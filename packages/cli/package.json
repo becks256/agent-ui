@@ -2,8 +2,13 @@
   "name": "@noetic-ui/cli",
   "version": "0.1.0",
   "description": "CLI to add Noetic UI components directly into your project",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
-    "noetic-ui": "./dist/index.js"
+    "noetic-ui": "./dist/index.js",
+    "@noetic-ui/cli": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "type": "module",

@@ -2,6 +2,10 @@
   "name": "@noetic-ui/react",
   "version": "0.1.0",
   "description": "High-design, polished UI component library for cognitive AI and agentic applications",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
