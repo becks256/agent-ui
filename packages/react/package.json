@@ -1,10 +1,14 @@
 {
   "name": "@noetic-ui/react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "High-design, polished UI component library for cognitive AI and agentic applications",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/becks256/agent-ui.git"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

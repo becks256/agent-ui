@@ -1,10 +1,14 @@
 {
   "name": "@noetic-ui/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI to add Noetic UI components directly into your project",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/becks256/agent-ui.git"
   },
   "bin": {
     "noetic-ui": "./dist/index.js",
