@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-export interface AgentUiConfig {
+export interface NoeticUiConfig {
   baseColor: string;
   css: string;
   components: string;
@@ -11,13 +11,13 @@ export interface AgentUiConfig {
   };
 }
 
-export const DEFAULT_CONFIG: AgentUiConfig = {
+export const DEFAULT_CONFIG: NoeticUiConfig = {
   baseColor: 'violet',
   css: 'app/globals.css',
-  components: 'components/agent-ui',
+  components: 'components/noetic-ui',
   aliases: {
-    components: 'components/agent-ui',
-    utils: 'components/agent-ui/cn',
+    components: 'components/noetic-ui',
+    utils: 'components/noetic-ui/cn',
   },
 };
 
@@ -96,15 +96,20 @@ export function getInstallCommand(pkgManager: 'pnpm' | 'npm' | 'yarn' | 'bun', p
   }
 }
 
-export async function readConfig(cwd: string): Promise<AgentUiConfig | null> {
-  const configPath = path.resolve(cwd, 'agent-ui.json');
+export async function readConfig(cwd: string): Promise<NoeticUiConfig | null> {
+  const configPath = path.resolve(cwd, 'noetic-ui.json');
   if (await fs.pathExists(configPath)) {
     return fs.readJson(configPath);
+  }
+  // Fallback for transition compatibility
+  const legacyConfigPath = path.resolve(cwd, 'agent-ui.json');
+  if (await fs.pathExists(legacyConfigPath)) {
+    return fs.readJson(legacyConfigPath);
   }
   return null;
 }
 
-export async function writeConfig(cwd: string, config: AgentUiConfig): Promise<void> {
-  const configPath = path.resolve(cwd, 'agent-ui.json');
+export async function writeConfig(cwd: string, config: NoeticUiConfig): Promise<void> {
+  const configPath = path.resolve(cwd, 'noetic-ui.json');
   await fs.writeJson(configPath, config, { spaces: 2 });
 }

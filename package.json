@@ -1,5 +1,5 @@
 {
-  "name": "agent-ui-monorepo",
+  "name": "noetic-ui-monorepo",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",

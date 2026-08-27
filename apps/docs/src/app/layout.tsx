@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Agent UI — High-Design Component Library for Agentic AI',
+  title: 'Noetic UI — High-Design Component Library for Thinking AI & Agents',
   description:
-    'A polished, open-source UI component library designed specifically for agentic AI applications.',
+    'A polished, open-source UI component library designed specifically for cognitive AI and agentic applications.',
 };
 
 export default function RootLayout({

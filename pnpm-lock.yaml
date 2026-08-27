@@ -20,7 +20,7 @@ importers:
 
   apps/docs:
     dependencies:
-      '@agent-ui/react':
+      '@noetic-ui/react':
         specifier: workspace:*
         version: link:../../packages/react
       '@radix-ui/react-accordion':

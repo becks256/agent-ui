@@ -67,7 +67,7 @@ import {
   type Artifact,
   type AgentPlan,
   type AgentState,
-} from '@agent-ui/react';
+} from '@noetic-ui/react';
 
 const mockModels: ModelInfo[] = [
   {
@@ -111,7 +111,7 @@ const mockArtifact: Artifact = {
   filename: 'src/orchestrator/AgentOrchestrator.ts',
   language: 'typescript',
   version: 2,
-  content: `import { AgentSwarm, ToolRegistry, type ExecutionContext } from '@agent-ui/core';
+  content: `import { AgentSwarm, ToolRegistry, type ExecutionContext } from '@noetic-ui/core';
 
 export class AgentOrchestrator {
   private swarm: AgentSwarm;
@@ -153,8 +153,8 @@ const mockDiff = `--- a/src/orchestrator/AgentOrchestrator.ts
 
 const cliSimulations: Record<string, { cmd: string; output: string }> = {
   list: {
-    cmd: 'npx agent-ui list',
-    output: `⚡ Agent UI — Component Registry (23 Components)
+    cmd: 'npx noetic-ui list',
+    output: `⚡ Noetic UI — Component Registry (23 Components)
 
 1. Reasoning & Tools (4)
   ReasoningAccordion         Collapsible thought container for Chain-of-Thought reasoning with live duration ticker & sub-steps.
@@ -193,45 +193,45 @@ const cliSimulations: Record<string, { cmd: string; output: string }> = {
 7. Theme & Customization (1)
   ThemeColorPicker           Full-featured HSL sliders with smart WCAG contrast estimation, message bubble modes, and CSS export.
 
-Use npx agent-ui add <component> to add components to your project.`,
+Use npx noetic-ui add <component> to add components to your project.`,
   },
   init: {
-    cmd: 'npx agent-ui init',
-    output: `⚡ Initializing Agent UI in your project...
+    cmd: 'npx noetic-ui init',
+    output: `⚡ Initializing Noetic UI in your project...
 
 ✔ Detected Next.js (App Router)
-✔ Created agent-ui.json
-✔ Created components directory at components/agent-ui
-✔ Created utility helper at components/agent-ui/cn.ts
-✔ Created shared agent types at components/agent-ui/types.ts
-✔ Added Agent UI color tokens to app/globals.css
+✔ Created noetic-ui.json
+✔ Created components directory at components/noetic-ui
+✔ Created utility helper at components/noetic-ui/cn.ts
+✔ Created shared agent types at components/noetic-ui/types.ts
+✔ Added Noetic UI color tokens to app/globals.css
 
-✨ Agent UI initialized successfully!
+✨ Noetic UI initialized successfully!
 Next steps:
 1. Install peer dependencies:
    pnpm add lucide-react framer-motion clsx tailwind-merge
 2. Add components:
-   npx agent-ui add <component>
-   npx agent-ui add --all`,
+   npx noetic-ui add <component>
+   npx noetic-ui add --all`,
   },
   addSingle: {
-    cmd: 'npx agent-ui add PromptInput',
-    output: `⚡ Adding 6 files to components/agent-ui...
+    cmd: 'npx noetic-ui add PromptInput',
+    output: `⚡ Adding 6 files to components/noetic-ui...
 
-✔ Added components/agent-ui/cn.ts
-✔ Added components/agent-ui/types.ts
-✔ Added components/agent-ui/PromptInput.tsx
-✔ Added components/agent-ui/ModelSelector.tsx
-✔ Added components/agent-ui/ContextTray.tsx
-✔ Added components/agent-ui/SlashCommandMenu.tsx
+✔ Added components/noetic-ui/cn.ts
+✔ Added components/noetic-ui/types.ts
+✔ Added components/noetic-ui/PromptInput.tsx
+✔ Added components/noetic-ui/ModelSelector.tsx
+✔ Added components/noetic-ui/ContextTray.tsx
+✔ Added components/noetic-ui/SlashCommandMenu.tsx
 
 ✨ Successfully installed 1 component(s) with internal dependencies!
 Required peer packages:
 pnpm add lucide-react framer-motion`,
   },
   addAll: {
-    cmd: 'npx agent-ui add --all',
-    output: `⚡ Adding 25 files to components/agent-ui...
+    cmd: 'npx noetic-ui add --all',
+    output: `⚡ Adding 25 files to components/noetic-ui...
 
 ✔ Added ReasoningAccordion.tsx
 ✔ Added ToolCallCard.tsx
@@ -261,7 +261,7 @@ pnpm add lucide-react framer-motion`,
 ✨ Successfully installed all 23 components across 7 suites!`,
   },
   themePreset: {
-    cmd: 'npx agent-ui theme cyan',
+    cmd: 'npx noetic-ui theme cyan',
     output: `✨ Set theme to Cyber Cyan (HSL: 195°, 90%, 50%)
 Calculated relative luminance: 0.384
 Optimal foreground contrast: #ffffff (6.8:1 AAA)
@@ -347,7 +347,7 @@ export default function Home() {
     {
       id: 'msg-2',
       role: 'assistant',
-      name: 'Agentic Architect',
+      name: 'Cognitive Architect',
       model: mockModels[0],
       createdAt: new Date(),
       latencyMs: 1420,
@@ -399,8 +399,8 @@ export default function Home() {
         {
           id: 'tc-1',
           name: 'bash',
-          args: { command: 'pnpm run build --filter @agent-ui/react' },
-          result: `> @agent-ui/react@0.1.0 build
+          args: { command: 'pnpm run build --filter @noetic-ui/react' },
+          result: `> @noetic-ui/react@0.1.0 build
 > tsup
 
 CLI Building entry: src/index.ts
@@ -437,7 +437,7 @@ Key improvements:
     const agentMsg: AgentMessage = {
       id: agentMsgId,
       role: 'assistant',
-      name: 'Agentic Architect',
+      name: 'Cognitive Architect',
       model: selectedModel,
       status: 'streaming',
       createdAt: new Date(),
@@ -503,7 +503,7 @@ Key improvements:
   };
 
   const copyInstallCommand = () => {
-    navigator.clipboard.writeText('npm i @agent-ui/react');
+    navigator.clipboard.writeText('npm i @noetic-ui/react');
     setCopiedInstall(true);
     setTimeout(() => setCopiedInstall(false), 2000);
   };
@@ -529,13 +529,13 @@ Key improvements:
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* Top Navigation Header */}
-      <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 border-b border-border/60 bg-background/80 backdrop-blur-md">
+      <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 border-b border-border/80 bg-card/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20 transition-colors">
             <Bot className="h-4 w-4" />
           </div>
           <div className="flex items-center gap-2">
-            <span className="font-bold text-sm tracking-tight">Agent UI</span>
+            <span className="font-bold text-sm tracking-tight">Noetic UI</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border/80 font-bold transition-colors">
               v0.1.0-alpha
             </span>
@@ -549,7 +549,7 @@ Key improvements:
             onClick={() => setActiveView('demo')}
             className={`px-3 py-1 rounded-lg font-medium transition-all ${
               activeView === 'demo'
-                ? 'bg-background text-foreground shadow-xs'
+                ? 'bg-card text-foreground shadow-xs'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -560,7 +560,7 @@ Key improvements:
             onClick={() => setActiveView('components')}
             className={`px-3 py-1 rounded-lg font-medium transition-all ${
               activeView === 'components'
-                ? 'bg-background text-foreground shadow-xs'
+                ? 'bg-card text-foreground shadow-xs'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -571,7 +571,7 @@ Key improvements:
             onClick={() => setActiveView('docs')}
             className={`px-3 py-1 rounded-lg font-medium transition-all ${
               activeView === 'docs'
-                ? 'bg-background text-foreground shadow-xs'
+                ? 'bg-card text-foreground shadow-xs'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -597,7 +597,7 @@ Key improvements:
             onClick={copyInstallCommand}
             className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-mono text-muted-foreground hover:text-foreground transition-all"
           >
-            <span>npm i @agent-ui/react</span>
+            <span>npm i @noetic-ui/react</span>
             {copiedInstall ? (
               <Check className="h-3 w-3 text-emerald-500" />
             ) : (
@@ -640,7 +640,7 @@ Key improvements:
                       onClick={() => setMessageVariant(v)}
                       className={`px-2 py-0.5 rounded-md font-medium capitalize transition-all ${
                         messageVariant === v
-                          ? 'bg-background text-foreground shadow-xs font-bold'
+                          ? 'bg-card text-foreground shadow-xs font-bold'
                           : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
@@ -727,7 +727,7 @@ Key improvements:
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                Component Suite Catalog
+                Noetic UI Component Catalog
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 Interactive sandbox showcasing all 23 components across the 7 core architectural suites.
@@ -791,7 +791,7 @@ Key improvements:
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Reasoning Accordion */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ReasoningAccordion
@@ -819,7 +819,7 @@ Key improvements:
                 </div>
 
                 {/* Tool Call Card */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ToolCallCard
@@ -842,7 +842,7 @@ Key improvements:
                 </div>
 
                 {/* Plan View */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       AgentPlanView
@@ -866,7 +866,7 @@ Key improvements:
                 </div>
 
                 {/* Swarm View */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       AgentSwarmView
@@ -911,7 +911,7 @@ Key improvements:
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Message Bubble (User & Assistant) with Variant Switcher */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3 lg:col-span-2">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -965,7 +965,7 @@ Key improvements:
                 </div>
 
                 {/* StreamingText & BranchSwitcher */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-4 lg:col-span-2">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       StreamingText & BranchSwitcher
@@ -980,7 +980,7 @@ Key improvements:
                     <StreamingText
                       content={`### Streaming Markdown Engine
 - **Zero-flicker** re-rendering during active SSE token streams
-- Integrated inline code formatting: \`import { useChat } from '@agent-ui/react'\`
+- Integrated inline code formatting: \`import { useChat } from '@noetic-ui/react'\`
 - Support for ordered/unordered task items and headers.`}
                       isStreaming={true}
                     />
@@ -1002,7 +1002,7 @@ Key improvements:
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* PromptInput */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       PromptInput
@@ -1027,7 +1027,7 @@ Key improvements:
                 </div>
 
                 {/* DragAndDropUploader */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       DragAndDropUploader
@@ -1046,7 +1046,7 @@ Key improvements:
                 </div>
 
                 {/* ContextTray Standalone */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     ContextTray
                   </h3>
@@ -1061,7 +1061,7 @@ Key improvements:
                 </div>
 
                 {/* ModelSelector Standalone */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     ModelSelector
                   </h3>
@@ -1092,7 +1092,7 @@ Key improvements:
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Interactive Question Card */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     InteractiveQuestionCard
                   </h3>
@@ -1117,7 +1117,7 @@ Key improvements:
                 </div>
 
                 {/* FeedbackActions & ActionConfirmationModal Preview */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-4">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
                   <div>
                     <h3 className="text-xs font-mono font-semibold text-foreground mb-2">
                       FeedbackActions
@@ -1161,7 +1161,7 @@ Key improvements:
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Terminal Stream */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     TerminalStream
                   </h3>
@@ -1176,7 +1176,7 @@ Time:   1.24s`}
                 </div>
 
                 {/* Diff Viewer */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     DiffViewer
                   </h3>
@@ -1184,7 +1184,7 @@ Time:   1.24s`}
                 </div>
 
                 {/* Code Block */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3 lg:col-span-2">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     CodeBlock
                   </h3>
@@ -1210,7 +1210,7 @@ Time:   1.24s`}
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* AgentStatusBadge States */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     AgentStatusBadge (6 Ambient States)
                   </h3>
@@ -1224,7 +1224,7 @@ Time:   1.24s`}
                 </div>
 
                 {/* TokenUsageMeter */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <h3 className="text-xs font-mono font-semibold text-foreground">
                     TokenUsageMeter
                   </h3>
@@ -1255,7 +1255,7 @@ Time:   1.24s`}
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Embedded Inline ThemeColorPicker */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-3">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ThemeColorPicker (Inline Mode)
@@ -1276,7 +1276,7 @@ Time:   1.24s`}
                 </div>
 
                 {/* Popover Mode Trigger & Live Information */}
-                <div className="p-5 rounded-2xl border border-border/60 bg-card space-y-4">
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ThemeColorPicker (Popover Mode)
@@ -1333,7 +1333,7 @@ Time:   1.24s`}
               }`}
             >
               <Terminal className="h-4 w-4" />
-              <span>CLI Tooling (<code className="font-mono text-[11px]">agent-ui</code>)</span>
+              <span>CLI Tooling (<code className="font-mono text-[11px]">noetic-ui</code>)</span>
             </button>
 
             <button
@@ -1387,10 +1387,10 @@ Time:   1.24s`}
                     <span>Official CLI Tooling</span>
                   </div>
                   <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-                    Agent UI CLI (<code className="font-mono text-2xl font-bold">agent-ui</code>)
+                    Noetic UI CLI (<code className="font-mono text-2xl font-bold">noetic-ui</code>)
                   </h1>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                    The <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">agent-ui</code> CLI is a shadcn-inspired component distribution and scaffolding tool. It allows you to initialize projects, inspect all 23 components, and copy unbundled TypeScript source code directly into your repository with 100% source ownership.
+                    The <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">noetic-ui</code> CLI is a shadcn-inspired component distribution and scaffolding tool. It allows you to initialize projects, inspect all 23 components, and copy unbundled TypeScript source code directly into your repository with 100% source ownership.
                   </p>
                 </div>
 
@@ -1441,19 +1441,19 @@ Time:   1.24s`}
                 <div className="space-y-3 pt-2">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">1</span>
-                    <span><code className="font-mono text-base">npx agent-ui init</code></span>
+                    <span><code className="font-mono text-base">npx noetic-ui init</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Scaffolds the Agent UI configuration in your project. It automatically detects your framework (Next.js App/Pages Router, Vite, Remix, Astro), creates <code className="font-mono text-[11px]">agent-ui.json</code>, sets up <code className="font-mono text-[11px]">components/agent-ui/cn.ts</code> and <code className="font-mono text-[11px]">types.ts</code>, and injects CSS custom properties into your global stylesheet.
+                    Scaffolds the Noetic UI configuration in your project. It automatically detects your framework (Next.js App/Pages Router, Vite, Remix, Astro), creates <code className="font-mono text-[11px]">noetic-ui.json</code>, sets up <code className="font-mono text-[11px]">components/noetic-ui/cn.ts</code> and <code className="font-mono text-[11px]">types.ts</code>, and injects CSS custom properties into your global stylesheet.
                   </p>
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
                     code={`# Interactive initialization with prompts
-npx agent-ui init
+npx noetic-ui init
 
 # Skip confirmation prompts and accept defaults
-npx agent-ui init -y`}
+npx noetic-ui init -y`}
                   />
                 </div>
 
@@ -1461,7 +1461,7 @@ npx agent-ui init -y`}
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">2</span>
-                    <span><code className="font-mono text-base">npx agent-ui list</code></span>
+                    <span><code className="font-mono text-base">npx noetic-ui list</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Prints a categorized index of all 23 available components across the 7 architectural suites with descriptions and required peer packages:
@@ -1469,7 +1469,7 @@ npx agent-ui init -y`}
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
-                    code={`npx agent-ui list`}
+                    code={`npx noetic-ui list`}
                   />
                 </div>
 
@@ -1477,28 +1477,28 @@ npx agent-ui init -y`}
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">3</span>
-                    <span><code className="font-mono text-base">npx agent-ui add [...components]</code></span>
+                    <span><code className="font-mono text-base">npx noetic-ui add [...components]</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Copies components directly into your codebase (<code className="font-mono text-[11px]">components/agent-ui/</code>). It automatically resolves internal dependencies (e.g. adding <code className="font-mono text-[11px]">PromptInput</code> also copies <code className="font-mono text-[11px]">ModelSelector</code>, <code className="font-mono text-[11px]">ContextTray</code>, <code className="font-mono text-[11px]">SlashCommandMenu</code>, <code className="font-mono text-[11px]">cn.ts</code>, and <code className="font-mono text-[11px]">types.ts</code>):
+                    Copies components directly into your codebase (<code className="font-mono text-[11px]">components/noetic-ui/</code>). It automatically resolves internal dependencies (e.g. adding <code className="font-mono text-[11px]">PromptInput</code> also copies <code className="font-mono text-[11px]">ModelSelector</code>, <code className="font-mono text-[11px]">ContextTray</code>, <code className="font-mono text-[11px]">SlashCommandMenu</code>, <code className="font-mono text-[11px]">cn.ts</code>, and <code className="font-mono text-[11px]">types.ts</code>):
                   </p>
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
                     code={`# Add individual or multiple components
-npx agent-ui add PromptInput MessageBubble
+npx noetic-ui add PromptInput MessageBubble
 
 # Add an entire architectural suite (e.g. reasoning, chat, input, hitl, canvas, telemetry, theme)
-npx agent-ui add --suite reasoning
+npx noetic-ui add --suite reasoning
 
 # Add all 23 components into your repository
-npx agent-ui add --all
+npx noetic-ui add --all
 
 # Launch interactive autocomplete multi-select checklist
-npx agent-ui add
+npx noetic-ui add
 
 # Overwrite existing local components with latest upstream
-npx agent-ui add MessageBubble --overwrite`}
+npx noetic-ui add MessageBubble --overwrite`}
                   />
                 </div>
 
@@ -1506,7 +1506,7 @@ npx agent-ui add MessageBubble --overwrite`}
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">4</span>
-                    <span><code className="font-mono text-base">npx agent-ui theme [preset]</code></span>
+                    <span><code className="font-mono text-base">npx noetic-ui theme [preset]</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Interactive palette configurator that updates <code className="font-mono text-[11px]">globals.css</code> with calibrated HSL color tokens and optimal WCAG text contrast:
@@ -1515,29 +1515,29 @@ npx agent-ui add MessageBubble --overwrite`}
                     language="bash"
                     filename="Terminal"
                     code={`# Interactive palette selector
-npx agent-ui theme
+npx noetic-ui theme
 
 # Specify a preset directly (violet, indigo, cyan, lime, emerald, amber, orange, rose, fuchsia)
-npx agent-ui theme cyan`}
+npx noetic-ui theme cyan`}
                   />
                 </div>
 
-                {/* Configuration File agent-ui.json */}
+                {/* Configuration File noetic-ui.json */}
                 <div className="space-y-3 pt-4 pb-12">
-                  <h2 className="text-lg font-bold text-foreground">Configuration File (<code className="font-mono text-sm">agent-ui.json</code>)</h2>
+                  <h2 className="text-lg font-bold text-foreground">Configuration File (<code className="font-mono text-sm">noetic-ui.json</code>)</h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Generated by <code className="font-mono text-[11px]">agent-ui init</code> in the root of your project:
+                    Generated by <code className="font-mono text-[11px]">noetic-ui init</code> in the root of your project:
                   </p>
                   <CodeBlock
                     language="json"
-                    filename="agent-ui.json"
+                    filename="noetic-ui.json"
                     code={`{
   "baseColor": "violet",
   "css": "app/globals.css",
-  "components": "components/agent-ui",
+  "components": "components/noetic-ui",
   "aliases": {
-    "components": "components/agent-ui",
-    "utils": "components/agent-ui/cn"
+    "components": "components/noetic-ui",
+    "utils": "components/noetic-ui/cn"
   }
 }`}
                   />
@@ -1553,7 +1553,7 @@ npx agent-ui theme cyan`}
                     Quickstart & Package Setup
                   </h1>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                    Install <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@agent-ui/react</code> directly from npm to consume pre-compiled components in your React 18/19 or Next.js app.
+                    Install <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@noetic-ui/react</code> directly from npm to consume pre-compiled components in your React 18/19 or Next.js app.
                   </p>
                 </div>
 
@@ -1562,7 +1562,7 @@ npx agent-ui theme cyan`}
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
-                    code={`pnpm add @agent-ui/react framer-motion lucide-react clsx tailwind-merge`}
+                    code={`pnpm add @noetic-ui/react framer-motion lucide-react clsx tailwind-merge`}
                   />
                 </div>
 
@@ -1577,7 +1577,7 @@ npx agent-ui theme cyan`}
   PromptInput,
   ReasoningAccordion,
   AgentStatusBadge,
-} from '@agent-ui/react';
+} from '@noetic-ui/react';
 
 export function MyAgentApp() {
   return (
@@ -1603,7 +1603,7 @@ export function MyAgentApp() {
                     Theme & Contrast Engine
                   </h1>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                    Agent UI uses CSS custom properties with automatic WCAG 2.1 contrast ratio calculations. When bright primary colors like Yellow (40°) or Neon Lime (85°) are selected in Light Mode, the text automatically flips to black (<code className="font-mono">#09090b</code>) to guarantee AA & AAA compliance (10.8:1 contrast).
+                    Noetic UI uses CSS custom properties with automatic WCAG 2.1 contrast ratio calculations. When bright primary colors like Yellow (40°) or Neon Lime (85°) are selected in Light Mode, the text automatically flips to black (<code className="font-mono">#09090b</code>) to guarantee AA & AAA compliance (10.8:1 contrast).
                   </p>
                 </div>
 
@@ -1612,7 +1612,7 @@ export function MyAgentApp() {
                   <CodeBlock
                     language="tsx"
                     filename="Header.tsx"
-                    code={`import { ThemeColorPicker } from '@agent-ui/react';
+                    code={`import { ThemeColorPicker } from '@noetic-ui/react';
 
 export function Header() {
   const [hue, setHue] = useState(265);

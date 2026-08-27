@@ -51,7 +51,7 @@ const componentFiles = [
   { key: 'ThemeColorPicker', relPath: 'components/theme/ThemeColorPicker.tsx', targetFilename: 'ThemeColorPicker.tsx' },
 ];
 
-let out = `// Auto-generated templates from @agent-ui/react source\n\n`;
+let out = `// Auto-generated templates from @noetic-ui/react source\n\n`;
 out += `export interface TemplateFile {\n  filename: string;\n  content: string;\n}\n\n`;
 out += `export const COMPONENT_TEMPLATES: Record<string, TemplateFile> = {\n`;
 

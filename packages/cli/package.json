@@ -1,9 +1,9 @@
 {
-  "name": "agent-ui",
+  "name": "noetic-ui",
   "version": "0.1.0",
-  "description": "CLI to add Agent UI components directly into your project",
+  "description": "CLI to add Noetic UI components directly into your project",
   "bin": {
-    "agent-ui": "./dist/index.js"
+    "noetic-ui": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "type": "module",

@@ -1,4 +1,4 @@
-// Auto-generated templates from @agent-ui/react source
+// Auto-generated templates from @noetic-ui/react source
 
 export interface TemplateFile {
   filename: string;

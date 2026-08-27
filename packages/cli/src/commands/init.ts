@@ -9,7 +9,7 @@ import {
   getInstallCommand,
   writeConfig,
   CSS_COLOR_VARIABLES,
-  type AgentUiConfig,
+  type NoeticUiConfig,
 } from '../utils/config';
 import { COMPONENT_TEMPLATES } from '../registry/templates';
 
@@ -20,11 +20,11 @@ export interface InitOptions {
 
 export async function initProject(options: InitOptions = {}) {
   const cwd = options.cwd || process.cwd();
-  console.log(chalk.bold.hex('#8b5cf6')('\n  ⚡ Initializing Agent UI in your project...\n'));
+  console.log(chalk.bold.hex('#8b5cf6')('\n  ⚡ Initializing Noetic UI in your project...\n'));
 
   const detectedCss = detectCssPath(cwd) || 'app/globals.css';
 
-  let config: AgentUiConfig = {
+  let config: NoeticUiConfig = {
     ...DEFAULT_CONFIG,
     css: detectedCss,
   };
@@ -40,8 +40,8 @@ export async function initProject(options: InitOptions = {}) {
       {
         type: 'text',
         name: 'componentsPath',
-        message: 'Where should Agent UI components be installed?',
-        initial: 'components/agent-ui',
+        message: 'Where should Noetic UI components be installed?',
+        initial: 'components/noetic-ui',
       },
       {
         type: 'select',
@@ -71,9 +71,9 @@ export async function initProject(options: InitOptions = {}) {
     config.baseColor = response.baseColor;
   }
 
-  // 1. Write agent-ui.json configuration
+  // 1. Write noetic-ui.json configuration
   await writeConfig(cwd, config);
-  console.log(`  ${chalk.green('✔')} Created ${chalk.bold('agent-ui.json')}`);
+  console.log(`  ${chalk.green('✔')} Created ${chalk.bold('noetic-ui.json')}`);
 
   // 2. Ensure target components directory exists
   const targetCompDir = path.resolve(cwd, config.components);
@@ -100,14 +100,14 @@ export async function initProject(options: InitOptions = {}) {
     const existingCss = await fs.readFile(fullCssPath, 'utf8');
     if (!existingCss.includes('--primary-hue') && !existingCss.includes('--agent-thought')) {
       await fs.appendFile(fullCssPath, CSS_COLOR_VARIABLES, 'utf8');
-      console.log(`  ${chalk.green('✔')} Added Agent UI color tokens to ${chalk.bold(config.css)}`);
+      console.log(`  ${chalk.green('✔')} Added Noetic UI color tokens to ${chalk.bold(config.css)}`);
     } else {
       console.log(`  ${chalk.dim('ℹ')} CSS color tokens already present in ${chalk.bold(config.css)}`);
     }
   } else {
     await fs.ensureDir(path.dirname(fullCssPath));
     await fs.writeFile(fullCssPath, CSS_COLOR_VARIABLES, 'utf8');
-    console.log(`  ${chalk.green('✔')} Created ${chalk.bold(config.css)} with Agent UI color tokens`);
+    console.log(`  ${chalk.green('✔')} Created ${chalk.bold(config.css)} with Noetic UI color tokens`);
   }
 
   // 6. Detect package manager and print dependencies command
@@ -115,11 +115,11 @@ export async function initProject(options: InitOptions = {}) {
   const peerDeps = ['lucide-react', 'framer-motion', 'clsx', 'tailwind-merge'];
   const installCmd = getInstallCommand(pkgManager, peerDeps);
 
-  console.log(chalk.bold.green('\n  ✨ Agent UI initialized successfully!'));
+  console.log(chalk.bold.green('\n  ✨ Noetic UI initialized successfully!'));
   console.log('\n  Next steps:');
   console.log(`  1. Install required peer dependencies:`);
   console.log(`     ${chalk.bold.hex('#8b5cf6')(installCmd)}`);
   console.log(`  2. Add components to your project:`);
-  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx agent-ui add <component>')}`);
-  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx agent-ui add --all')}\n`);
+  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx noetic-ui add <component>')}`);
+  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx noetic-ui add --all')}\n`);
 }

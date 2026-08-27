@@ -48,7 +48,7 @@ export async function addComponents(components: string[] = [], options: AddOptio
     const response = await prompts({
       type: 'autocompleteMultiselect',
       name: 'components',
-      message: 'Select the Agent UI components you want to add:',
+      message: 'Select the Noetic UI components you want to add:',
       choices,
       hint: '- Space to select. Return to submit',
       instructions: false,

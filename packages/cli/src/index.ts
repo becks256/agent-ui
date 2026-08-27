@@ -4,18 +4,18 @@ import { initProject } from './commands/init';
 import { addComponents } from './commands/add';
 import { setTheme } from './commands/theme';
 
-const cli = cac('agent-ui');
+const cli = cac('noetic-ui');
 
 // 1. List Command
 cli
-  .command('list', 'List all available Agent UI components across all 7 architectural suites')
+  .command('list', 'List all available Noetic UI components across all 7 architectural suites')
   .action(() => {
     listComponents();
   });
 
 // 2. Init Command
 cli
-  .command('init', 'Initialize Agent UI configuration, utility helpers, types, and CSS variables')
+  .command('init', 'Initialize Noetic UI configuration, utility helpers, types, and CSS variables')
   .option('-y, --yes', 'Skip prompts and use default configuration')
   .option('--cwd <cwd>', 'Working directory')
   .action(async (options) => {
@@ -24,7 +24,7 @@ cli
 
 // 3. Add Command
 cli
-  .command('add [...components]', 'Add one or more Agent UI components to your project')
+  .command('add [...components]', 'Add one or more Noetic UI components to your project')
   .option('-a, --all', 'Add all available components')
   .option('-s, --suite <suite>', 'Add all components in a specific suite (e.g. reasoning, chat, hitl)')
   .option('-o, --overwrite', 'Overwrite existing component files')
