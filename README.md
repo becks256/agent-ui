@@ -81,16 +81,16 @@ pnpm add @noetic-ui/react framer-motion lucide-react clsx tailwind-merge
 ### Official CLI (shadcn-style)
 ```bash
 # 1. Initialize project with configuration and CSS variables
-npx noetic-ui init
+npx @noetic-ui/cli init
 
 # 2. Browse all 23 components
-npx noetic-ui list
+npx @noetic-ui/cli list
 
 # 3. Add components with automatic dependency resolution
-npx noetic-ui add PromptInput MessageBubble
+npx @noetic-ui/cli add PromptInput MessageBubble
 
 # 4. Or copy the entire library
-npx noetic-ui add --all
+npx @noetic-ui/cli add --all
 ```
 
 ---
@@ -144,7 +144,7 @@ noetic-ui/
 │   └── docs/            # Next.js 15 interactive documentation and live agent simulator
 ├── packages/
 │   ├── react/           # Core React component library (@noetic-ui/react)
-│   └── cli/             # CLI for copy-pasting components into projects (noetic-ui)
+│   └── cli/             # CLI for copy-pasting components into projects (@noetic-ui/cli)
 ├── pnpm-workspace.yaml
 ├── turbo.json
 └── package.json

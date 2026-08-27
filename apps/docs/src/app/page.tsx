@@ -153,7 +153,7 @@ const mockDiff = `--- a/src/orchestrator/AgentOrchestrator.ts
 
 const cliSimulations: Record<string, { cmd: string; output: string }> = {
   list: {
-    cmd: 'npx noetic-ui list',
+    cmd: 'npx @noetic-ui/cli list',
     output: `⚡ Noetic UI — Component Registry (23 Components)
 
 1. Reasoning & Tools (4)
@@ -193,10 +193,10 @@ const cliSimulations: Record<string, { cmd: string; output: string }> = {
 7. Theme & Customization (1)
   ThemeColorPicker           Full-featured HSL sliders with smart WCAG contrast estimation, message bubble modes, and CSS export.
 
-Use npx noetic-ui add <component> to add components to your project.`,
+Use npx @noetic-ui/cli add <component> to add components to your project.`,
   },
   init: {
-    cmd: 'npx noetic-ui init',
+    cmd: 'npx @noetic-ui/cli init',
     output: `⚡ Initializing Noetic UI in your project...
 
 ✔ Detected Next.js (App Router)
@@ -211,11 +211,11 @@ Next steps:
 1. Install peer dependencies:
    pnpm add lucide-react framer-motion clsx tailwind-merge
 2. Add components:
-   npx noetic-ui add <component>
-   npx noetic-ui add --all`,
+   npx @noetic-ui/cli add <component>
+   npx @noetic-ui/cli add --all`,
   },
   addSingle: {
-    cmd: 'npx noetic-ui add PromptInput',
+    cmd: 'npx @noetic-ui/cli add PromptInput',
     output: `⚡ Adding 6 files to components/noetic-ui...
 
 ✔ Added components/noetic-ui/cn.ts
@@ -230,7 +230,7 @@ Required peer packages:
 pnpm add lucide-react framer-motion`,
   },
   addAll: {
-    cmd: 'npx noetic-ui add --all',
+    cmd: 'npx @noetic-ui/cli add --all',
     output: `⚡ Adding 25 files to components/noetic-ui...
 
 ✔ Added ReasoningAccordion.tsx
@@ -261,7 +261,7 @@ pnpm add lucide-react framer-motion`,
 ✨ Successfully installed all 23 components across 7 suites!`,
   },
   themePreset: {
-    cmd: 'npx noetic-ui theme cyan',
+    cmd: 'npx @noetic-ui/cli theme cyan',
     output: `✨ Set theme to Cyber Cyan (HSL: 195°, 90%, 50%)
 Calculated relative luminance: 0.384
 Optimal foreground contrast: #ffffff (6.8:1 AAA)
@@ -1387,10 +1387,10 @@ Time:   1.24s`}
                     <span>Official CLI Tooling</span>
                   </div>
                   <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-                    Noetic UI CLI (<code className="font-mono text-2xl font-bold">noetic-ui</code>)
+                    Noetic UI CLI (<code className="font-mono text-2xl font-bold">@noetic-ui/cli</code>)
                   </h1>
                   <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-                    The <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">noetic-ui</code> CLI is a shadcn-inspired component distribution and scaffolding tool. It allows you to initialize projects, inspect all 23 components, and copy unbundled TypeScript source code directly into your repository with 100% source ownership.
+                    The <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@noetic-ui/cli</code> package is a shadcn-inspired component distribution and scaffolding tool. It allows you to initialize projects, inspect all 23 components, and copy unbundled TypeScript source code directly into your repository with 100% source ownership.
                   </p>
                 </div>
 
@@ -1441,7 +1441,7 @@ Time:   1.24s`}
                 <div className="space-y-3 pt-2">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">1</span>
-                    <span><code className="font-mono text-base">npx noetic-ui init</code></span>
+                    <span><code className="font-mono text-base">npx @noetic-ui/cli init</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Scaffolds the Noetic UI configuration in your project. It automatically detects your framework (Next.js App/Pages Router, Vite, Remix, Astro), creates <code className="font-mono text-[11px]">noetic-ui.json</code>, sets up <code className="font-mono text-[11px]">components/noetic-ui/cn.ts</code> and <code className="font-mono text-[11px]">types.ts</code>, and injects CSS custom properties into your global stylesheet.
@@ -1450,10 +1450,10 @@ Time:   1.24s`}
                     language="bash"
                     filename="Terminal"
                     code={`# Interactive initialization with prompts
-npx noetic-ui init
+npx @noetic-ui/cli init
 
 # Skip confirmation prompts and accept defaults
-npx noetic-ui init -y`}
+npx @noetic-ui/cli init -y`}
                   />
                 </div>
 
@@ -1461,7 +1461,7 @@ npx noetic-ui init -y`}
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">2</span>
-                    <span><code className="font-mono text-base">npx noetic-ui list</code></span>
+                    <span><code className="font-mono text-base">npx @noetic-ui/cli list</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Prints a categorized index of all 23 available components across the 7 architectural suites with descriptions and required peer packages:
@@ -1469,7 +1469,7 @@ npx noetic-ui init -y`}
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
-                    code={`npx noetic-ui list`}
+                    code={`npx @noetic-ui/cli list`}
                   />
                 </div>
 
@@ -1477,7 +1477,7 @@ npx noetic-ui init -y`}
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">3</span>
-                    <span><code className="font-mono text-base">npx noetic-ui add [...components]</code></span>
+                    <span><code className="font-mono text-base">npx @noetic-ui/cli add [...components]</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Copies components directly into your codebase (<code className="font-mono text-[11px]">components/noetic-ui/</code>). It automatically resolves internal dependencies (e.g. adding <code className="font-mono text-[11px]">PromptInput</code> also copies <code className="font-mono text-[11px]">ModelSelector</code>, <code className="font-mono text-[11px]">ContextTray</code>, <code className="font-mono text-[11px]">SlashCommandMenu</code>, <code className="font-mono text-[11px]">cn.ts</code>, and <code className="font-mono text-[11px]">types.ts</code>):
@@ -1486,19 +1486,19 @@ npx noetic-ui init -y`}
                     language="bash"
                     filename="Terminal"
                     code={`# Add individual or multiple components
-npx noetic-ui add PromptInput MessageBubble
+npx @noetic-ui/cli add PromptInput MessageBubble
 
 # Add an entire architectural suite (e.g. reasoning, chat, input, hitl, canvas, telemetry, theme)
-npx noetic-ui add --suite reasoning
+npx @noetic-ui/cli add --suite reasoning
 
 # Add all 23 components into your repository
-npx noetic-ui add --all
+npx @noetic-ui/cli add --all
 
 # Launch interactive autocomplete multi-select checklist
-npx noetic-ui add
+npx @noetic-ui/cli add
 
 # Overwrite existing local components with latest upstream
-npx noetic-ui add MessageBubble --overwrite`}
+npx @noetic-ui/cli add MessageBubble --overwrite`}
                   />
                 </div>
 
@@ -1506,7 +1506,7 @@ npx noetic-ui add MessageBubble --overwrite`}
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">4</span>
-                    <span><code className="font-mono text-base">npx noetic-ui theme [preset]</code></span>
+                    <span><code className="font-mono text-base">npx @noetic-ui/cli theme [preset]</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Interactive palette configurator that updates <code className="font-mono text-[11px]">globals.css</code> with calibrated HSL color tokens and optimal WCAG text contrast:
@@ -1515,10 +1515,10 @@ npx noetic-ui add MessageBubble --overwrite`}
                     language="bash"
                     filename="Terminal"
                     code={`# Interactive palette selector
-npx noetic-ui theme
+npx @noetic-ui/cli theme
 
 # Specify a preset directly (violet, indigo, cyan, lime, emerald, amber, orange, rose, fuchsia)
-npx noetic-ui theme cyan`}
+npx @noetic-ui/cli theme cyan`}
                   />
                 </div>
 
@@ -1526,7 +1526,7 @@ npx noetic-ui theme cyan`}
                 <div className="space-y-3 pt-4 pb-12">
                   <h2 className="text-lg font-bold text-foreground">Configuration File (<code className="font-mono text-sm">noetic-ui.json</code>)</h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Generated by <code className="font-mono text-[11px]">noetic-ui init</code> in the root of your project:
+                    Generated by <code className="font-mono text-[11px]">npx @noetic-ui/cli init</code> in the root of your project:
                   </p>
                   <CodeBlock
                     language="json"

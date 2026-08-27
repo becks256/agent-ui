@@ -1,5 +1,5 @@
 {
-  "name": "noetic-ui",
+  "name": "@noetic-ui/cli",
   "version": "0.1.0",
   "description": "CLI to add Noetic UI components directly into your project",
   "bin": {

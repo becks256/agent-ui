@@ -120,6 +120,6 @@ export async function initProject(options: InitOptions = {}) {
   console.log(`  1. Install required peer dependencies:`);
   console.log(`     ${chalk.bold.hex('#8b5cf6')(installCmd)}`);
   console.log(`  2. Add components to your project:`);
-  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx noetic-ui add <component>')}`);
-  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx noetic-ui add --all')}\n`);
+  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx @noetic-ui/cli add <component>')}`);
+  console.log(`     ${chalk.bold.hex('#8b5cf6')('npx @noetic-ui/cli add --all')}\n`);
 }

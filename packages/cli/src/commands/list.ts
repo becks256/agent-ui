@@ -23,6 +23,6 @@ export function listComponents() {
   });
 
   console.log(chalk.dim('  ─────────────────────────────────────────────────────────────────────────────'));
-  console.log(`  Use ${chalk.bold.hex('#8b5cf6')('npx noetic-ui add <component>')} to add a component to your project.`);
-  console.log(`  Use ${chalk.bold.hex('#8b5cf6')('npx noetic-ui add --all')} to copy the entire component suite.\n`);
+  console.log(`  Use ${chalk.bold.hex('#8b5cf6')('npx @noetic-ui/cli add <component>')} to add a component to your project.`);
+  console.log(`  Use ${chalk.bold.hex('#8b5cf6')('npx @noetic-ui/cli add --all')} to copy the entire component suite.\n`);
 }
