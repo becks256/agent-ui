@@ -1,0 +1,32 @@
+{
+  "name": "agent-ui",
+  "version": "0.1.0",
+  "description": "CLI to add Agent UI components directly into your project",
+  "bin": {
+    "agent-ui": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "node scripts/build-templates.mjs",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cac": "^6.7.14",
+    "chalk": "^5.4.1",
+    "fs-extra": "^11.3.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.13.4",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary-hue: 265;
+    --primary-sat: 85%;
+    --primary-light: 56%;
+    --primary: 265 85% 56%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Layer 0: Soft off-white canvas background */
+    --background: 240 5% 97.5%;
+    --foreground: 240 10% 3.9%;
+
+    /* Layer 1: Crisp elevated white card surface */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    /* Layer 2: Floating popovers and dialogs */
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Layer 3: Subtle nested boxes, inputs, chips */
+    --secondary: 240 4.8% 93.5%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 93.5%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 265 20% 93.5%;
+    --accent-foreground: 265 85% 45%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 88%;
+    --input: 240 5.9% 88%;
+    --ring: 265 85% 56%;
+    --radius: 0.75rem;
+
+    /* Agent UI Custom Accents */
+    --agent-thought: 265 85% 56%;
+    --agent-tool: 199 89% 48%;
+    --agent-success: 142 71% 45%;
+    --agent-warning: 38 92% 50%;
+  }
+
+  .dark {
+    --primary-hue: 265;
+    --primary-sat: 85%;
+    --primary-light: 62%;
+    --primary: 265 85% 62%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Layer 0: Deep background */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    /* Layer 1: Medium gray elevated card surface */
+    --card: 240 5% 10%;
+    --card-foreground: 0 0% 98%;
+
+    /* Layer 2: Elevated popovers and dialogs */
+    --popover: 240 6% 12.5%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Layer 3: Secondary nested boxes, inputs, and chips */
+    --secondary: 240 4% 16.5%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 4% 15%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 265 25% 18%;
+    --accent-foreground: 265 85% 75%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 4% 20%;
+    --input: 240 4% 20%;
+    --ring: 265 85% 62%;
+
+    --agent-thought: 265 85% 62%;
+    --agent-tool: 199 89% 52%;
+    --agent-success: 142 71% 45%;
+    --agent-warning: 38 92% 50%;
+  }
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Dynamic Global Text Selection Styling consuming --primary token */
+::selection,
+*::selection {
+  background-color: hsl(var(--primary) / 0.35) !important;
+  color: inherit !important;
+}
+
+::-moz-selection,
+*::-moz-selection {
+  background-color: hsl(var(--primary) / 0.35) !important;
+  color: inherit !important;
+}
+
+.dark ::selection,
+.dark *::selection,
+pre ::selection,
+pre *::selection,
+code ::selection,
+code *::selection {
+  background-color: hsl(var(--primary) / 0.45) !important;
+  color: inherit !important;
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* Dynamic color slider range styling */
+input[type="range"].hue-slider,
+input[type="range"].sat-slider,
+input[type="range"].light-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"].hue-slider {
+  background: linear-gradient(
+    to right,
+    hsl(0, 85%, 60%),
+    hsl(30, 85%, 60%),
+    hsl(60, 85%, 60%),
+    hsl(90, 85%, 60%),
+    hsl(120, 85%, 60%),
+    hsl(150, 85%, 60%),
+    hsl(180, 85%, 60%),
+    hsl(210, 85%, 60%),
+    hsl(240, 85%, 60%),
+    hsl(270, 85%, 60%),
+    hsl(300, 85%, 60%),
+    hsl(330, 85%, 60%),
+    hsl(360, 85%, 60%)
+  );
+}
+
+input[type="range"].hue-slider::-webkit-slider-thumb,
+input[type="range"].sat-slider::-webkit-slider-thumb,
+input[type="range"].light-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: hsl(var(--foreground));
+  border: 2px solid hsl(var(--background));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"].hue-slider::-webkit-slider-thumb:hover,
+input[type="range"].sat-slider::-webkit-slider-thumb:hover,
+input[type="range"].light-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
