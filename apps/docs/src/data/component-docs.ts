@@ -679,6 +679,12 @@ export interface AgentPlanStep {
         description: 'Callback when a command is selected via enter or mouse click.',
       },
       {
+        name: 'placement',
+        type: "'bottom-full' | 'top-full' | 'inline'",
+        default: "'bottom-full'",
+        description: 'Positioning mode: floating above input (bottom-full), below (top-full), or static relative (inline).',
+      },
+      {
         name: 'onClose',
         type: '() => void',
         required: true,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Terminal, Search, FileText, CheckSquare, Zap } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -16,6 +16,7 @@ export interface SlashCommandMenuProps {
   commands?: SlashCommand[];
   onSelectCommand: (command: SlashCommand) => void;
   onClose: () => void;
+  placement?: 'bottom-full' | 'top-full' | 'inline';
   className?: string;
 }
 
@@ -33,9 +34,11 @@ export const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
   commands = defaultCommands,
   onSelectCommand,
   onClose,
+  placement = 'bottom-full',
   className,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const filteredCommands = commands.filter(
     (c) =>
@@ -47,17 +50,43 @@ export const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
     setSelectedIndex(0);
   }, [filterText]);
 
+  // Click-outside listener without hijacking browser viewport
+  useEffect(() => {
+    if (!isOpen || placement === 'inline') return;
+
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+    };
+  }, [isOpen, placement, onClose]);
+
   if (!isOpen || filteredCommands.length === 0) return null;
+
+  const placementClasses = {
+    'bottom-full': 'absolute left-3 bottom-full mb-2 w-72 shadow-xl z-50',
+    'top-full': 'absolute left-3 top-full mt-2 w-72 shadow-xl z-50',
+    'inline': 'relative w-full shadow-sm',
+  }[placement];
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-40" onClick={onClose} />
       <motion.div
-        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+        ref={menuRef}
+        initial={{ opacity: 0, y: placement === 'bottom-full' ? 8 : -8, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+        exit={{ opacity: 0, y: placement === 'bottom-full' ? 8 : -8, scale: 0.97 }}
+        transition={{ duration: 0.15 }}
         className={cn(
-          'absolute left-3 bottom-full mb-2 w-72 rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md shadow-xl z-50 p-1.5 space-y-0.5',
+          'rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md p-1.5 space-y-0.5',
+          placementClasses,
           className
         )}
       >
@@ -80,17 +109,31 @@ export const SlashCommandMenu: React.FC<SlashCommandMenuProps> = ({
                     : 'text-foreground hover:bg-secondary'
                 )}
               >
-                <div className={cn(
-                  'flex h-5 w-5 items-center justify-center rounded-md text-xs',
-                  isSelected ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-secondary text-muted-foreground'
-                )}>
+                <div
+                  className={cn(
+                    'flex h-5 w-5 items-center justify-center rounded-md text-xs',
+                    isSelected
+                      ? 'bg-primary-foreground/20 text-primary-foreground'
+                      : 'bg-secondary text-muted-foreground'
+                  )}
+                >
                   {cmd.icon || <Sparkles className="h-3 w-3" />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className={cn("font-mono font-semibold", isSelected ? "text-primary-foreground" : "text-foreground")}>
+                  <div
+                    className={cn(
+                      'font-mono font-semibold',
+                      isSelected ? 'text-primary-foreground' : 'text-foreground'
+                    )}
+                  >
                     {cmd.name}
                   </div>
-                  <div className={cn("text-[10px] truncate", isSelected ? "text-primary-foreground/80" : "text-muted-foreground")}>
+                  <div
+                    className={cn(
+                      'text-[10px] truncate',
+                      isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'
+                    )}
+                  >
                     {cmd.description}
                   </div>
                 </div>

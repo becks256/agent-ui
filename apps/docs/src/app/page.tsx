@@ -764,10 +764,11 @@ Key improvements:
         );
       case 'SlashCommandMenu':
         return (
-          <div className="relative h-44 bg-secondary/20 rounded-xl p-2 border border-border/40">
+          <div className="max-w-md mx-auto p-1">
             <SlashCommandMenu
               isOpen={true}
               filterText=""
+              placement="inline"
               onSelectCommand={() => {}}
               onClose={() => {}}
             />
@@ -1561,10 +1562,11 @@ Key improvements:
                       <ArrowRight className="h-3 w-3" />
                     </button>
                   </div>
-                  <div className="relative h-40 bg-secondary/20 rounded-xl p-2 border border-border/40 overflow-hidden">
+                  <div className="p-1">
                     <SlashCommandMenu
                       isOpen={true}
                       filterText=""
+                      placement="inline"
                       onSelectCommand={() => {}}
                       onClose={() => {}}
                     />
