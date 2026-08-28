@@ -42,7 +42,7 @@ export const ContextTray: React.FC<ContextTrayProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 px-3 py-1.5 border-b border-border/40 bg-secondary/30 overflow-x-auto text-xs',
+        'flex items-center gap-1.5 px-3 py-1.5 border-b border-border/40 bg-secondary/30 overflow-x-auto text-xs rounded-t-2xl',
         className
       )}
     >

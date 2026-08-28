@@ -93,7 +93,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
   return (
     <div
       className={cn(
-        'relative rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md shadow-lg transition-all duration-200 focus-within:border-primary/60 focus-within:ring-1 focus-within:ring-primary/30 overflow-hidden',
+        'relative rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md shadow-lg transition-all duration-200 focus-within:border-primary/60 focus-within:ring-1 focus-within:ring-primary/30',
         className
       )}
     >
