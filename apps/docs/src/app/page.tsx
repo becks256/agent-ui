@@ -18,6 +18,7 @@ import {
   ListTodo,
   Cpu,
   ArrowRight,
+  ArrowLeft,
   Code2,
   Users,
   MessageSquare,
@@ -27,6 +28,7 @@ import {
   CheckSquare,
   Palette,
   ChevronDown,
+  ChevronUp,
   Eye,
   Sliders,
   Paintbrush,
@@ -39,6 +41,7 @@ import {
   ChevronRight,
   FileText,
   Table,
+  Grid,
 } from 'lucide-react';
 import {
   ChatContainer,
@@ -74,6 +77,44 @@ import {
   type AgentState,
 } from '@noetic-ui/react';
 import { COMPONENT_DOCS, type ComponentDoc } from '../data/component-docs';
+
+const SUITES = [
+  {
+    id: 'reasoning',
+    title: '1. Reasoning & Tools',
+    components: ['ReasoningAccordion', 'ToolCallCard', 'AgentPlanView', 'AgentSwarmView'],
+  },
+  {
+    id: 'chat',
+    title: '2. Messages & Streaming',
+    components: ['MessageBubble', 'StreamingText', 'BranchSwitcher', 'ChatContainer'],
+  },
+  {
+    id: 'input',
+    title: '3. Input & Prompting',
+    components: ['PromptInput', 'DragAndDropUploader', 'ContextTray', 'SlashCommandMenu', 'ModelSelector'],
+  },
+  {
+    id: 'hitl',
+    title: '4. Human-in-the-Loop',
+    components: ['ActionConfirmationModal', 'InteractiveQuestionCard', 'FeedbackActions'],
+  },
+  {
+    id: 'canvas',
+    title: '5. Artifacts & Canvas',
+    components: ['ArtifactWorkspace', 'CodeBlock', 'DiffViewer', 'TerminalStream'],
+  },
+  {
+    id: 'telemetry',
+    title: '6. Telemetry & States',
+    components: ['AgentStatusBadge', 'TokenUsageMeter'],
+  },
+  {
+    id: 'theme',
+    title: '7. Theme & Customization',
+    components: ['ThemeColorPicker'],
+  },
+];
 
 const mockModels: ModelInfo[] = [
   {
@@ -155,7 +196,7 @@ const mockDiff = `--- a/src/orchestrator/AgentOrchestrator.ts
      for (const step of plan.steps) {
 -      const agent = this.swarm.getAgentForRole('general');
 +      const agent = this.swarm.getAgentForRole(step.role);
-+      const execution = await agent.executeStep(step, { tools: this.tools });`;
+      const execution = await agent.executeStep(step, { tools: this.tools });`;
 
 const cliSimulations: Record<string, { cmd: string; output: string }> = {
   list: {
@@ -278,7 +319,7 @@ Updated CSS custom properties in app/globals.css`,
 export default function Home() {
   const [isDark, setIsDark] = useState(true);
   const [activeView, setActiveView] = useState<'demo' | 'components' | 'docs'>('demo');
-  const [docsSection, setDocsSection] = useState<'cli' | 'quickstart' | 'components-api' | 'theme' | 'messages'>('components-api');
+  const [docsSection, setDocsSection] = useState<'cli' | 'quickstart' | 'components-api' | 'components-directory' | 'theme' | 'messages'>('components-api');
   const [selectedDocComponent, setSelectedDocComponent] = useState<string>('ReasoningAccordion');
   const [docSearchQuery, setDocSearchQuery] = useState<string>('');
   const [activeCliDemo, setActiveCliDemo] = useState<string>('list');
@@ -677,7 +718,7 @@ Key improvements:
         );
       case 'ChatContainer':
         return (
-          <div className="h-44 border border-border/60 rounded-xl overflow-hidden">
+          <div className="h-44 border border-border/60 rounded-xl overflow-hidden bg-card">
             <ChatContainer isStreaming={false} className="p-4">
               <MessageBubble
                 message={{ id: 'c-1', role: 'user', content: 'Testing auto-scrolling viewport...' }}
@@ -854,16 +895,11 @@ Key improvements:
 
   const activeDoc: ComponentDoc = COMPONENT_DOCS[selectedDocComponent] || COMPONENT_DOCS['ReasoningAccordion'];
 
-  // Filter components for the docs sidebar
-  const filteredDocComponents = Object.values(COMPONENT_DOCS).filter((comp) => {
-    if (!docSearchQuery) return true;
-    const q = docSearchQuery.toLowerCase();
-    return (
-      comp.name.toLowerCase().includes(q) ||
-      comp.suite.toLowerCase().includes(q) ||
-      comp.description.toLowerCase().includes(q)
-    );
-  });
+  // All component names in sequence for prev/next navigation
+  const allComponentNames = SUITES.flatMap((s) => s.components);
+  const currentCompIndex = allComponentNames.indexOf(selectedDocComponent);
+  const prevComponentName = currentCompIndex > 0 ? allComponentNames[currentCompIndex - 1] : null;
+  const nextComponentName = currentCompIndex < allComponentNames.length - 1 ? allComponentNames[currentCompIndex + 1] : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -907,7 +943,10 @@ Key improvements:
           </button>
           <button
             type="button"
-            onClick={() => setActiveView('docs')}
+            onClick={() => {
+              setActiveView('docs');
+              setDocsSection('components-api');
+            }}
             className={`px-3 py-1 rounded-lg font-medium transition-all ${
               activeView === 'docs'
                 ? 'bg-card text-foreground shadow-xs'
@@ -1066,7 +1105,7 @@ Key improvements:
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                Noetic UI Component Catalog
+                Noetic UI Component Catalog (23 Components)
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
                 Interactive sandbox showcasing all 23 components across the 7 core architectural suites.
@@ -1118,20 +1157,20 @@ Key improvements:
             ))}
           </div>
 
-          {/* Suite 1: Reasoning & Tool Execution */}
+          {/* Suite 1: Reasoning & Tool Execution (4) */}
           {(componentCategory === 'all' || componentCategory === 'reasoning') && (
             <section className="space-y-4 pt-2">
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <h2 className="text-base font-semibold text-foreground">
-                    1. Reasoning & Tool Execution Suite
+                    1. Reasoning & Tool Execution Suite (4 Components)
                   </h2>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Reasoning Accordion */}
+                {/* 1. Reasoning Accordion */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -1164,7 +1203,7 @@ Key improvements:
                   </div>
                 </div>
 
-                {/* Tool Call Card */}
+                {/* 2. Tool Call Card */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -1194,7 +1233,7 @@ Key improvements:
                   </div>
                 </div>
 
-                {/* Plan View */}
+                {/* 3. AgentPlanView */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -1225,7 +1264,7 @@ Key improvements:
                   </div>
                 </div>
 
-                {/* Swarm View */}
+                {/* 4. AgentSwarmView */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -1266,18 +1305,18 @@ Key improvements:
             </section>
           )}
 
-          {/* Suite 2: Messages & Streaming */}
+          {/* Suite 2: Messages & Streaming (4) */}
           {(componentCategory === 'all' || componentCategory === 'chat') && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <MessageSquare className="h-4 w-4 text-primary" />
                 <h2 className="text-base font-semibold text-foreground">
-                  2. Messages & Streaming Suite
+                  2. Messages & Streaming Suite (4 Components)
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Message Bubble (User & Assistant) with Variant Switcher */}
+                {/* 5. MessageBubble */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
@@ -1341,62 +1380,94 @@ Key improvements:
                   </div>
                 </div>
 
-                {/* StreamingText & BranchSwitcher */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 lg:col-span-2 shadow-xs">
+                {/* 6. StreamingText */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-xs font-mono font-semibold text-foreground">
-                        StreamingText & BranchSwitcher
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => navigateToComponentDoc('StreamingText')}
-                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
-                      >
-                        <span>StreamingText Docs</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => navigateToComponentDoc('BranchSwitcher')}
-                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
-                      >
-                        <span>BranchSwitcher Docs</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </button>
-                    </div>
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      StreamingText
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('StreamingText')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="p-3.5 rounded-xl border border-border/60 bg-secondary/30 text-xs">
+                    <StreamingText
+                      content={`### Zero-Flicker Streaming
+- Smooth token accumulation without layout shifts.
+- Inline code: \`import { useChat } from '@noetic-ui/react'\``}
+                      isStreaming={true}
+                    />
+                  </div>
+                </div>
+
+                {/* 7. BranchSwitcher */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      BranchSwitcher
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('BranchSwitcher')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/20 border border-border/40">
+                    <span className="text-xs text-muted-foreground font-mono">Variant Navigator:</span>
                     <BranchSwitcher
                       currentIndex={sampleBranchIndex}
                       totalBranches={4}
                       onSelectBranch={setSampleBranchIndex}
                     />
                   </div>
-                  <div className="p-3.5 rounded-xl border border-border/60 bg-secondary/30 text-xs">
-                    <StreamingText
-                      content={`### Streaming Markdown Engine
-- **Zero-flicker** re-rendering during active SSE token streams
-- Integrated inline code formatting: \`import { useChat } from '@noetic-ui/react'\`
-- Support for ordered/unordered task items and headers.`}
-                      isStreaming={true}
-                    />
+                </div>
+
+                {/* 8. ChatContainer */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      ChatContainer
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('ChatContainer')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="h-36 border border-border/60 rounded-xl overflow-hidden bg-secondary/10">
+                    <ChatContainer isStreaming={false} className="p-3 space-y-2">
+                      <MessageBubble message={{ id: 'c-1', role: 'user', content: 'Testing conversation viewport anchoring...' }} />
+                      <MessageBubble message={{ id: 'c-2', role: 'assistant', content: 'ChatContainer ensures stick-to-bottom scroll during token streaming.' }} />
+                    </ChatContainer>
                   </div>
                 </div>
               </div>
             </section>
           )}
 
-          {/* Suite 3: Input & Multimodal Prompting */}
+          {/* Suite 3: Input & Multimodal Prompting (5) */}
           {(componentCategory === 'all' || componentCategory === 'input') && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <SlidersHorizontal className="h-4 w-4 text-primary" />
                 <h2 className="text-base font-semibold text-foreground">
-                  3. Input & Multimodal Prompting Suite
+                  3. Input & Multimodal Prompting Suite (5 Components)
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* PromptInput */}
+                {/* 9. PromptInput */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1426,7 +1497,7 @@ Key improvements:
                   />
                 </div>
 
-                {/* DragAndDropUploader */}
+                {/* 10. DragAndDropUploader */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1450,7 +1521,7 @@ Key improvements:
                   />
                 </div>
 
-                {/* ContextTray Standalone */}
+                {/* 11. ContextTray */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1475,8 +1546,33 @@ Key improvements:
                   />
                 </div>
 
-                {/* ModelSelector Standalone */}
+                {/* 12. SlashCommandMenu */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      SlashCommandMenu
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('SlashCommandMenu')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="relative h-40 bg-secondary/20 rounded-xl p-2 border border-border/40 overflow-hidden">
+                    <SlashCommandMenu
+                      isOpen={true}
+                      filterText=""
+                      onSelectCommand={() => {}}
+                      onClose={() => {}}
+                    />
+                  </div>
+                </div>
+
+                {/* 13. ModelSelector */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ModelSelector
@@ -1505,18 +1601,18 @@ Key improvements:
             </section>
           )}
 
-          {/* Suite 4: Human-in-the-Loop & HITL Controls */}
+          {/* Suite 4: Human-in-the-Loop & HITL Controls (3) */}
           {(componentCategory === 'all' || componentCategory === 'hitl') && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <ShieldAlert className="h-4 w-4 text-primary" />
                 <h2 className="text-base font-semibold text-foreground">
-                  4. Human-in-the-Loop (HITL) Controls Suite
+                  4. Human-in-the-Loop (HITL) Controls Suite (3 Components)
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Interactive Question Card */}
+                {/* 14. InteractiveQuestionCard */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1551,112 +1647,93 @@ Key improvements:
                   />
                 </div>
 
-                {/* FeedbackActions & ActionConfirmationModal Preview */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xs font-mono font-semibold text-foreground">
-                        FeedbackActions
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => navigateToComponentDoc('FeedbackActions')}
-                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
-                      >
-                        <span>View Props & Docs</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </button>
-                    </div>
+                {/* 15. FeedbackActions */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      FeedbackActions
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('FeedbackActions')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="p-4 bg-secondary/30 rounded-xl border border-border/40">
                     <FeedbackActions
                       onFeedback={() => {}}
                       onCopy={() => {}}
                       onRetry={() => {}}
                     />
                   </div>
+                </div>
 
-                  <div className="pt-3 border-t border-border/40">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xs font-mono font-semibold text-foreground">
-                        ActionConfirmationModal
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => navigateToComponentDoc('ActionConfirmationModal')}
-                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
-                      >
-                        <span>View Props & Docs</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </button>
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-                      Safety gatekeeper modal for sensitive shell commands, file overwrites, and DB migrations.
-                    </p>
+                {/* 16. ActionConfirmationModal */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 lg:col-span-2 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      ActionConfirmationModal
+                    </h3>
                     <button
                       type="button"
-                      onClick={() => setIsApprovalOpen(true)}
-                      className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-amber-950 hover:bg-amber-400 transition-colors shadow-xs"
+                      onClick={() => navigateToComponentDoc('ActionConfirmationModal')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
-                      Trigger Approval Modal
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
                     </button>
                   </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Safety gatekeeper modal for sensitive shell commands, file overwrites, and DB migrations.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setIsApprovalOpen(true)}
+                    className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-amber-500 text-amber-950 hover:bg-amber-400 transition-colors shadow-xs"
+                  >
+                    Trigger Approval Modal
+                  </button>
                 </div>
               </div>
             </section>
           )}
 
-          {/* Suite 5: Artifacts & Canvas */}
+          {/* Suite 5: Artifacts & Canvas (4) */}
           {(componentCategory === 'all' || componentCategory === 'canvas') && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Layers className="h-4 w-4 text-primary" />
                 <h2 className="text-base font-semibold text-foreground">
-                  5. Artifacts & Canvas Suite
+                  5. Artifacts & Canvas Suite (4 Components)
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Terminal Stream */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      TerminalStream
-                    </h3>
-                    <button
-                      type="button"
-                      onClick={() => navigateToComponentDoc('TerminalStream')}
-                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>View Props & Docs</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </button>
-                  </div>
-                  <TerminalStream
-                    command="pnpm test"
-                    output={`PASS packages/react/src/components/reasoning/ReasoningAccordion.test.tsx\nPASS packages/react/src/components/chat/MessageBubble.test.tsx\nTests:  14 passed, 14 total\nTime:   1.24s`}
-                    status="completed"
-                  />
-                </div>
-
-                {/* Diff Viewer */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      DiffViewer
-                    </h3>
-                    <button
-                      type="button"
-                      onClick={() => navigateToComponentDoc('DiffViewer')}
-                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
-                    >
-                      <span>View Props & Docs</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </button>
-                  </div>
-                  <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />
-                </div>
-
-                {/* Code Block */}
+                {/* 17. ArtifactWorkspace */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      ArtifactWorkspace
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('ArtifactWorkspace')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <div className="h-60 rounded-xl border border-border/60 overflow-hidden">
+                    <ArtifactWorkspace artifact={mockArtifact} />
+                  </div>
+                </div>
+
+                {/* 18. CodeBlock */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       CodeBlock
@@ -1676,22 +1753,62 @@ Key improvements:
                     code={mockArtifact.content}
                   />
                 </div>
+
+                {/* 19. DiffViewer */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      DiffViewer
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('DiffViewer')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />
+                </div>
+
+                {/* 20. TerminalStream */}
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      TerminalStream
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('TerminalStream')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <TerminalStream
+                    command="pnpm test"
+                    output={`PASS packages/react/src/components/reasoning/ReasoningAccordion.test.tsx\nPASS packages/react/src/components/chat/MessageBubble.test.tsx\nTests:  14 passed, 14 total\nTime:   1.24s`}
+                    status="completed"
+                  />
+                </div>
               </div>
             </section>
           )}
 
-          {/* Suite 6: Telemetry & Live States */}
+          {/* Suite 6: Telemetry & Live States (2) */}
           {(componentCategory === 'all' || componentCategory === 'telemetry') && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Activity className="h-4 w-4 text-primary" />
                 <h2 className="text-base font-semibold text-foreground">
-                  6. Telemetry & Live Agent States Suite
+                  6. Telemetry & Live Agent States Suite (2 Components)
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* AgentStatusBadge States */}
+                {/* 21. AgentStatusBadge */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1715,7 +1832,7 @@ Key improvements:
                   </div>
                 </div>
 
-                {/* TokenUsageMeter */}
+                {/* 22. TokenUsageMeter */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1745,18 +1862,18 @@ Key improvements:
             </section>
           )}
 
-          {/* Suite 7: Theme & Customization Suite */}
+          {/* Suite 7: Theme & Customization Suite (1) */}
           {(componentCategory === 'all' || componentCategory === 'theme') && (
             <section className="space-y-4 pt-4 pb-12">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Paintbrush className="h-4 w-4 text-primary" />
                 <h2 className="text-base font-semibold text-foreground">
-                  7. Theme & Customization Suite (Reusable)
+                  7. Theme & Customization Suite (1 Component)
                 </h2>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Embedded Inline ThemeColorPicker */}
+                {/* 23. ThemeColorPicker */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1782,7 +1899,6 @@ Key improvements:
                   />
                 </div>
 
-                {/* Popover Mode Trigger & Live Information */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1799,22 +1915,20 @@ Key improvements:
                   </div>
 
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Compact button trigger that opens a floating backdrop-blurred studio popover with live WCAG 2.1 contrast calculations, Hue/Saturation/Lightness range sliders, preset palettes, and clipboard CSS export.
+                    Backdrop-blurred color studio popover with automated WCAG contrast calculation and continuous HSL sliders.
                   </p>
 
                   <div className="p-4 rounded-xl bg-secondary/30 border border-border/40 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ThemeColorPicker
-                        mode="popover"
-                        hue={primaryHue}
-                        saturation={primarySat}
-                        lightness={primaryLight}
-                        onChangeHsl={updateThemeColor}
-                        messageVariant={messageVariant}
-                        onChangeMessageVariant={setMessageVariant}
-                        triggerLabel="Open Color Studio"
-                      />
-                    </div>
+                    <ThemeColorPicker
+                      mode="popover"
+                      hue={primaryHue}
+                      saturation={primarySat}
+                      lightness={primaryLight}
+                      onChangeHsl={updateThemeColor}
+                      messageVariant={messageVariant}
+                      onChangeMessageVariant={setMessageVariant}
+                      triggerLabel="Open Color Studio"
+                    />
                     <span className="text-xs font-mono text-muted-foreground">
                       Contrast: <strong className="text-foreground">{metrics.ratio}:1</strong>
                     </span>
@@ -1830,10 +1944,10 @@ Key improvements:
       {activeView === 'docs' && (
         <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row overflow-hidden">
           {/* Docs Left Sub-Navigation Sidebar */}
-          <aside className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-4 overflow-y-auto max-h-[calc(100vh-57px)]">
+          <aside className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-5 overflow-y-auto max-h-[calc(100vh-57px)]">
             <div className="space-y-1">
-              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
-                Overview & Setup
+              <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
+                Overview & Guides
               </div>
 
               <button
@@ -1889,54 +2003,92 @@ Key improvements:
               </button>
             </div>
 
-            {/* Component API Explorer Section */}
-            <div className="space-y-2 pt-2 border-t border-border/40">
+            {/* Component API Directory Link & Suites Navigation */}
+            <div className="space-y-3 pt-2 border-t border-border/40">
               <div className="flex items-center justify-between px-3">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
-                  Component API & Props (23)
+                  Components & API (23)
                 </span>
                 <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-primary/10 text-primary font-bold">
                   23
                 </span>
               </div>
 
+              {/* Master Directory Link */}
+              <button
+                type="button"
+                onClick={() => setDocsSection('components-directory')}
+                className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  docsSection === 'components-directory'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                }`}
+              >
+                <Grid className="h-3.5 w-3.5" />
+                <span>All 23 Components Directory</span>
+              </button>
+
               {/* Search filter for components */}
               <div className="relative px-1">
                 <Search className="absolute left-3.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Filter components..."
+                  placeholder="Filter 23 components..."
                   value={docSearchQuery}
                   onChange={(e) => setDocSearchQuery(e.target.value)}
                   className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-card border border-border/60 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
-              {/* Categorized List of Components */}
-              <div className="space-y-1 max-h-96 overflow-y-auto pr-1">
-                {filteredDocComponents.map((comp) => {
-                  const isSelected = docsSection === 'components-api' && selectedDocComponent === comp.name;
+              {/* 7 Grouped Suites in Sidebar */}
+              <div className="space-y-4 pt-1">
+                {SUITES.map((suite) => {
+                  const filteredCompNames = suite.components.filter((cName) => {
+                    if (!docSearchQuery) return true;
+                    const compDoc = COMPONENT_DOCS[cName];
+                    const q = docSearchQuery.toLowerCase();
+                    return (
+                      cName.toLowerCase().includes(q) ||
+                      (compDoc && compDoc.description.toLowerCase().includes(q))
+                    );
+                  });
+
+                  if (filteredCompNames.length === 0) return null;
+
                   return (
-                    <button
-                      key={comp.name}
-                      type="button"
-                      onClick={() => {
-                        setSelectedDocComponent(comp.name);
-                        setDocsSection('components-api');
-                      }}
-                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all ${
-                        isSelected
-                          ? 'bg-primary text-primary-foreground font-semibold shadow-2xs'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
-                      }`}
-                    >
-                      <span className="truncate">{comp.name}</span>
-                      <span className={`text-[9px] font-mono px-1 rounded ${
-                        isSelected ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-muted-foreground/80'
-                      }`}>
-                        {comp.suiteId}
-                      </span>
-                    </button>
+                    <div key={suite.id} className="space-y-1">
+                      <div className="px-3 text-[10px] font-semibold text-muted-foreground/90 flex items-center justify-between">
+                        <span>{suite.title}</span>
+                        <span className="font-mono text-[9px] text-muted-foreground/60">
+                          {filteredCompNames.length}
+                        </span>
+                      </div>
+
+                      <div className="space-y-0.5 pl-1">
+                        {filteredCompNames.map((compName) => {
+                          const isSelected =
+                            docsSection === 'components-api' && selectedDocComponent === compName;
+                          return (
+                            <button
+                              key={compName}
+                              type="button"
+                              onClick={() => {
+                                setSelectedDocComponent(compName);
+                                setDocsSection('components-api');
+                              }}
+                              className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all ${
+                                isSelected
+                                  ? 'bg-primary text-primary-foreground font-semibold shadow-2xs'
+                                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                              }`}
+                            >
+                              <span className="truncate">{compName}</span>
+                              <ChevronRight className={`h-3 w-3 ${isSelected ? 'opacity-100' : 'opacity-40'}`} />
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
@@ -1945,7 +2097,79 @@ Key improvements:
 
           {/* Docs Right Content Area */}
           <main className="flex-1 p-6 md:p-10 overflow-y-auto space-y-10">
-            {/* 1. Component API Reference & Props Mapping */}
+            {/* 1. All 23 Components Directory Overview View */}
+            {docsSection === 'components-directory' && (
+              <div className="space-y-8 max-w-4xl">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-mono font-semibold mb-3">
+                    <Grid className="h-3 w-3" />
+                    <span>Complete API Reference</span>
+                  </div>
+                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                    All 23 Components Directory
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                    Explore props, TypeScript type definitions, live sandbox previews, and copyable usage snippets for all 23 components across the 7 architectural suites.
+                  </p>
+                </div>
+
+                <div className="space-y-8">
+                  {SUITES.map((suite) => (
+                    <div key={suite.id} className="space-y-3">
+                      <h2 className="text-base font-bold text-foreground flex items-center gap-2 border-b border-border/60 pb-2">
+                        <span className="text-primary font-mono text-sm">{suite.title}</span>
+                      </h2>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {suite.components.map((compName) => {
+                          const doc = COMPONENT_DOCS[compName];
+                          if (!doc) return null;
+                          return (
+                            <div
+                              key={compName}
+                              className="p-4 rounded-xl border border-border/70 bg-card hover:border-primary/40 transition-all flex flex-col justify-between space-y-3 shadow-2xs"
+                            >
+                              <div className="space-y-1.5">
+                                <div className="flex items-center justify-between">
+                                  <h3 className="font-mono font-bold text-sm text-foreground">
+                                    {doc.name}
+                                  </h3>
+                                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
+                                    {doc.props.length} props
+                                  </span>
+                                </div>
+                                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                                  {doc.description}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                                <code className="text-[10px] font-mono text-muted-foreground truncate max-w-[180px]">
+                                  {doc.cliCommand}
+                                </code>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedDocComponent(doc.name);
+                                    setDocsSection('components-api');
+                                  }}
+                                  className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                                >
+                                  <span>View API & Props</span>
+                                  <ArrowRight className="h-3 w-3" />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 2. Component API Reference & Props Mapping */}
             {docsSection === 'components-api' && activeDoc && (
               <div className="space-y-8 max-w-4xl">
                 {/* Header info */}
@@ -2019,7 +2243,7 @@ Key improvements:
                 <div className="space-y-3 pt-4">
                   <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <Table className="h-4 w-4 text-primary" />
-                    <span>Props & API Reference</span>
+                    <span>Props & API Reference ({activeDoc.props.length})</span>
                   </h2>
 
                   <div className="overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-sm">
@@ -2102,10 +2326,41 @@ Key improvements:
                     </div>
                   )}
                 </div>
+
+                {/* Prev / Next Component Pagination Bar */}
+                <div className="flex items-center justify-between pt-6 border-t border-border/60">
+                  {prevComponentName ? (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDocComponent(prevComponentName)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-left"
+                    >
+                      <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" />
+                      <div>
+                        <span className="text-[10px] text-muted-foreground block font-mono">Previous</span>
+                        <span className="font-semibold text-foreground">{prevComponentName}</span>
+                      </div>
+                    </button>
+                  ) : <div />}
+
+                  {nextComponentName ? (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDocComponent(nextComponentName)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-right"
+                    >
+                      <div>
+                        <span className="text-[10px] text-muted-foreground block font-mono">Next</span>
+                        <span className="font-semibold text-foreground">{nextComponentName}</span>
+                      </div>
+                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                    </button>
+                  ) : <div />}
+                </div>
               </div>
             )}
 
-            {/* 2. CLI Reference & Interactive Playground */}
+            {/* 3. CLI Reference & Interactive Playground */}
             {docsSection === 'cli' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
@@ -2272,7 +2527,7 @@ npx @noetic-ui/cli theme cyan`}
               </div>
             )}
 
-            {/* 3. Quickstart & Package Setup */}
+            {/* 4. Quickstart & Package Setup */}
             {docsSection === 'quickstart' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
@@ -2322,7 +2577,7 @@ export function MyAgentApp() {
               </div>
             )}
 
-            {/* 4. Theme & Contrast Engine */}
+            {/* 5. Theme & Contrast Engine */}
             {docsSection === 'theme' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
@@ -2368,7 +2623,7 @@ export function Header() {
               </div>
             )}
 
-            {/* 5. Message Bubble Contrast Modes */}
+            {/* 6. Message Bubble Contrast Modes */}
             {docsSection === 'messages' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
