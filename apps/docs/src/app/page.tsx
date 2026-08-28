@@ -34,6 +34,11 @@ import {
   Wrench,
   HelpCircle,
   Settings,
+  Search,
+  ExternalLink,
+  ChevronRight,
+  FileText,
+  Table,
 } from 'lucide-react';
 import {
   ChatContainer,
@@ -68,6 +73,7 @@ import {
   type AgentPlan,
   type AgentState,
 } from '@noetic-ui/react';
+import { COMPONENT_DOCS, type ComponentDoc } from '../data/component-docs';
 
 const mockModels: ModelInfo[] = [
   {
@@ -272,10 +278,14 @@ Updated CSS custom properties in app/globals.css`,
 export default function Home() {
   const [isDark, setIsDark] = useState(true);
   const [activeView, setActiveView] = useState<'demo' | 'components' | 'docs'>('demo');
-  const [docsSection, setDocsSection] = useState<'cli' | 'quickstart' | 'theme' | 'messages'>('cli');
+  const [docsSection, setDocsSection] = useState<'cli' | 'quickstart' | 'components-api' | 'theme' | 'messages'>('components-api');
+  const [selectedDocComponent, setSelectedDocComponent] = useState<string>('ReasoningAccordion');
+  const [docSearchQuery, setDocSearchQuery] = useState<string>('');
   const [activeCliDemo, setActiveCliDemo] = useState<string>('list');
   const [componentCategory, setComponentCategory] = useState<string>('all');
   const [copiedInstall, setCopiedInstall] = useState(false);
+  const [copiedDocCmd, setCopiedDocCmd] = useState(false);
+  const [copiedDocImport, setCopiedDocImport] = useState(false);
   const [selectedModel, setSelectedModel] = useState<ModelInfo>(mockModels[0]);
   const [promptText, setPromptText] = useState('');
   const [isSimulating, setIsSimulating] = useState(false);
@@ -508,6 +518,18 @@ Key improvements:
     setTimeout(() => setCopiedInstall(false), 2000);
   };
 
+  const copyText = (text: string, setFn: (val: boolean) => void) => {
+    navigator.clipboard.writeText(text);
+    setFn(true);
+    setTimeout(() => setFn(false), 2000);
+  };
+
+  const navigateToComponentDoc = (componentName: string) => {
+    setSelectedDocComponent(componentName);
+    setDocsSection('components-api');
+    setActiveView('docs');
+  };
+
   const toggleTheme = () => {
     setIsDark(!isDark);
     if (typeof document !== 'undefined') {
@@ -526,6 +548,323 @@ Key improvements:
     { id: 'theme', label: '7. Theme & Customization (1)' },
   ];
 
+  // Helper to render live component previews inside the Component API Reference page
+  const renderLiveComponentPreview = (name: string) => {
+    switch (name) {
+      case 'ReasoningAccordion':
+        return (
+          <ReasoningAccordion
+            defaultExpanded={true}
+            thought={{
+              id: 'th-demo',
+              title: 'Deconstructing workspace graph & bundling strategy',
+              content: `1. Verified workspace dependencies across 3 packages.\n2. Checking tsup.config.ts for ESM/CJS dual output.\n3. Identified optimization: externalize icons and isolate sourcemaps.`,
+              durationMs: 3840,
+              tokens: 412,
+              steps: [
+                { id: 's1', title: 'Parse monorepo dependency graph', status: 'completed' },
+                { id: 's2', title: 'Analyze rollup bundle chunking', status: 'completed' },
+                { id: 's3', title: 'Verify exports contract', status: 'completed' },
+              ],
+            }}
+          />
+        );
+      case 'ToolCallCard':
+        return (
+          <ToolCallCard
+            defaultExpanded={true}
+            toolCall={{
+              id: 'tc-demo',
+              name: 'bash',
+              args: { command: 'pnpm run build --filter @noetic-ui/react' },
+              result: `CJS dist/index.js     48.2 KB\nESM dist/index.mjs    42.8 KB\nDTS dist/index.d.ts   14.1 KB\n✔ Build completed in 242ms`,
+              status: 'success',
+              durationMs: 242,
+            }}
+          />
+        );
+      case 'AgentPlanView':
+        return (
+          <AgentPlanView
+            plan={{
+              id: 'p-demo',
+              title: 'Refactor Package Exports & Optimize Bundle',
+              status: 'running',
+              steps: [
+                { id: '1', title: 'Audit bundle dependencies', status: 'completed' },
+                {
+                  id: '2',
+                  title: 'Configure tsup build targets for modern ESM',
+                  status: 'in_progress',
+                  subtasks: [
+                    { id: '2-1', title: 'Inject "use client" directives', status: 'completed' },
+                    { id: '2-2', title: 'Enable DTS rollup optimization', status: 'in_progress' },
+                  ],
+                },
+                { id: '3', title: 'Run automated typecheck verification', status: 'pending' },
+              ],
+            }}
+          />
+        );
+      case 'AgentSwarmView':
+        return (
+          <AgentSwarmView
+            agents={[
+              {
+                id: 'a1',
+                name: 'Orchestrator',
+                role: 'Task Coordinator',
+                status: 'working',
+                currentTask: 'Delegating code review to Coder agent...',
+              },
+              {
+                id: 'a2',
+                name: 'Code Synthesizer',
+                role: 'TypeScript Specialist',
+                status: 'working',
+                currentTask: 'Writing unit test suites...',
+              },
+            ]}
+            activeAgentId="a1"
+          />
+        );
+      case 'MessageBubble':
+        return (
+          <div className="space-y-3">
+            <MessageBubble
+              variant={messageVariant}
+              message={{
+                id: 'msg-u-prev',
+                role: 'user',
+                content: 'Can you optimize our React 19 server actions in Next.js 15?',
+              }}
+            />
+            <MessageBubble
+              variant={messageVariant}
+              message={{
+                id: 'msg-a-prev',
+                role: 'assistant',
+                name: 'Claude 3.5 Sonnet',
+                model: mockModels[0],
+                latencyMs: 840,
+                tokens: { total: 420 },
+                content: 'Collocating mutations with `useActionState` and optimistic UI guarantees seamless zero-flicker transitions.',
+              }}
+            />
+          </div>
+        );
+      case 'StreamingText':
+        return (
+          <div className="p-3.5 rounded-xl border border-border/60 bg-secondary/30 text-xs">
+            <StreamingText
+              content={`### Zero-Flicker Streaming
+- Smooth token accumulation without layout shifts.
+- Real-time inline code formatting: \`import { useChat } from '@noetic-ui/react'\``}
+              isStreaming={true}
+            />
+          </div>
+        );
+      case 'BranchSwitcher':
+        return (
+          <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/60">
+            <span className="text-xs text-muted-foreground font-mono">Variant Navigator:</span>
+            <BranchSwitcher
+              currentIndex={sampleBranchIndex}
+              totalBranches={4}
+              onSelectBranch={setSampleBranchIndex}
+            />
+          </div>
+        );
+      case 'ChatContainer':
+        return (
+          <div className="h-44 border border-border/60 rounded-xl overflow-hidden">
+            <ChatContainer isStreaming={false} className="p-4">
+              <MessageBubble
+                message={{ id: 'c-1', role: 'user', content: 'Testing auto-scrolling viewport...' }}
+              />
+              <MessageBubble
+                message={{ id: 'c-2', role: 'assistant', content: 'ChatContainer automatically maintains scroll anchoring!' }}
+              />
+            </ChatContainer>
+          </div>
+        );
+      case 'PromptInput':
+        return (
+          <PromptInput
+            value={sampleInputText}
+            onChange={setSampleInputText}
+            onSubmit={() => {}}
+            models={mockModels}
+            selectedModel={selectedModel}
+            onSelectModel={setSelectedModel}
+            contextItems={[{ id: '1', label: 'AgentOrchestrator.ts', type: 'file' }]}
+          />
+        );
+      case 'DragAndDropUploader':
+        return (
+          <DragAndDropUploader
+            attachments={sampleAttachments}
+            onUploadFiles={() => {}}
+            onRemoveAttachment={(id) =>
+              setSampleAttachments((prev) => prev.filter((a) => a.id !== id))
+            }
+          />
+        );
+      case 'ContextTray':
+        return (
+          <ContextTray
+            items={[
+              { id: '1', label: 'AgentOrchestrator.ts', type: 'file' },
+              { id: '2', label: 'UserPreferences', type: 'memory' },
+              { id: '3', label: 'Postgres DB', type: 'database' },
+            ]}
+            onRemoveItem={() => {}}
+          />
+        );
+      case 'SlashCommandMenu':
+        return (
+          <div className="relative h-44 bg-secondary/20 rounded-xl p-2 border border-border/40">
+            <SlashCommandMenu
+              isOpen={true}
+              filterText=""
+              onSelectCommand={() => {}}
+              onClose={() => {}}
+            />
+          </div>
+        );
+      case 'ModelSelector':
+        return (
+          <div className="flex items-center gap-3">
+            <ModelSelector
+              models={mockModels}
+              selectedModel={selectedModel}
+              onSelectModel={setSelectedModel}
+            />
+            <span className="text-xs text-muted-foreground">
+              Selected: <strong className="text-foreground">{selectedModel.name}</strong>
+            </span>
+          </div>
+        );
+      case 'ActionConfirmationModal':
+        return (
+          <div className="p-4 rounded-xl bg-secondary/30 border border-border/40 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold text-foreground">Safety Gatekeeper Modal</p>
+              <p className="text-[11px] text-muted-foreground">Intercepts destructive commands and DB mutations.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsApprovalOpen(true)}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 text-amber-950 hover:bg-amber-400 transition-colors shadow-xs"
+            >
+              Preview Modal
+            </button>
+          </div>
+        );
+      case 'InteractiveQuestionCard':
+        return (
+          <InteractiveQuestionCard
+            question="Which bundling strategy would you like configured?"
+            description="Agent detected multiple valid bundlers in workspace."
+            options={[
+              {
+                id: 'tsup',
+                label: 'tsup (Recommended)',
+                description: 'Fast, zero-config bundler powered by esbuild with dual ESM/CJS output',
+                isRecommended: true,
+              },
+              {
+                id: 'rollup',
+                label: 'Rollup',
+                description: 'Classic plugin-based ecosystem for complex tree-shaking',
+              },
+            ]}
+            onSubmit={() => {}}
+          />
+        );
+      case 'FeedbackActions':
+        return (
+          <div className="p-3 bg-secondary/30 rounded-xl border border-border/40">
+            <FeedbackActions
+              onFeedback={() => {}}
+              onCopy={() => {}}
+              onRetry={() => {}}
+            />
+          </div>
+        );
+      case 'ArtifactWorkspace':
+        return (
+          <div className="h-64 rounded-xl border border-border/60 overflow-hidden">
+            <ArtifactWorkspace artifact={mockArtifact} />
+          </div>
+        );
+      case 'CodeBlock':
+        return (
+          <CodeBlock
+            filename="AgentOrchestrator.ts"
+            language="typescript"
+            code={`import { AgentSwarm } from '@noetic-ui/react';\n\nexport const orchestrator = new AgentSwarm();`}
+          />
+        );
+      case 'DiffViewer':
+        return <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />;
+      case 'TerminalStream':
+        return (
+          <TerminalStream
+            command="pnpm test"
+            output={`PASS packages/react/src/components/reasoning/ReasoningAccordion.test.tsx\nPASS packages/react/src/components/chat/MessageBubble.test.tsx\n\nTests:  28 passed, 28 total\nTime:   1.24s`}
+            status="completed"
+          />
+        );
+      case 'AgentStatusBadge':
+        return (
+          <div className="flex flex-wrap gap-2">
+            {(['idle', 'thinking', 'searching', 'coding', 'awaiting_approval', 'completed'] as AgentState[]).map(
+              (state) => (
+                <AgentStatusBadge key={state} state={state} />
+              )
+            )}
+          </div>
+        );
+      case 'TokenUsageMeter':
+        return (
+          <div className="space-y-3">
+            <TokenUsageMeter
+              usage={{ prompt: 14200, completion: 4800, total: 19000, costUsd: 0.057 }}
+              maxTokens={128000}
+            />
+          </div>
+        );
+      case 'ThemeColorPicker':
+        return (
+          <ThemeColorPicker
+            mode="inline"
+            hue={primaryHue}
+            saturation={primarySat}
+            lightness={primaryLight}
+            onChangeHsl={updateThemeColor}
+            messageVariant={messageVariant}
+            onChangeMessageVariant={setMessageVariant}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const activeDoc: ComponentDoc = COMPONENT_DOCS[selectedDocComponent] || COMPONENT_DOCS['ReasoningAccordion'];
+
+  // Filter components for the docs sidebar
+  const filteredDocComponents = Object.values(COMPONENT_DOCS).filter((comp) => {
+    if (!docSearchQuery) return true;
+    const q = docSearchQuery.toLowerCase();
+    return (
+      comp.name.toLowerCase().includes(q) ||
+      comp.suite.toLowerCase().includes(q) ||
+      comp.description.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* Top Navigation Header */}
@@ -537,7 +876,7 @@ Key improvements:
           <div className="flex items-center gap-2">
             <span className="font-bold text-sm tracking-tight">Noetic UI</span>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border/80 font-bold transition-colors">
-              v0.1.0-alpha
+              v0.1.1
             </span>
           </div>
         </div>
@@ -575,7 +914,7 @@ Key improvements:
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Docs & CLI
+            Docs & API Reference
           </button>
         </div>
 
@@ -616,7 +955,7 @@ Key improvements:
         </div>
       </header>
 
-      {/* Main Content Body */}
+      {/* Main Content Body: 1. Demo View */}
       {activeView === 'demo' && (
         <main className="flex-1 flex flex-col lg:flex-row h-[calc(100vh-57px)] overflow-hidden">
           {/* Left Column: Chat Conversation Stream */}
@@ -720,7 +1059,7 @@ Key improvements:
         </main>
       )}
 
-      {/* Comprehensive Component Suite Gallery View */}
+      {/* Main Content Body: 2. Comprehensive Component Suite Gallery View */}
       {activeView === 'components' && (
         <div className="flex-1 p-6 sm:p-10 max-w-7xl mx-auto w-full space-y-8 overflow-y-auto">
           {/* Header & Theme Customization Bar */}
@@ -782,118 +1121,146 @@ Key improvements:
           {/* Suite 1: Reasoning & Tool Execution */}
           {(componentCategory === 'all' || componentCategory === 'reasoning') && (
             <section className="space-y-4 pt-2">
-              <div className="flex items-center gap-2 border-b border-border/60 pb-2">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
-                  1. Reasoning & Tool Execution Suite
-                </h2>
+              <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  <h2 className="text-base font-semibold text-foreground">
+                    1. Reasoning & Tool Execution Suite
+                  </h2>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Reasoning Accordion */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      ReasoningAccordion
-                    </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      Chain of Thought
-                    </span>
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        ReasoningAccordion
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('ReasoningAccordion')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>View Props & Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <ReasoningAccordion
+                      defaultExpanded={true}
+                      thought={{
+                        id: 'sample-th',
+                        title: 'Synthesizing Multi-Agent Strategy',
+                        content: `1. Verified workspace dependencies.\n2. Formulated task DAG for parallel tool dispatch.\n3. Validated schema contracts across subagents.`,
+                        durationMs: 3200,
+                        tokens: 284,
+                        steps: [
+                          { id: 's1', title: 'Verify workspace contracts', status: 'completed' },
+                          { id: 's2', title: 'Formulate execution DAG', status: 'completed' },
+                        ],
+                      }}
+                    />
                   </div>
-                  <ReasoningAccordion
-                    defaultExpanded={true}
-                    thought={{
-                      id: 'sample-th',
-                      title: 'Synthesizing Multi-Agent Strategy',
-                      content: `1. Verified workspace dependencies.
-2. Formulated task DAG for parallel tool dispatch.
-3. Validated schema contracts across subagents.`,
-                      durationMs: 3200,
-                      tokens: 284,
-                      steps: [
-                        { id: 's1', title: 'Verify workspace contracts', status: 'completed' },
-                        { id: 's2', title: 'Formulate execution DAG', status: 'completed' },
-                      ],
-                    }}
-                  />
                 </div>
 
                 {/* Tool Call Card */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      ToolCallCard
-                    </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      Execution Inspector
-                    </span>
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        ToolCallCard
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('ToolCallCard')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>View Props & Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <ToolCallCard
+                      defaultExpanded={true}
+                      toolCall={{
+                        id: 'tc-demo',
+                        name: 'bash',
+                        args: { command: 'git status --short' },
+                        result: 'M packages/react/src/index.ts\nM packages/react/package.json',
+                        status: 'success',
+                        durationMs: 142,
+                      }}
+                    />
                   </div>
-                  <ToolCallCard
-                    defaultExpanded={true}
-                    toolCall={{
-                      id: 'tc-demo',
-                      name: 'bash',
-                      args: { command: 'git status --short' },
-                      result: 'M packages/react/src/index.ts\nM packages/react/package.json',
-                      status: 'success',
-                      durationMs: 142,
-                    }}
-                  />
                 </div>
 
                 {/* Plan View */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      AgentPlanView
-                    </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      Hierarchical Task DAG
-                    </span>
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        AgentPlanView
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('AgentPlanView')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>View Props & Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <AgentPlanView
+                      plan={{
+                        id: 'sample-plan',
+                        title: 'Refactor Monorepo Structure',
+                        status: 'running',
+                        steps: [
+                          { id: '1', title: 'Analyze existing dependencies', status: 'completed' },
+                          { id: '2', title: 'Extract shared Tailwind preset', status: 'in_progress' },
+                          { id: '3', title: 'Deploy Storybook documentation', status: 'pending' },
+                        ],
+                      }}
+                    />
                   </div>
-                  <AgentPlanView
-                    plan={{
-                      id: 'sample-plan',
-                      title: 'Refactor Monorepo Structure',
-                      status: 'running',
-                      steps: [
-                        { id: '1', title: 'Analyze existing dependencies', status: 'completed' },
-                        { id: '2', title: 'Extract shared Tailwind preset', status: 'in_progress' },
-                        { id: '3', title: 'Deploy Storybook documentation', status: 'pending' },
-                      ],
-                    }}
-                  />
                 </div>
 
                 {/* Swarm View */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      AgentSwarmView
-                    </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      Multi-Agent Orchestration
-                    </span>
+                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        AgentSwarmView
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('AgentSwarmView')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>View Props & Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <AgentSwarmView
+                      agents={[
+                        {
+                          id: 'a1',
+                          name: 'Orchestrator',
+                          role: 'Task Coordinator',
+                          status: 'working',
+                          currentTask: 'Delegating code review to Coder agent...',
+                        },
+                        {
+                          id: 'a2',
+                          name: 'Code Synthesizer',
+                          role: 'TypeScript Specialist',
+                          status: 'working',
+                          currentTask: 'Writing unit test suites...',
+                        },
+                      ]}
+                      activeAgentId="a1"
+                    />
                   </div>
-                  <AgentSwarmView
-                    agents={[
-                      {
-                        id: 'a1',
-                        name: 'Orchestrator',
-                        role: 'Task Coordinator',
-                        status: 'working',
-                        currentTask: 'Delegating code review to Coder agent...',
-                      },
-                      {
-                        id: 'a2',
-                        name: 'Code Synthesizer',
-                        role: 'TypeScript Specialist',
-                        status: 'working',
-                        currentTask: 'Writing unit test suites...',
-                      },
-                    ]}
-                    activeAgentId="a1"
-                  />
                 </div>
               </div>
             </section>
@@ -914,10 +1281,20 @@ Key improvements:
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                      <h3 className="text-xs font-mono font-semibold text-foreground">
-                        MessageBubble & Contrast Modes
-                      </h3>
-                      <p className="text-[11px] text-muted-foreground">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-xs font-mono font-semibold text-foreground">
+                          MessageBubble & Contrast Modes
+                        </h3>
+                        <button
+                          type="button"
+                          onClick={() => navigateToComponentDoc('MessageBubble')}
+                          className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                        >
+                          <span>View Props & Docs</span>
+                          <ArrowRight className="h-3 w-3" />
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
                         Supports 4 contrast variants: <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">solid</code> (automatic AAA foreground), <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">subtle</code>, <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">neutral</code>, and <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">bordered</code>.
                       </p>
                     </div>
@@ -967,9 +1344,27 @@ Key improvements:
                 {/* StreamingText & BranchSwitcher */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-mono font-semibold text-foreground">
-                      StreamingText & BranchSwitcher
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        StreamingText & BranchSwitcher
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('StreamingText')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>StreamingText Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('BranchSwitcher')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>BranchSwitcher Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
                     <BranchSwitcher
                       currentIndex={sampleBranchIndex}
                       totalBranches={4}
@@ -1007,9 +1402,14 @@ Key improvements:
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       PromptInput
                     </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      Auto-Expanding with Context & Tools
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('PromptInput')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
                   </div>
                   <PromptInput
                     value={sampleInputText}
@@ -1032,9 +1432,14 @@ Key improvements:
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       DragAndDropUploader
                     </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      Multi-file Dropzone
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('DragAndDropUploader')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
                   </div>
                   <DragAndDropUploader
                     attachments={sampleAttachments}
@@ -1047,9 +1452,19 @@ Key improvements:
 
                 {/* ContextTray Standalone */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    ContextTray
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      ContextTray
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('ContextTray')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <ContextTray
                     items={[
                       { id: '1', label: 'tsconfig.json', type: 'file', meta: 'root' },
@@ -1062,9 +1477,19 @@ Key improvements:
 
                 {/* ModelSelector Standalone */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    ModelSelector
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      ModelSelector
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('ModelSelector')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <div className="flex items-center gap-3">
                     <ModelSelector
                       models={mockModels}
@@ -1093,9 +1518,19 @@ Key improvements:
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Interactive Question Card */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    InteractiveQuestionCard
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      InteractiveQuestionCard
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('InteractiveQuestionCard')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <InteractiveQuestionCard
                     question="Which testing framework would you like configured for the package?"
                     description="Agent detected multiple options in workspace configuration."
@@ -1119,9 +1554,19 @@ Key improvements:
                 {/* FeedbackActions & ActionConfirmationModal Preview */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
                   <div>
-                    <h3 className="text-xs font-mono font-semibold text-foreground mb-2">
-                      FeedbackActions
-                    </h3>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        FeedbackActions
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('FeedbackActions')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>View Props & Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
                     <FeedbackActions
                       onFeedback={() => {}}
                       onCopy={() => {}}
@@ -1130,9 +1575,19 @@ Key improvements:
                   </div>
 
                   <div className="pt-3 border-t border-border/40">
-                    <h3 className="text-xs font-mono font-semibold text-foreground mb-2">
-                      ActionConfirmationModal
-                    </h3>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        ActionConfirmationModal
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => navigateToComponentDoc('ActionConfirmationModal')}
+                        className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>View Props & Docs</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </button>
+                    </div>
                     <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
                       Safety gatekeeper modal for sensitive shell commands, file overwrites, and DB migrations.
                     </p>
@@ -1162,32 +1617,59 @@ Key improvements:
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Terminal Stream */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    TerminalStream
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      TerminalStream
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('TerminalStream')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <TerminalStream
                     command="pnpm test"
-                    output={`PASS packages/react/src/components/reasoning/ReasoningAccordion.test.tsx
-PASS packages/react/src/components/chat/MessageBubble.test.tsx
-Tests:  14 passed, 14 total
-Time:   1.24s`}
+                    output={`PASS packages/react/src/components/reasoning/ReasoningAccordion.test.tsx\nPASS packages/react/src/components/chat/MessageBubble.test.tsx\nTests:  14 passed, 14 total\nTime:   1.24s`}
                     status="completed"
                   />
                 </div>
 
                 {/* Diff Viewer */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    DiffViewer
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      DiffViewer
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('DiffViewer')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />
                 </div>
 
                 {/* Code Block */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    CodeBlock
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      CodeBlock
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('CodeBlock')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <CodeBlock
                     filename="AgentOrchestrator.ts"
                     language="typescript"
@@ -1211,9 +1693,19 @@ Time:   1.24s`}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* AgentStatusBadge States */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    AgentStatusBadge (6 Ambient States)
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      AgentStatusBadge (6 Ambient States)
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('AgentStatusBadge')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <div className="flex flex-wrap gap-2 pt-1">
                     {(['idle', 'thinking', 'searching', 'coding', 'awaiting_approval', 'completed'] as AgentState[]).map(
                       (state) => (
@@ -1225,9 +1717,19 @@ Time:   1.24s`}
 
                 {/* TokenUsageMeter */}
                 <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
-                  <h3 className="text-xs font-mono font-semibold text-foreground">
-                    TokenUsageMeter
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono font-semibold text-foreground">
+                      TokenUsageMeter
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('TokenUsageMeter')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
+                  </div>
                   <div className="space-y-3 pt-1">
                     <TokenUsageMeter
                       usage={{ prompt: 14200, completion: 4800, total: 19000, costUsd: 0.057 }}
@@ -1260,9 +1762,14 @@ Time:   1.24s`}
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ThemeColorPicker (Inline Mode)
                     </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      mode=&quot;inline&quot;
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('ThemeColorPicker')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
                   </div>
                   <ThemeColorPicker
                     mode="inline"
@@ -1281,9 +1788,14 @@ Time:   1.24s`}
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ThemeColorPicker (Popover Mode)
                     </h3>
-                    <span className="text-[10px] font-mono text-muted-foreground">
-                      mode=&quot;popover&quot;
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigateToComponentDoc('ThemeColorPicker')}
+                      className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
+                    >
+                      <span>View Props & Docs</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </button>
                   </div>
 
                   <p className="text-xs text-muted-foreground leading-relaxed">
@@ -1314,71 +1826,286 @@ Time:   1.24s`}
         </div>
       )}
 
-      {/* Docs & Architecture View with Dedicated CLI Hub */}
+      {/* Main Content Body: 3. Docs, CLI & Component API Reference View */}
       {activeView === 'docs' && (
         <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row overflow-hidden">
           {/* Docs Left Sub-Navigation Sidebar */}
-          <aside className="w-full md:w-64 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-1">
-            <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
-              Documentation & CLI
+          <aside className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-4 overflow-y-auto max-h-[calc(100vh-57px)]">
+            <div className="space-y-1">
+              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
+                Overview & Setup
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setDocsSection('cli')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  docsSection === 'cli'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                }`}
+              >
+                <Terminal className="h-4 w-4" />
+                <span>CLI Tooling (<code className="font-mono text-[11px]">@noetic-ui/cli</code>)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDocsSection('quickstart')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  docsSection === 'quickstart'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                }`}
+              >
+                <BookOpen className="h-4 w-4" />
+                <span>Quickstart & Package Setup</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDocsSection('theme')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  docsSection === 'theme'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                }`}
+              >
+                <Palette className="h-4 w-4" />
+                <span>Theme & Contrast Engine</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDocsSection('messages')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
+                  docsSection === 'messages'
+                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                }`}
+              >
+                <MessageSquare className="h-4 w-4" />
+                <span>Message Contrast Modes</span>
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setDocsSection('cli')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                docsSection === 'cli'
-                  ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
-              }`}
-            >
-              <Terminal className="h-4 w-4" />
-              <span>CLI Tooling (<code className="font-mono text-[11px]">noetic-ui</code>)</span>
-            </button>
+            {/* Component API Explorer Section */}
+            <div className="space-y-2 pt-2 border-t border-border/40">
+              <div className="flex items-center justify-between px-3">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
+                  Component API & Props (23)
+                </span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-primary/10 text-primary font-bold">
+                  23
+                </span>
+              </div>
 
-            <button
-              type="button"
-              onClick={() => setDocsSection('quickstart')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                docsSection === 'quickstart'
-                  ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
-              }`}
-            >
-              <BookOpen className="h-4 w-4" />
-              <span>Quickstart & Package Setup</span>
-            </button>
+              {/* Search filter for components */}
+              <div className="relative px-1">
+                <Search className="absolute left-3.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+                <input
+                  type="text"
+                  placeholder="Filter components..."
+                  value={docSearchQuery}
+                  onChange={(e) => setDocSearchQuery(e.target.value)}
+                  className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-card border border-border/60 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
 
-            <button
-              type="button"
-              onClick={() => setDocsSection('theme')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                docsSection === 'theme'
-                  ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
-              }`}
-            >
-              <Palette className="h-4 w-4" />
-              <span>Theme & Contrast Engine</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setDocsSection('messages')}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                docsSection === 'messages'
-                  ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
-              }`}
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span>Message Contrast Modes</span>
-            </button>
+              {/* Categorized List of Components */}
+              <div className="space-y-1 max-h-96 overflow-y-auto pr-1">
+                {filteredDocComponents.map((comp) => {
+                  const isSelected = docsSection === 'components-api' && selectedDocComponent === comp.name;
+                  return (
+                    <button
+                      key={comp.name}
+                      type="button"
+                      onClick={() => {
+                        setSelectedDocComponent(comp.name);
+                        setDocsSection('components-api');
+                      }}
+                      className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all ${
+                        isSelected
+                          ? 'bg-primary text-primary-foreground font-semibold shadow-2xs'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                      }`}
+                    >
+                      <span className="truncate">{comp.name}</span>
+                      <span className={`text-[9px] font-mono px-1 rounded ${
+                        isSelected ? 'bg-primary-foreground/20 text-primary-foreground' : 'text-muted-foreground/80'
+                      }`}>
+                        {comp.suiteId}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </aside>
 
           {/* Docs Right Content Area */}
           <main className="flex-1 p-6 md:p-10 overflow-y-auto space-y-10">
-            {/* 1. CLI Reference & Interactive Playground */}
+            {/* 1. Component API Reference & Props Mapping */}
+            {docsSection === 'components-api' && activeDoc && (
+              <div className="space-y-8 max-w-4xl">
+                {/* Header info */}
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">
+                      {activeDoc.suite}
+                    </span>
+                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border/60">
+                      {activeDoc.props.length} Props
+                    </span>
+                  </div>
+
+                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
+                    <code>{activeDoc.name}</code>
+                  </h1>
+                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                    {activeDoc.description}
+                  </p>
+                </div>
+
+                {/* Quick Action Badges: CLI & Import */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-secondary/30 border border-border/60">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/40 text-xs">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <Terminal className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                      <code className="font-mono text-[11px] text-foreground truncate">{activeDoc.cliCommand}</code>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => copyText(activeDoc.cliCommand, setCopiedDocCmd)}
+                      className="p-1 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors ml-2"
+                      title="Copy CLI command"
+                    >
+                      {copiedDocCmd ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/40 text-xs">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <Code2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                      <code className="font-mono text-[11px] text-foreground truncate">{activeDoc.importStatement}</code>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => copyText(activeDoc.importStatement, setCopiedDocImport)}
+                      className="p-1 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors ml-2"
+                      title="Copy import statement"
+                    >
+                      {copiedDocImport ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Interactive Live Component Preview */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-sm font-mono font-bold text-foreground flex items-center gap-2">
+                      <Eye className="h-4 w-4 text-primary" />
+                      <span>Live Interactive Preview</span>
+                    </h2>
+                    <span className="text-[10px] font-mono text-muted-foreground">Active Theme: {primaryHue}° HSL</span>
+                  </div>
+
+                  <div className="p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
+                    {renderLiveComponentPreview(activeDoc.name)}
+                  </div>
+                </div>
+
+                {/* Props Table */}
+                <div className="space-y-3 pt-4">
+                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    <Table className="h-4 w-4 text-primary" />
+                    <span>Props & API Reference</span>
+                  </h2>
+
+                  <div className="overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-sm">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-secondary/40 border-b border-border/60 text-muted-foreground font-mono text-[11px]">
+                        <tr>
+                          <th className="py-3 px-4">Prop</th>
+                          <th className="py-3 px-4">Type</th>
+                          <th className="py-3 px-4">Default</th>
+                          <th className="py-3 px-4">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/40">
+                        {activeDoc.props.map((prop) => (
+                          <tr key={prop.name} className="hover:bg-secondary/20 transition-colors">
+                            <td className="py-3 px-4 font-mono font-semibold text-foreground flex items-center gap-2">
+                              <span>{prop.name}</span>
+                              {prop.required && (
+                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 font-bold border border-rose-500/20">
+                                  required
+                                </span>
+                              )}
+                            </td>
+                            <td className="py-3 px-4 font-mono text-primary text-[11px]">
+                              <code>{prop.type}</code>
+                            </td>
+                            <td className="py-3 px-4 font-mono text-muted-foreground text-[11px]">
+                              {prop.default ? <code>{prop.default}</code> : <span className="text-muted-foreground/40">—</span>}
+                            </td>
+                            <td className="py-3 px-4 text-muted-foreground leading-relaxed">
+                              {prop.description}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Related TypeScript Interfaces */}
+                {activeDoc.types && activeDoc.types.length > 0 && (
+                  <div className="space-y-3 pt-4">
+                    <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                      <FileCode className="h-4 w-4 text-primary" />
+                      <span>TypeScript Types & Interfaces</span>
+                    </h2>
+
+                    {activeDoc.types.map((typeDef) => (
+                      <CodeBlock
+                        key={typeDef.name}
+                        filename={`${typeDef.name}.d.ts`}
+                        language="typescript"
+                        code={typeDef.code}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Usage Examples */}
+                <div className="space-y-4 pt-4">
+                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                    <Code2 className="h-4 w-4 text-primary" />
+                    <span>Usage Example</span>
+                  </h2>
+
+                  <CodeBlock
+                    filename={`${activeDoc.name}Example.tsx`}
+                    language="tsx"
+                    code={activeDoc.basicUsage}
+                  />
+
+                  {activeDoc.advancedUsage && (
+                    <div className="space-y-2 pt-2">
+                      <h3 className="text-xs font-mono font-semibold text-foreground">Advanced / Streaming Integration:</h3>
+                      <CodeBlock
+                        filename={`${activeDoc.name}Advanced.tsx`}
+                        language="tsx"
+                        code={activeDoc.advancedUsage}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* 2. CLI Reference & Interactive Playground */}
             {docsSection === 'cli' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
@@ -1545,7 +2272,7 @@ npx @noetic-ui/cli theme cyan`}
               </div>
             )}
 
-            {/* 2. Quickstart & Package Setup */}
+            {/* 3. Quickstart & Package Setup */}
             {docsSection === 'quickstart' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
@@ -1595,7 +2322,7 @@ export function MyAgentApp() {
               </div>
             )}
 
-            {/* 3. Theme & Contrast Engine */}
+            {/* 4. Theme & Contrast Engine */}
             {docsSection === 'theme' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
@@ -1641,7 +2368,7 @@ export function Header() {
               </div>
             )}
 
-            {/* 4. Message Bubble Contrast Modes */}
+            {/* 5. Message Bubble Contrast Modes */}
             {docsSection === 'messages' && (
               <div className="space-y-8 max-w-4xl">
                 <div>
