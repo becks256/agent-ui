@@ -178,3 +178,12 @@ input[type="range"].sat-slider::-webkit-slider-thumb:hover,
 input[type="range"].light-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

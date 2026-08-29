@@ -42,6 +42,8 @@ import {
   FileText,
   Table,
   Grid,
+  Menu,
+  X,
 } from 'lucide-react';
 import {
   ChatContainer,
@@ -335,6 +337,10 @@ export default function Home() {
   const [sampleBranchIndex, setSampleBranchIndex] = useState(1);
   const [sampleInputText, setSampleInputText] = useState('Inspect active agent tasks and optimize bundle...');
   
+  // Mobile UI States
+  const [mobileDemoTab, setMobileDemoTab] = useState<'chat' | 'canvas'>('chat');
+  const [isMobileDocsNavOpen, setIsMobileDocsNavOpen] = useState(false);
+
   // Dynamic Primary Color Theme State: Hue, Saturation, Lightness
   const [primaryHue, setPrimaryHue] = useState<number>(265);
   const [primarySat, setPrimarySat] = useState<number>(85);
@@ -568,6 +574,7 @@ Key improvements:
   const navigateToComponentDoc = (componentName: string) => {
     setSelectedDocComponent(componentName);
     setDocsSection('components-api');
+    setIsMobileDocsNavOpen(false);
     setActiveView('docs');
   };
 
@@ -700,7 +707,7 @@ Key improvements:
             <StreamingText
               content={`### Zero-Flicker Streaming
 - Smooth token accumulation without layout shifts.
-- Real-time inline code formatting: \`import { useChat } from '@noetic-ui/react'\``}
+- Inline code: \`import { useChat } from '@noetic-ui/react'\``}
               isStreaming={true}
             />
           </div>
@@ -905,103 +912,197 @@ Key improvements:
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* Top Navigation Header */}
-      <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 border-b border-border/80 bg-card/80 backdrop-blur-md">
-        <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20 transition-colors">
-            <Bot className="h-4 w-4" />
+      <header className="sticky top-0 z-40 border-b border-border/80 bg-card/90 backdrop-blur-md">
+        <div className="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3">
+          {/* Brand Logo */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20 transition-colors">
+              <Bot className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-sm sm:text-base tracking-tight text-foreground">Noetic UI</span>
+              <span className="text-[9px] sm:text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border/80 font-bold">
+                v0.1.1
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-sm tracking-tight">Noetic UI</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border/80 font-bold transition-colors">
-              v0.1.1
-            </span>
+
+          {/* Desktop Navigation Tabs (Hidden on mobile) */}
+          <nav className="hidden md:flex items-center gap-1 bg-secondary/80 p-1 rounded-xl border border-border/60 text-xs">
+            <button
+              type="button"
+              onClick={() => setActiveView('demo')}
+              className={`px-3 py-1 rounded-lg font-medium transition-all ${
+                activeView === 'demo'
+                  ? 'bg-card text-foreground shadow-xs font-semibold'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Live Agent Demo
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView('components')}
+              className={`px-3 py-1 rounded-lg font-medium transition-all ${
+                activeView === 'components'
+                  ? 'bg-card text-foreground shadow-xs font-semibold'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Component Suite (23)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveView('docs');
+                setDocsSection('components-api');
+              }}
+              className={`px-3 py-1 rounded-lg font-medium transition-all ${
+                activeView === 'docs'
+                  ? 'bg-card text-foreground shadow-xs font-semibold'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Docs & API Reference
+            </button>
+          </nav>
+
+          {/* Right Action Controls: Reusable ThemeColorPicker, Install, Theme */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Reusable Theme Color & Contrast Studio Component */}
+            <ThemeColorPicker
+              hue={primaryHue}
+              saturation={primarySat}
+              lightness={primaryLight}
+              onChangeHsl={updateThemeColor}
+              messageVariant={messageVariant}
+              onChangeMessageVariant={setMessageVariant}
+              triggerLabel="Palette"
+            />
+
+            {/* Quick Install Pill (Desktop only) */}
+            <button
+              type="button"
+              onClick={copyInstallCommand}
+              className="hidden lg:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-mono text-muted-foreground hover:text-foreground transition-all"
+            >
+              <span>npm i @noetic-ui/react</span>
+              {copiedInstall ? (
+                <Check className="h-3 w-3 text-emerald-500" />
+              ) : (
+                <Copy className="h-3 w-3" />
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="p-1.5 sm:p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60 transition-colors"
+              title="Toggle theme"
+            >
+              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
           </div>
         </div>
 
-        {/* View Tabs */}
-        <div className="flex items-center gap-1 bg-secondary/80 p-1 rounded-xl border border-border/60 text-xs">
-          <button
-            type="button"
-            onClick={() => setActiveView('demo')}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              activeView === 'demo'
-                ? 'bg-card text-foreground shadow-xs'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Live Agent Demo
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveView('components')}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              activeView === 'components'
-                ? 'bg-card text-foreground shadow-xs'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Component Suite (23)
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveView('docs');
-              setDocsSection('components-api');
-            }}
-            className={`px-3 py-1 rounded-lg font-medium transition-all ${
-              activeView === 'docs'
-                ? 'bg-card text-foreground shadow-xs'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Docs & API Reference
-          </button>
-        </div>
-
-        {/* Right Action Controls: Reusable ThemeColorPicker, Install, Theme */}
-        <div className="flex items-center gap-2">
-          {/* Reusable Theme Color & Contrast Studio Component */}
-          <ThemeColorPicker
-            hue={primaryHue}
-            saturation={primarySat}
-            lightness={primaryLight}
-            onChangeHsl={updateThemeColor}
-            messageVariant={messageVariant}
-            onChangeMessageVariant={setMessageVariant}
-          />
-
-          {/* Quick Install Pill */}
-          <button
-            type="button"
-            onClick={copyInstallCommand}
-            className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-mono text-muted-foreground hover:text-foreground transition-all"
-          >
-            <span>npm i @noetic-ui/react</span>
-            {copiedInstall ? (
-              <Check className="h-3 w-3 text-emerald-500" />
-            ) : (
-              <Copy className="h-3 w-3" />
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60 transition-colors"
-            title="Toggle theme"
-          >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
+        {/* Mobile Responsive Segmented Sub-Navbar (Visible only on < md) */}
+        <div className="flex md:hidden border-t border-border/40 bg-secondary/30 px-2 py-1.5">
+          <div className="flex items-center gap-1 w-full text-xs">
+            <button
+              type="button"
+              onClick={() => setActiveView('demo')}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg font-medium transition-all ${
+                activeView === 'demo'
+                  ? 'bg-card text-foreground shadow-xs font-bold'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Play className="h-3.5 w-3.5 fill-current opacity-80" />
+              <span>Demo</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveView('components')}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg font-medium transition-all ${
+                activeView === 'components'
+                  ? 'bg-card text-foreground shadow-xs font-bold'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <Layers className="h-3.5 w-3.5" />
+              <span>Catalog (23)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setActiveView('docs');
+                setDocsSection('components-api');
+              }}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg font-medium transition-all ${
+                activeView === 'docs'
+                  ? 'bg-card text-foreground shadow-xs font-bold'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              <span>Docs & API</span>
+            </button>
+          </div>
         </div>
       </header>
 
       {/* Main Content Body: 1. Demo View */}
       {activeView === 'demo' && (
-        <main className="flex-1 flex flex-col lg:flex-row h-[calc(100vh-57px)] overflow-hidden">
+        <main className="flex-1 flex flex-col lg:flex-row h-[calc(100vh-97px)] md:h-[calc(100vh-57px)] overflow-hidden">
+          {/* Mobile Tab Switcher for Demo (Chat vs Sidecar Artifact) */}
+          <div className="flex lg:hidden items-center justify-between px-3 py-2 border-b border-border/40 bg-secondary/30 text-xs">
+            <div className="flex items-center gap-1 bg-secondary/80 p-0.5 rounded-lg border border-border/60">
+              <button
+                type="button"
+                onClick={() => setMobileDemoTab('chat')}
+                className={`flex items-center gap-1 px-3 py-1 rounded-md font-medium transition-all ${
+                  mobileDemoTab === 'chat'
+                    ? 'bg-card text-foreground shadow-xs font-bold'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                <MessageSquare className="h-3 w-3" />
+                <span>Agent Chat</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMobileDemoTab('canvas')}
+                className={`flex items-center gap-1 px-3 py-1 rounded-md font-medium transition-all ${
+                  mobileDemoTab === 'canvas'
+                    ? 'bg-card text-foreground shadow-xs font-bold'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                <Layers className="h-3 w-3" />
+                <span>Artifact Canvas</span>
+                {selectedArtifact && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSimulateFlow}
+              disabled={isSimulating}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary hover:opacity-90 disabled:opacity-50 text-primary-foreground text-xs font-semibold shadow-xs transition-all"
+            >
+              <Play className="h-3 w-3 fill-current" />
+              <span>Simulate</span>
+            </button>
+          </div>
+
           {/* Left Column: Chat Conversation Stream */}
-          <div className="flex-1 flex flex-col h-full border-r border-border/60 min-w-0 bg-background/50">
+          <div
+            className={`flex-1 flex-col h-full border-r border-border/60 min-w-0 bg-background/50 ${
+              mobileDemoTab === 'chat' ? 'flex' : 'hidden lg:flex'
+            }`}
+          >
             {/* Ambient Telemetry & Message Style Controller Status Bar */}
-            <div className="flex items-center justify-between px-6 py-2 border-b border-border/40 bg-secondary/20 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-6 py-2 border-b border-border/40 bg-secondary/20 text-xs">
               <div className="flex items-center gap-2">
                 <AgentStatusBadge
                   state={isSimulating ? 'thinking' : 'idle'}
@@ -1036,7 +1137,7 @@ Key improvements:
                   type="button"
                   onClick={handleSimulateFlow}
                   disabled={isSimulating}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary hover:opacity-90 disabled:opacity-50 text-primary-foreground text-xs font-semibold shadow-xs transition-all"
+                  className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary hover:opacity-90 disabled:opacity-50 text-primary-foreground text-xs font-semibold shadow-xs transition-all"
                 >
                   <Play className="h-3 w-3 fill-current" />
                   <span>Simulate Stream</span>
@@ -1045,20 +1146,23 @@ Key improvements:
             </div>
 
             {/* Virtualized / Auto-scrolling Chat Viewport */}
-            <ChatContainer isStreaming={isSimulating} className="px-4 sm:px-8 py-6">
+            <ChatContainer isStreaming={isSimulating} className="px-3 sm:px-8 py-4 sm:py-6">
               {messages.map((msg) => (
                 <MessageBubble
                   key={msg.id}
                   message={msg}
                   variant={messageVariant}
-                  onSelectArtifact={(artId) => setSelectedArtifact(mockArtifact)}
+                  onSelectArtifact={(artId) => {
+                    setSelectedArtifact(mockArtifact);
+                    setMobileDemoTab('canvas');
+                  }}
                   onApproveTool={(tcId) => setIsApprovalOpen(true)}
                 />
               ))}
             </ChatContainer>
 
             {/* Bottom Prompt Input */}
-            <div className="p-4 sm:p-6 bg-background border-t border-border/40">
+            <div className="p-3 sm:p-6 bg-background border-t border-border/40">
               <PromptInput
                 value={promptText}
                 onChange={setPromptText}
@@ -1078,21 +1182,35 @@ Key improvements:
           </div>
 
           {/* Right Column: Artifacts, Code Canvas & Live Sidecar */}
-          <div className="w-full lg:w-[480px] xl:w-[560px] h-full flex flex-col p-4 bg-secondary/10 overflow-hidden">
+          <div
+            className={`w-full lg:w-[480px] xl:w-[560px] h-full flex-col p-3 sm:p-4 bg-secondary/10 overflow-hidden ${
+              mobileDemoTab === 'canvas' ? 'flex' : 'hidden lg:flex'
+            }`}
+          >
             {selectedArtifact ? (
               <ArtifactWorkspace
                 artifact={selectedArtifact}
-                onClose={() => setSelectedArtifact(null)}
+                onClose={() => {
+                  setSelectedArtifact(null);
+                  setMobileDemoTab('chat');
+                }}
               />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-8 rounded-2xl border border-dashed border-border/60 bg-secondary/20 text-muted-foreground">
+              <div className="h-full flex flex-col items-center justify-center text-center p-6 sm:p-8 rounded-2xl border border-dashed border-border/60 bg-secondary/20 text-muted-foreground">
                 <Layers className="h-10 w-10 text-muted-foreground/40 mb-3" />
                 <p className="text-sm font-medium text-foreground">
                   No Active Artifact Selected
                 </p>
-                <p className="text-xs text-muted-foreground mt-1 max-w-xs">
+                <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">
                   When your agent generates code, files, or canvas documents, they will be rendered in this sidecar workspace.
                 </p>
+                <button
+                  type="button"
+                  onClick={() => setMobileDemoTab('chat')}
+                  className="mt-4 lg:hidden px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs"
+                >
+                  Back to Agent Chat
+                </button>
               </div>
             )}
           </div>
@@ -1101,20 +1219,20 @@ Key improvements:
 
       {/* Main Content Body: 2. Comprehensive Component Suite Gallery View */}
       {activeView === 'components' && (
-        <div className="flex-1 p-6 sm:p-10 max-w-7xl mx-auto w-full space-y-8 overflow-y-auto">
+        <div className="flex-1 p-4 sm:p-10 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8 overflow-y-auto">
           {/* Header & Theme Customization Bar */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Noetic UI Component Catalog (23 Components)
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
                 Interactive sandbox showcasing all 23 components across the 7 core architectural suites.
               </p>
             </div>
 
             {/* Reusable Palette Studio Trigger & Indicators */}
-            <div className="p-3.5 rounded-xl bg-secondary/40 border border-border/60 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="p-3 rounded-xl bg-secondary/40 border border-border/60 flex flex-wrap items-center justify-between sm:justify-start gap-3">
               <div className="flex items-center gap-2">
                 <div
                   className="h-4 w-4 rounded-full border border-background shadow-xs flex-shrink-0"
@@ -1140,16 +1258,16 @@ Key improvements:
             </div>
           </div>
 
-          {/* Category Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Category Filter Pills (Scrollable on mobile) */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => setComponentCategory(cat.id)}
-                className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap flex-shrink-0 transition-all ${
                   componentCategory === cat.id
-                    ? 'bg-primary text-primary-foreground shadow-xs'
+                    ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
                     : 'bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary'
                 }`}
               >
@@ -1164,15 +1282,15 @@ Key improvements:
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-primary" />
-                  <h2 className="text-base font-semibold text-foreground">
+                  <h2 className="text-sm sm:text-base font-semibold text-foreground">
                     1. Reasoning & Tool Execution Suite (4 Components)
                   </h2>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 1. Reasoning Accordion */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1205,7 +1323,7 @@ Key improvements:
                 </div>
 
                 {/* 2. Tool Call Card */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1235,7 +1353,7 @@ Key improvements:
                 </div>
 
                 {/* 3. AgentPlanView */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1266,7 +1384,7 @@ Key improvements:
                 </div>
 
                 {/* 4. AgentSwarmView */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs flex flex-col justify-between">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <h3 className="text-xs font-mono font-semibold text-foreground">
@@ -1311,14 +1429,14 @@ Key improvements:
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <MessageSquare className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground">
                   2. Messages & Streaming Suite (4 Components)
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 5. MessageBubble */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-3">
@@ -1335,17 +1453,17 @@ Key improvements:
                         </button>
                       </div>
                       <p className="text-[11px] text-muted-foreground mt-0.5">
-                        Supports 4 contrast variants: <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">solid</code> (automatic AAA foreground), <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">subtle</code>, <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">neutral</code>, and <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">bordered</code>.
+                        Supports 4 contrast variants: <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">solid</code>, <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">subtle</code>, <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">neutral</code>, and <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">bordered</code>.
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-1 bg-secondary p-1 rounded-lg text-xs">
+                    <div className="flex items-center gap-1 bg-secondary p-1 rounded-lg text-xs overflow-x-auto no-scrollbar">
                       {(['solid', 'subtle', 'neutral', 'bordered'] as const).map((v) => (
                         <button
                           key={v}
                           type="button"
                           onClick={() => setMessageVariant(v)}
-                          className={`px-2.5 py-1 rounded-md font-medium capitalize transition-all ${
+                          className={`px-2.5 py-1 rounded-md font-medium capitalize whitespace-nowrap transition-all ${
                             messageVariant === v
                               ? 'bg-primary text-primary-foreground font-bold shadow-xs'
                               : 'text-muted-foreground hover:text-foreground'
@@ -1357,7 +1475,7 @@ Key improvements:
                     </div>
                   </div>
 
-                  <div className="space-y-3 p-4 rounded-xl bg-secondary/20 border border-border/40">
+                  <div className="space-y-3 p-3 sm:p-4 rounded-xl bg-secondary/20 border border-border/40">
                     <MessageBubble
                       variant={messageVariant}
                       message={{
@@ -1382,7 +1500,7 @@ Key improvements:
                 </div>
 
                 {/* 6. StreamingText */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       StreamingText
@@ -1407,7 +1525,7 @@ Key improvements:
                 </div>
 
                 {/* 7. BranchSwitcher */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       BranchSwitcher
@@ -1421,8 +1539,8 @@ Key improvements:
                       <ArrowRight className="h-3 w-3" />
                     </button>
                   </div>
-                  <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/20 border border-border/40">
-                    <span className="text-xs text-muted-foreground font-mono">Variant Navigator:</span>
+                  <div className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-secondary/20 border border-border/40">
+                    <span className="text-xs text-muted-foreground font-mono">Variant:</span>
                     <BranchSwitcher
                       currentIndex={sampleBranchIndex}
                       totalBranches={4}
@@ -1432,7 +1550,7 @@ Key improvements:
                 </div>
 
                 {/* 8. ChatContainer */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ChatContainer
@@ -1462,14 +1580,14 @@ Key improvements:
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <SlidersHorizontal className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground">
                   3. Input & Multimodal Prompting Suite (5 Components)
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 9. PromptInput */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       PromptInput
@@ -1499,7 +1617,7 @@ Key improvements:
                 </div>
 
                 {/* 10. DragAndDropUploader */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       DragAndDropUploader
@@ -1523,7 +1641,7 @@ Key improvements:
                 </div>
 
                 {/* 11. ContextTray */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ContextTray
@@ -1548,7 +1666,7 @@ Key improvements:
                 </div>
 
                 {/* 12. SlashCommandMenu */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       SlashCommandMenu
@@ -1574,7 +1692,7 @@ Key improvements:
                 </div>
 
                 {/* 13. ModelSelector */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ModelSelector
@@ -1588,7 +1706,7 @@ Key improvements:
                       <ArrowRight className="h-3 w-3" />
                     </button>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <ModelSelector
                       models={mockModels}
                       selectedModel={selectedModel}
@@ -1608,14 +1726,14 @@ Key improvements:
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <ShieldAlert className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground">
                   4. Human-in-the-Loop (HITL) Controls Suite (3 Components)
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 14. InteractiveQuestionCard */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       InteractiveQuestionCard
@@ -1650,7 +1768,7 @@ Key improvements:
                 </div>
 
                 {/* 15. FeedbackActions */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       FeedbackActions
@@ -1664,7 +1782,7 @@ Key improvements:
                       <ArrowRight className="h-3 w-3" />
                     </button>
                   </div>
-                  <div className="p-4 bg-secondary/30 rounded-xl border border-border/40">
+                  <div className="p-3 sm:p-4 bg-secondary/30 rounded-xl border border-border/40">
                     <FeedbackActions
                       onFeedback={() => {}}
                       onCopy={() => {}}
@@ -1674,7 +1792,7 @@ Key improvements:
                 </div>
 
                 {/* 16. ActionConfirmationModal */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 lg:col-span-2 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-4 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ActionConfirmationModal
@@ -1708,14 +1826,14 @@ Key improvements:
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Layers className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground">
                   5. Artifacts & Canvas Suite (4 Components)
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 17. ArtifactWorkspace */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ArtifactWorkspace
@@ -1735,7 +1853,7 @@ Key improvements:
                 </div>
 
                 {/* 18. CodeBlock */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       CodeBlock
@@ -1757,7 +1875,7 @@ Key improvements:
                 </div>
 
                 {/* 19. DiffViewer */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       DiffViewer
@@ -1775,7 +1893,7 @@ Key improvements:
                 </div>
 
                 {/* 20. TerminalStream */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 lg:col-span-2 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       TerminalStream
@@ -1804,14 +1922,14 @@ Key improvements:
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Activity className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground">
                   6. Telemetry & Live Agent States Suite (2 Components)
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 21. AgentStatusBadge */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       AgentStatusBadge (6 Ambient States)
@@ -1835,7 +1953,7 @@ Key improvements:
                 </div>
 
                 {/* 22. TokenUsageMeter */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       TokenUsageMeter
@@ -1869,14 +1987,14 @@ Key improvements:
             <section className="space-y-4 pt-4 pb-12">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Paintbrush className="h-4 w-4 text-primary" />
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 className="text-sm sm:text-base font-semibold text-foreground">
                   7. Theme & Customization Suite (1 Component)
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* 23. ThemeColorPicker */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ThemeColorPicker (Inline Mode)
@@ -1901,7 +2019,7 @@ Key improvements:
                   />
                 </div>
 
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-mono font-semibold text-foreground">
                       ThemeColorPicker (Popover Mode)
@@ -1920,7 +2038,7 @@ Key improvements:
                     Backdrop-blurred color studio popover with automated WCAG contrast calculation and continuous HSL sliders.
                   </p>
 
-                  <div className="p-4 rounded-xl bg-secondary/30 border border-border/40 flex items-center justify-between">
+                  <div className="p-3 sm:p-4 rounded-xl bg-secondary/30 border border-border/40 flex items-center justify-between">
                     <ThemeColorPicker
                       mode="popover"
                       hue={primaryHue}
@@ -1945,8 +2063,72 @@ Key improvements:
       {/* Main Content Body: 3. Docs, CLI & Component API Reference View */}
       {activeView === 'docs' && (
         <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row overflow-hidden">
-          {/* Docs Left Sub-Navigation Sidebar */}
-          <aside className="w-full md:w-72 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-5 overflow-y-auto max-h-[calc(100vh-57px)]">
+          {/* Mobile Docs Suite & Component Dropdown Navigator Bar (Visible only on < md) */}
+          <div className="flex md:hidden items-center justify-between px-3 py-2 border-b border-border/60 bg-card/90 backdrop-blur-md sticky top-[95px] z-30 shadow-xs">
+            <button
+              type="button"
+              onClick={() => setIsMobileDocsNavOpen(!isMobileDocsNavOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-secondary border border-border/70 text-xs font-semibold text-foreground shadow-2xs"
+            >
+              <Grid className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+              <span className="truncate max-w-[150px]">
+                {docsSection === 'components-api'
+                  ? selectedDocComponent
+                  : docsSection === 'cli'
+                  ? 'CLI Tooling'
+                  : docsSection === 'quickstart'
+                  ? 'Quickstart'
+                  : docsSection === 'theme'
+                  ? 'Theme Engine'
+                  : docsSection === 'messages'
+                  ? 'Message Variants'
+                  : 'Directory (23)'}
+              </span>
+              <ChevronDown
+                className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${
+                  isMobileDocsNavOpen ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+
+            {docsSection === 'components-api' && (
+              <div className="flex items-center gap-1">
+                {prevComponentName && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDocComponent(prevComponentName);
+                      setDocsSection('components-api');
+                    }}
+                    className="p-1.5 rounded-lg bg-secondary border border-border/60 text-muted-foreground hover:text-foreground"
+                    title={`Previous: ${prevComponentName}`}
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                  </button>
+                )}
+                {nextComponentName && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDocComponent(nextComponentName);
+                      setDocsSection('components-api');
+                    }}
+                    className="p-1.5 rounded-lg bg-secondary border border-border/60 text-muted-foreground hover:text-foreground"
+                    title={`Next: ${nextComponentName}`}
+                  >
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Docs Left Sub-Navigation Sidebar (Desktop sidebar & Mobile collapsible dropdown) */}
+          <aside
+            className={`w-full md:w-72 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-5 overflow-y-auto max-h-[calc(100vh-140px)] md:max-h-[calc(100vh-57px)] ${
+              isMobileDocsNavOpen ? 'block' : 'hidden md:block'
+            }`}
+          >
             <div className="space-y-1">
               <div className="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
                 Overview & Guides
@@ -1954,7 +2136,10 @@ Key improvements:
 
               <button
                 type="button"
-                onClick={() => setDocsSection('cli')}
+                onClick={() => {
+                  setDocsSection('cli');
+                  setIsMobileDocsNavOpen(false);
+                }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                   docsSection === 'cli'
                     ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
@@ -1967,7 +2152,10 @@ Key improvements:
 
               <button
                 type="button"
-                onClick={() => setDocsSection('quickstart')}
+                onClick={() => {
+                  setDocsSection('quickstart');
+                  setIsMobileDocsNavOpen(false);
+                }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                   docsSection === 'quickstart'
                     ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
@@ -1980,7 +2168,10 @@ Key improvements:
 
               <button
                 type="button"
-                onClick={() => setDocsSection('theme')}
+                onClick={() => {
+                  setDocsSection('theme');
+                  setIsMobileDocsNavOpen(false);
+                }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                   docsSection === 'theme'
                     ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
@@ -1993,7 +2184,10 @@ Key improvements:
 
               <button
                 type="button"
-                onClick={() => setDocsSection('messages')}
+                onClick={() => {
+                  setDocsSection('messages');
+                  setIsMobileDocsNavOpen(false);
+                }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                   docsSection === 'messages'
                     ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
@@ -2019,7 +2213,10 @@ Key improvements:
               {/* Master Directory Link */}
               <button
                 type="button"
-                onClick={() => setDocsSection('components-directory')}
+                onClick={() => {
+                  setDocsSection('components-directory');
+                  setIsMobileDocsNavOpen(false);
+                }}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                   docsSection === 'components-directory'
                     ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
@@ -2077,6 +2274,7 @@ Key improvements:
                               onClick={() => {
                                 setSelectedDocComponent(compName);
                                 setDocsSection('components-api');
+                                setIsMobileDocsNavOpen(false);
                               }}
                               className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all ${
                                 isSelected
@@ -2098,31 +2296,31 @@ Key improvements:
           </aside>
 
           {/* Docs Right Content Area */}
-          <main className="flex-1 p-6 md:p-10 overflow-y-auto space-y-10">
+          <main className="flex-1 p-4 sm:p-8 md:p-10 overflow-y-auto space-y-8 sm:space-y-10">
             {/* 1. All 23 Components Directory Overview View */}
             {docsSection === 'components-directory' && (
-              <div className="space-y-8 max-w-4xl">
+              <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-mono font-semibold mb-3">
                     <Grid className="h-3 w-3" />
                     <span>Complete API Reference</span>
                   </div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     All 23 Components Directory
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                     Explore props, TypeScript type definitions, live sandbox previews, and copyable usage snippets for all 23 components across the 7 architectural suites.
                   </p>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-6 sm:space-y-8">
                   {SUITES.map((suite) => (
                     <div key={suite.id} className="space-y-3">
-                      <h2 className="text-base font-bold text-foreground flex items-center gap-2 border-b border-border/60 pb-2">
-                        <span className="text-primary font-mono text-sm">{suite.title}</span>
+                      <h2 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2 border-b border-border/60 pb-2">
+                        <span className="text-primary font-mono">{suite.title}</span>
                       </h2>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                         {suite.components.map((compName) => {
                           const doc = COMPONENT_DOCS[compName];
                           if (!doc) return null;
@@ -2145,8 +2343,8 @@ Key improvements:
                                 </p>
                               </div>
 
-                              <div className="flex items-center justify-between pt-2 border-t border-border/40">
-                                <code className="text-[10px] font-mono text-muted-foreground truncate max-w-[180px]">
+                              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/40">
+                                <code className="text-[10px] font-mono text-muted-foreground truncate max-w-[170px]">
                                   {doc.cliCommand}
                                 </code>
                                 <button
@@ -2154,6 +2352,7 @@ Key improvements:
                                   onClick={() => {
                                     setSelectedDocComponent(doc.name);
                                     setDocsSection('components-api');
+                                    setIsMobileDocsNavOpen(false);
                                   }}
                                   className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
                                 >
@@ -2173,28 +2372,28 @@ Key improvements:
 
             {/* 2. Component API Reference & Props Mapping */}
             {docsSection === 'components-api' && activeDoc && (
-              <div className="space-y-8 max-w-4xl">
+              <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 {/* Header info */}
                 <div>
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">
+                    <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 font-semibold">
                       {activeDoc.suite}
                     </span>
-                    <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border/60">
+                    <span className="text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-full bg-secondary text-muted-foreground border border-border/60">
                       {activeDoc.props.length} Props
                     </span>
                   </div>
 
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-3">
                     <code>{activeDoc.name}</code>
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                     {activeDoc.description}
                   </p>
                 </div>
 
                 {/* Quick Action Badges: CLI & Import */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-secondary/30 border border-border/60">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 p-3 sm:p-3.5 rounded-2xl bg-secondary/30 border border-border/60">
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/40 text-xs">
                     <div className="flex items-center gap-2 overflow-hidden">
                       <Terminal className="h-3.5 w-3.5 text-primary flex-shrink-0" />
@@ -2229,27 +2428,27 @@ Key improvements:
                 {/* Interactive Live Component Preview */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-mono font-bold text-foreground flex items-center gap-2">
+                    <h2 className="text-xs sm:text-sm font-mono font-bold text-foreground flex items-center gap-2">
                       <Eye className="h-4 w-4 text-primary" />
                       <span>Live Interactive Preview</span>
                     </h2>
                     <span className="text-[10px] font-mono text-muted-foreground">Active Theme: {primaryHue}° HSL</span>
                   </div>
 
-                  <div className="p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
+                  <div className="p-4 sm:p-6 rounded-2xl border border-border/80 bg-card shadow-sm overflow-hidden">
                     {renderLiveComponentPreview(activeDoc.name)}
                   </div>
                 </div>
 
                 {/* Props Table */}
-                <div className="space-y-3 pt-4">
-                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <div className="space-y-3 pt-2 sm:pt-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <Table className="h-4 w-4 text-primary" />
                     <span>Props & API Reference ({activeDoc.props.length})</span>
                   </h2>
 
                   <div className="overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-sm">
-                    <table className="w-full text-left text-xs">
+                    <table className="w-full text-left text-xs min-w-[500px]">
                       <thead className="bg-secondary/40 border-b border-border/60 text-muted-foreground font-mono text-[11px]">
                         <tr>
                           <th className="py-3 px-4">Prop</th>
@@ -2261,13 +2460,15 @@ Key improvements:
                       <tbody className="divide-y divide-border/40">
                         {activeDoc.props.map((prop) => (
                           <tr key={prop.name} className="hover:bg-secondary/20 transition-colors">
-                            <td className="py-3 px-4 font-mono font-semibold text-foreground flex items-center gap-2">
-                              <span>{prop.name}</span>
-                              {prop.required && (
-                                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 font-bold border border-rose-500/20">
-                                  required
-                                </span>
-                              )}
+                            <td className="py-3 px-4 font-mono font-semibold text-foreground whitespace-nowrap">
+                              <div className="flex items-center gap-1.5">
+                                <span>{prop.name}</span>
+                                {prop.required && (
+                                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 font-bold border border-rose-500/20">
+                                    req
+                                  </span>
+                                )}
+                              </div>
                             </td>
                             <td className="py-3 px-4 font-mono text-primary text-[11px]">
                               <code>{prop.type}</code>
@@ -2287,8 +2488,8 @@ Key improvements:
 
                 {/* Related TypeScript Interfaces */}
                 {activeDoc.types && activeDoc.types.length > 0 && (
-                  <div className="space-y-3 pt-4">
-                    <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <div className="space-y-3 pt-2 sm:pt-4">
+                    <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                       <FileCode className="h-4 w-4 text-primary" />
                       <span>TypeScript Types & Interfaces</span>
                     </h2>
@@ -2305,8 +2506,8 @@ Key improvements:
                 )}
 
                 {/* Usage Examples */}
-                <div className="space-y-4 pt-4">
-                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <div className="space-y-4 pt-2 sm:pt-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <Code2 className="h-4 w-4 text-primary" />
                     <span>Usage Example</span>
                   </h2>
@@ -2330,17 +2531,20 @@ Key improvements:
                 </div>
 
                 {/* Prev / Next Component Pagination Bar */}
-                <div className="flex items-center justify-between pt-6 border-t border-border/60">
+                <div className="flex items-center justify-between gap-2 pt-4 sm:pt-6 border-t border-border/60">
                   {prevComponentName ? (
                     <button
                       type="button"
-                      onClick={() => setSelectedDocComponent(prevComponentName)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-left"
+                      onClick={() => {
+                        setSelectedDocComponent(prevComponentName);
+                        setIsMobileDocsNavOpen(false);
+                      }}
+                      className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-left"
                     >
-                      <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground" />
+                      <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                       <div>
-                        <span className="text-[10px] text-muted-foreground block font-mono">Previous</span>
-                        <span className="font-semibold text-foreground">{prevComponentName}</span>
+                        <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">Previous</span>
+                        <span className="font-semibold text-foreground truncate max-w-[120px] block">{prevComponentName}</span>
                       </div>
                     </button>
                   ) : <div />}
@@ -2348,14 +2552,17 @@ Key improvements:
                   {nextComponentName ? (
                     <button
                       type="button"
-                      onClick={() => setSelectedDocComponent(nextComponentName)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-right"
+                      onClick={() => {
+                        setSelectedDocComponent(nextComponentName);
+                        setIsMobileDocsNavOpen(false);
+                      }}
+                      className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-right"
                     >
                       <div>
-                        <span className="text-[10px] text-muted-foreground block font-mono">Next</span>
-                        <span className="font-semibold text-foreground">{nextComponentName}</span>
+                        <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">Next</span>
+                        <span className="font-semibold text-foreground truncate max-w-[120px] block">{nextComponentName}</span>
                       </div>
-                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                     </button>
                   ) : <div />}
                 </div>
@@ -2364,22 +2571,22 @@ Key improvements:
 
             {/* 3. CLI Reference & Interactive Playground */}
             {docsSection === 'cli' && (
-              <div className="space-y-8 max-w-4xl">
+              <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-mono font-semibold mb-3">
                     <Terminal className="h-3 w-3" />
                     <span>Official CLI Tooling</span>
                   </div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-                    Noetic UI CLI (<code className="font-mono text-2xl font-bold">@noetic-ui/cli</code>)
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
+                    Noetic UI CLI (<code className="font-mono text-xl sm:text-2xl font-bold">@noetic-ui/cli</code>)
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                     The <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@noetic-ui/cli</code> package is a shadcn-inspired component distribution and scaffolding tool. It allows you to initialize projects, inspect all 23 components, and copy unbundled TypeScript source code directly into your repository with 100% source ownership.
                   </p>
                 </div>
 
                 {/* Interactive CLI Command Simulator */}
-                <div className="p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-sm">
+                <div className="p-4 sm:p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-sm">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/40 pb-3">
                     <div>
                       <h3 className="text-xs font-mono font-bold text-foreground">
@@ -2423,9 +2630,9 @@ Key improvements:
 
                 {/* Command 1: init */}
                 <div className="space-y-3 pt-2">
-                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">1</span>
-                    <span><code className="font-mono text-base">npx @noetic-ui/cli init</code></span>
+                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli init</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Scaffolds the Noetic UI configuration in your project. It automatically detects your framework (Next.js App/Pages Router, Vite, Remix, Astro), creates <code className="font-mono text-[11px]">noetic-ui.json</code>, sets up <code className="font-mono text-[11px]">components/noetic-ui/cn.ts</code> and <code className="font-mono text-[11px]">types.ts</code>, and injects CSS custom properties into your global stylesheet.
@@ -2442,10 +2649,10 @@ npx @noetic-ui/cli init -y`}
                 </div>
 
                 {/* Command 2: list */}
-                <div className="space-y-3 pt-4">
-                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <div className="space-y-3 pt-3 sm:pt-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">2</span>
-                    <span><code className="font-mono text-base">npx @noetic-ui/cli list</code></span>
+                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli list</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Prints a categorized index of all 23 available components across the 7 architectural suites with descriptions and required peer packages:
@@ -2458,10 +2665,10 @@ npx @noetic-ui/cli init -y`}
                 </div>
 
                 {/* Command 3: add */}
-                <div className="space-y-3 pt-4">
-                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <div className="space-y-3 pt-3 sm:pt-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">3</span>
-                    <span><code className="font-mono text-base">npx @noetic-ui/cli add [...components]</code></span>
+                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli add [...components]</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Copies components directly into your codebase (<code className="font-mono text-[11px]">components/noetic-ui/</code>). It automatically resolves internal dependencies (e.g. adding <code className="font-mono text-[11px]">PromptInput</code> also copies <code className="font-mono text-[11px]">ModelSelector</code>, <code className="font-mono text-[11px]">ContextTray</code>, <code className="font-mono text-[11px]">SlashCommandMenu</code>, <code className="font-mono text-[11px]">cn.ts</code>, and <code className="font-mono text-[11px]">types.ts</code>):
@@ -2487,10 +2694,10 @@ npx @noetic-ui/cli add MessageBubble --overwrite`}
                 </div>
 
                 {/* Command 4: theme */}
-                <div className="space-y-3 pt-4">
-                  <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                <div className="space-y-3 pt-3 sm:pt-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">4</span>
-                    <span><code className="font-mono text-base">npx @noetic-ui/cli theme [preset]</code></span>
+                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli theme [preset]</code></span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Interactive palette configurator that updates <code className="font-mono text-[11px]">globals.css</code> with calibrated HSL color tokens and optimal WCAG text contrast:
@@ -2507,8 +2714,8 @@ npx @noetic-ui/cli theme cyan`}
                 </div>
 
                 {/* Configuration File noetic-ui.json */}
-                <div className="space-y-3 pt-4 pb-12">
-                  <h2 className="text-lg font-bold text-foreground">Configuration File (<code className="font-mono text-sm">noetic-ui.json</code>)</h2>
+                <div className="space-y-3 pt-3 sm:pt-4 pb-12">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">Configuration File (<code className="font-mono text-sm">noetic-ui.json</code>)</h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Generated by <code className="font-mono text-[11px]">npx @noetic-ui/cli init</code> in the root of your project:
                   </p>
@@ -2531,18 +2738,18 @@ npx @noetic-ui/cli theme cyan`}
 
             {/* 4. Quickstart & Package Setup */}
             {docsSection === 'quickstart' && (
-              <div className="space-y-8 max-w-4xl">
+              <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     Quickstart & Package Setup
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                     Install <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@noetic-ui/react</code> directly from npm to consume pre-compiled components in your React 18/19 or Next.js app.
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <h2 className="text-lg font-bold text-foreground">1. Install NPM Package</h2>
+                <div className="space-y-3 sm:space-y-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">1. Install NPM Package</h2>
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
@@ -2550,8 +2757,8 @@ npx @noetic-ui/cli theme cyan`}
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <h2 className="text-lg font-bold text-foreground">2. Import Components</h2>
+                <div className="space-y-3 sm:space-y-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">2. Import Components</h2>
                   <CodeBlock
                     language="tsx"
                     filename="AgentView.tsx"
@@ -2581,18 +2788,18 @@ export function MyAgentApp() {
 
             {/* 5. Theme & Contrast Engine */}
             {docsSection === 'theme' && (
-              <div className="space-y-8 max-w-4xl">
+              <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     Theme & Contrast Engine
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                     Noetic UI uses CSS custom properties with automatic WCAG 2.1 contrast ratio calculations. When bright primary colors like Yellow (40°) or Neon Lime (85°) are selected in Light Mode, the text automatically flips to black (<code className="font-mono">#09090b</code>) to guarantee AA & AAA compliance (10.8:1 contrast).
                   </p>
                 </div>
 
-                <div className="space-y-4">
-                  <h2 className="text-lg font-bold text-foreground">Reusable ThemeColorPicker Component</h2>
+                <div className="space-y-3 sm:space-y-4">
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">Reusable ThemeColorPicker Component</h2>
                   <CodeBlock
                     language="tsx"
                     filename="Header.tsx"
@@ -2627,17 +2834,17 @@ export function Header() {
 
             {/* 6. Message Bubble Contrast Modes */}
             {docsSection === 'messages' && (
-              <div className="space-y-8 max-w-4xl">
+              <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
-                  <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     Message Bubble Contrast Modes
                   </h1>
-                  <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
                     <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">MessageBubble</code> supports 4 distinct visual variants designed to accommodate any brand visual hierarchy:
                   </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <CodeBlock
                     language="tsx"
                     filename="Messages.tsx"
