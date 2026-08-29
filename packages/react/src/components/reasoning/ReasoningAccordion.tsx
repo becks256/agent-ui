@@ -65,10 +65,17 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
       )}
     >
       {/* Header Bar */}
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between px-3.5 py-2.5 text-left text-xs text-muted-foreground hover:text-foreground transition-colors"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsExpanded(!isExpanded);
+          }
+        }}
+        className="w-full flex items-center justify-between px-3.5 py-2.5 text-left text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer select-none"
       >
         <div className="flex items-center gap-2 min-w-0">
           <div
@@ -127,7 +134,7 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
             <ChevronDown className="h-3.5 w-3.5" />
           </motion.div>
         </div>
-      </button>
+      </div>
 
       {/* Expanded Content */}
       <AnimatePresence initial={false}>
