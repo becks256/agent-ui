@@ -1,6 +1,6 @@
 {
   "name": "@noetic-ui/react",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "High-design, polished UI component library for cognitive AI and agentic applications",
   "license": "MIT",
   "publishConfig": {
