@@ -2064,7 +2064,7 @@ Key improvements:
       {activeView === 'docs' && (
         <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row overflow-hidden">
           {/* Mobile Docs Suite & Component Dropdown Navigator Bar (Visible only on < md) */}
-          <div className="flex md:hidden items-center justify-between px-3 py-2 border-b border-border/60 bg-card/90 backdrop-blur-md sticky top-[95px] z-30 shadow-xs">
+          <div className="flex md:hidden items-center justify-between px-3 py-2 border-b border-border/60 bg-card/90 backdrop-blur-md sticky z-30 shadow-xs">
             <button
               type="button"
               onClick={() => setIsMobileDocsNavOpen(!isMobileDocsNavOpen)}
