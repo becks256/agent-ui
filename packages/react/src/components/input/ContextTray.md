@@ -17,18 +17,18 @@ Pinned context pill bar displaying active files, database tables, documentation,
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `items` | `ContextItem[]` | — | Yes | Array of context items with id, label, type (file, database, memory, tool), and optional metadata. |
-| `onRemoveItem` | `(id: string) => void` | — | No | Callback fired when user clicks the remove icon on a context pill. |
+| Prop           | Type                   | Default | Required | Description                                                                                        |
+| :------------- | :--------------------- | :------ | :------- | :------------------------------------------------------------------------------------------------- |
+| `items`        | `ContextItem[]`        | —       | Yes      | Array of context items with id, label, type (file, database, memory, tool), and optional metadata. |
+| `onRemoveItem` | `(id: string) => void` | —       | No       | Callback fired when user clicks the remove icon on a context pill.                                 |
 
 ## Basic Usage
 
 ```tsx
 <ContextTray
   items={[
-    { id: '1', label: 'AgentOrchestrator.ts', type: 'file' },
-    { id: '2', label: 'Postgres DB', type: 'database' },
+    { id: "1", label: "AgentOrchestrator.ts", type: "file" },
+    { id: "2", label: "Postgres DB", type: "database" },
   ]}
   onRemoveItem={(id) => removeContext(id)}
 />

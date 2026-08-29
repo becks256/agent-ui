@@ -18,17 +18,17 @@ Safety gatekeeper modal for sensitive shell commands, file overwrites, and DB mi
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `isOpen` | `boolean` | — | Yes | Whether the modal dialog is displayed. |
-| `title` | `string` | — | Yes | Dialog title describing the action. |
-| `description` | `string` | — | No | Explanation of what will happen upon approval. |
-| `actionType` | `'command' | 'file_write' | 'api_call' | 'db_mutation' | string` | — | Yes | Action classification for icon and badge formatting. |
-| `payload` | `string | Record<string, unknown>` | — | Yes | Command string or JSON object to inspect before execution. |
-| `severity` | `'low' | 'medium' | 'critical'` | `'medium'` | No | Risk severity level. |
-| `onApprove` | `() => void` | — | Yes | Callback when user grants approval. |
-| `onReject` | `() => void` | — | Yes | Callback when user denies execution. |
-| `onClose` | `() => void` | — | Yes | Callback when user dismisses the modal backdrop. |
+| Prop          | Type         | Default                  | Required    | Description                                      |
+| :------------ | :----------- | :----------------------- | :---------- | :----------------------------------------------- |
+| `isOpen`      | `boolean`    | —                        | Yes         | Whether the modal dialog is displayed.           |
+| `title`       | `string`     | —                        | Yes         | Dialog title describing the action.              |
+| `description` | `string`     | —                        | No          | Explanation of what will happen upon approval.   |
+| `actionType`  | `'command'   | 'file_write'             | 'api_call'  | 'db_mutation'                                    | string`                                                    | —                    | Yes | Action classification for icon and badge formatting. |
+| `payload`     | `string      | Record<string, unknown>` | —           | Yes                                              | Command string or JSON object to inspect before execution. |
+| `severity`    | `'low'       | 'medium'                 | 'critical'` | `'medium'`                                       | No                                                         | Risk severity level. |
+| `onApprove`   | `() => void` | —                        | Yes         | Callback when user grants approval.              |
+| `onReject`    | `() => void` | —                        | Yes         | Callback when user denies execution.             |
+| `onClose`     | `() => void` | —                        | Yes         | Callback when user dismisses the modal backdrop. |
 
 ## Basic Usage
 

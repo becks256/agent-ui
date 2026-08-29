@@ -1,11 +1,19 @@
-import React, { useRef, useEffect } from 'react';
-import { Terminal, Square, CheckCircle2, AlertCircle, Loader2, Copy, Check } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import React, { useRef, useEffect } from "react";
+import {
+  Terminal,
+  Square,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  Copy,
+  Check,
+} from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface TerminalStreamProps {
   command: string;
   output: string;
-  status?: 'running' | 'completed' | 'failed' | 'idle';
+  status?: "running" | "completed" | "failed" | "idle";
   exitCode?: number;
   onInterrupt?: () => void;
   className?: string;
@@ -14,7 +22,7 @@ export interface TerminalStreamProps {
 export const TerminalStream: React.FC<TerminalStreamProps> = ({
   command,
   output,
-  status = 'completed',
+  status = "completed",
   exitCode,
   onInterrupt,
   className,
@@ -38,9 +46,9 @@ export const TerminalStream: React.FC<TerminalStreamProps> = ({
   return (
     <div
       className={cn(
-        'my-3 rounded-xl border border-neutral-800 bg-[#09090b] text-neutral-100 font-mono text-xs overflow-hidden shadow-lg',
-        status === 'running' && 'border-cyan-500/40 shadow-cyan-500/5',
-        className
+        "my-3 rounded-xl border border-neutral-800 bg-[#09090b] text-neutral-100 font-mono text-xs overflow-hidden shadow-lg",
+        status === "running" && "border-cyan-500/40 shadow-cyan-500/5",
+        className,
       )}
     >
       {/* Terminal Titlebar */}
@@ -53,33 +61,33 @@ export const TerminalStream: React.FC<TerminalStreamProps> = ({
           </div>
           <Terminal className="h-3.5 w-3.5 text-neutral-400" />
           <span className="text-[11px] text-neutral-300 font-medium truncate max-w-xs font-sans">
-            {command || 'bash'}
+            {command || "bash"}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          {status === 'running' && (
+          {status === "running" && (
             <div className="flex items-center gap-1 text-[10px] text-cyan-400">
               <Loader2 className="h-2.5 w-2.5 animate-spin" />
               <span>Running</span>
             </div>
           )}
 
-          {status === 'completed' && (
+          {status === "completed" && (
             <div className="flex items-center gap-1 text-[10px] text-emerald-400">
               <CheckCircle2 className="h-2.5 w-2.5" />
               <span>Exited (0)</span>
             </div>
           )}
 
-          {status === 'failed' && (
+          {status === "failed" && (
             <div className="flex items-center gap-1 text-[10px] text-rose-400">
               <AlertCircle className="h-2.5 w-2.5" />
               <span>Failed ({exitCode ?? 1})</span>
             </div>
           )}
 
-          {status === 'running' && onInterrupt && (
+          {status === "running" && onInterrupt && (
             <button
               type="button"
               onClick={onInterrupt}
@@ -119,7 +127,7 @@ export const TerminalStream: React.FC<TerminalStreamProps> = ({
           {output}
         </pre>
 
-        {status === 'running' && (
+        {status === "running" && (
           <span className="inline-block h-3.5 w-1.5 bg-neutral-300 animate-pulse align-middle ml-0.5" />
         )}
       </div>

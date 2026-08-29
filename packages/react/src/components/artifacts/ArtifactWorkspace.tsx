@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Code,
   Eye,
@@ -10,11 +10,11 @@ import {
   Minimize2,
   X,
   Sparkles,
-} from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { Artifact } from '../../types';
-import { CodeBlock } from './CodeBlock';
-import { StreamingText } from '../chat/StreamingText';
+} from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { Artifact } from "../../types";
+import { CodeBlock } from "./CodeBlock";
+import { StreamingText } from "../chat/StreamingText";
 
 export interface ArtifactWorkspaceProps {
   artifact: Artifact;
@@ -31,7 +31,9 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
   onClose,
   className,
 }) => {
-  const [activeTab, setActiveTab] = useState<'preview' | 'code' | 'diff' | 'doc'>('code');
+  const [activeTab, setActiveTab] = useState<
+    "preview" | "code" | "diff" | "doc"
+  >("code");
   const [copied, setCopied] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -42,11 +44,15 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
   };
 
   const handleDownload = () => {
-    const blob = new Blob([artifact.content], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([artifact.content], {
+      type: "text/plain;charset=utf-8",
+    });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = artifact.filename || `${artifact.title.toLowerCase().replace(/\s+/g, '_')}.${artifact.language || 'txt'}`;
+    link.download =
+      artifact.filename ||
+      `${artifact.title.toLowerCase().replace(/\s+/g, "_")}.${artifact.language || "txt"}`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -54,9 +60,9 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
   return (
     <div
       className={cn(
-        'flex flex-col h-full rounded-2xl border border-border/80 bg-card shadow-xl overflow-hidden',
-        isFullScreen && 'fixed inset-4 z-50 rounded-2xl shadow-2xl',
-        className
+        "flex flex-col h-full rounded-2xl border border-border/80 bg-card shadow-xl overflow-hidden",
+        isFullScreen && "fixed inset-4 z-50 rounded-2xl shadow-2xl",
+        className,
       )}
     >
       {/* Workspace Header */}
@@ -108,12 +114,12 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
             {artifact.isLivePreviewable && (
               <button
                 type="button"
-                onClick={() => setActiveTab('preview')}
+                onClick={() => setActiveTab("preview")}
                 className={cn(
-                  'flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors',
-                  activeTab === 'preview'
-                    ? 'bg-secondary text-foreground font-medium shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground'
+                  "flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors",
+                  activeTab === "preview"
+                    ? "bg-secondary text-foreground font-medium shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <Eye className="h-3 w-3" />
@@ -123,27 +129,27 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
 
             <button
               type="button"
-              onClick={() => setActiveTab('code')}
+              onClick={() => setActiveTab("code")}
               className={cn(
-                'flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors',
-                activeTab === 'code'
-                  ? 'bg-secondary text-foreground font-medium shadow-2xs'
-                  : 'text-muted-foreground hover:text-foreground'
+                "flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors",
+                activeTab === "code"
+                  ? "bg-secondary text-foreground font-medium shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               <Code className="h-3 w-3" />
               <span className="text-[11px]">Code</span>
             </button>
 
-            {artifact.type === 'markdown' && (
+            {artifact.type === "markdown" && (
               <button
                 type="button"
-                onClick={() => setActiveTab('doc')}
+                onClick={() => setActiveTab("doc")}
                 className={cn(
-                  'flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors',
-                  activeTab === 'doc'
-                    ? 'bg-secondary text-foreground font-medium shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground'
+                  "flex items-center gap-1 px-2.5 py-1 rounded-md transition-colors",
+                  activeTab === "doc"
+                    ? "bg-secondary text-foreground font-medium shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <FileText className="h-3 w-3" />
@@ -178,7 +184,7 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
             type="button"
             onClick={() => setIsFullScreen(!isFullScreen)}
             className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-            title={isFullScreen ? 'Exit Fullscreen' : 'Fullscreen'}
+            title={isFullScreen ? "Exit Fullscreen" : "Fullscreen"}
           >
             {isFullScreen ? (
               <Minimize2 className="h-3.5 w-3.5" />
@@ -202,9 +208,9 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
 
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto p-4 bg-background/50">
-        {activeTab === 'preview' && (
+        {activeTab === "preview" && (
           <div className="h-full min-h-[320px] rounded-xl border border-border/60 bg-background p-4 shadow-inner flex items-center justify-center">
-            {artifact.type === 'svg' || artifact.type === 'html' ? (
+            {artifact.type === "svg" || artifact.type === "html" ? (
               <div
                 className="w-full h-full flex items-center justify-center"
                 dangerouslySetInnerHTML={{ __html: artifact.content }}
@@ -217,16 +223,16 @@ export const ArtifactWorkspace: React.FC<ArtifactWorkspaceProps> = ({
           </div>
         )}
 
-        {activeTab === 'code' && (
+        {activeTab === "code" && (
           <CodeBlock
             code={artifact.content}
-            language={artifact.language || 'typescript'}
+            language={artifact.language || "typescript"}
             filename={artifact.filename}
             className="my-0 h-full"
           />
         )}
 
-        {activeTab === 'doc' && (
+        {activeTab === "doc" && (
           <div className="prose prose-sm dark:prose-invert max-w-none p-4 rounded-xl border border-border/60 bg-card">
             <StreamingText content={artifact.content} />
           </div>

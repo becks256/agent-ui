@@ -1,11 +1,11 @@
-import React from 'react';
-import { X, FileCode, Brain, Database, Wrench, Sparkles } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import React from "react";
+import { X, FileCode, Brain, Database, Wrench, Sparkles } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface ContextItem {
   id: string;
   label: string;
-  type: 'file' | 'memory' | 'database' | 'tool' | 'custom';
+  type: "file" | "memory" | "database" | "tool" | "custom";
   meta?: string;
 }
 
@@ -16,15 +16,15 @@ export interface ContextTrayProps {
   className?: string;
 }
 
-const getContextIcon = (type: ContextItem['type']) => {
+const getContextIcon = (type: ContextItem["type"]) => {
   switch (type) {
-    case 'file':
+    case "file":
       return <FileCode className="h-3 w-3 text-blue-500" />;
-    case 'memory':
+    case "memory":
       return <Brain className="h-3 w-3 text-primary" />;
-    case 'database':
+    case "database":
       return <Database className="h-3 w-3 text-emerald-500" />;
-    case 'tool':
+    case "tool":
       return <Wrench className="h-3 w-3 text-amber-500" />;
     default:
       return <Sparkles className="h-3 w-3 text-primary" />;
@@ -42,8 +42,8 @@ export const ContextTray: React.FC<ContextTrayProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center gap-1.5 px-3 py-1.5 border-b border-border/40 bg-secondary/30 overflow-x-auto text-xs rounded-t-2xl',
-        className
+        "flex items-center gap-1.5 px-3 py-1.5 border-b border-border/40 bg-secondary/30 overflow-x-auto text-xs rounded-t-2xl",
+        className,
       )}
     >
       <span className="text-[10px] uppercase font-mono tracking-wider text-muted-foreground flex-shrink-0">

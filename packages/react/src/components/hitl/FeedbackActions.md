@@ -17,11 +17,11 @@ Thumbs up/down rating bar with copy, retry, and feedback confirmation state.
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `onFeedback` | `(type: 'thumbs_up' | 'thumbs_down') => void` | — | No | Callback when positive or negative feedback is clicked. |
-| `onCopy` | `() => void` | — | No | Callback when copy button is clicked. |
-| `onRetry` | `() => void` | — | No | Callback when regenerate/retry is clicked. |
+| Prop         | Type                | Default                 | Required | Description                                |
+| :----------- | :------------------ | :---------------------- | :------- | :----------------------------------------- |
+| `onFeedback` | `(type: 'thumbs_up' | 'thumbs_down') => void` | —        | No                                         | Callback when positive or negative feedback is clicked. |
+| `onCopy`     | `() => void`        | —                       | No       | Callback when copy button is clicked.      |
+| `onRetry`    | `() => void`        | —                       | No       | Callback when regenerate/retry is clicked. |
 
 ## Basic Usage
 

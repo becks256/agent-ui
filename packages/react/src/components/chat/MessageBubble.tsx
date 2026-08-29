@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   User,
   Sparkles,
@@ -11,18 +11,18 @@ import {
   Cpu,
   Code,
   ArrowUpRight,
-} from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { AgentMessage } from '../../types';
-import { StreamingText } from './StreamingText';
-import { BranchSwitcher } from './BranchSwitcher';
-import { ReasoningAccordion } from '../reasoning/ReasoningAccordion';
-import { ToolCallCard } from '../reasoning/ToolCallCard';
-import { AgentPlanView } from '../reasoning/AgentPlanView';
+} from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { AgentMessage } from "../../types";
+import { StreamingText } from "./StreamingText";
+import { BranchSwitcher } from "./BranchSwitcher";
+import { ReasoningAccordion } from "../reasoning/ReasoningAccordion";
+import { ToolCallCard } from "../reasoning/ToolCallCard";
+import { AgentPlanView } from "../reasoning/AgentPlanView";
 
 export interface MessageBubbleProps {
   message: AgentMessage;
-  variant?: 'solid' | 'subtle' | 'neutral' | 'bordered';
+  variant?: "solid" | "subtle" | "neutral" | "bordered";
   onRetry?: (messageId: string) => void;
   onEdit?: (messageId: string) => void;
   onSelectBranch?: (messageId: string, branchIndex: number) => void;
@@ -34,7 +34,7 @@ export interface MessageBubbleProps {
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
   message,
-  variant = 'solid',
+  variant = "solid",
   onRetry,
   onEdit,
   onSelectBranch,
@@ -44,8 +44,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   className,
 }) => {
   const [copied, setCopied] = useState(false);
-  const isUser = message.role === 'user';
-  const isSystem = message.role === 'system';
+  const isUser = message.role === "user";
+  const isSystem = message.role === "system";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.content);
@@ -55,7 +55,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   if (isSystem) {
     return (
-      <div className={cn('flex justify-center my-3 px-4', className)}>
+      <div className={cn("flex justify-center my-3 px-4", className)}>
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary/80 border border-border/50 text-[11px] text-muted-foreground">
           <span>{message.content}</span>
         </div>
@@ -66,31 +66,31 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   return (
     <div
       className={cn(
-        'group flex gap-3 py-3 px-2 sm:px-4 transition-colors rounded-xl',
-        isUser ? 'flex-row-reverse' : 'flex-row',
-        className
+        "group flex gap-3 py-3 px-2 sm:px-4 transition-colors rounded-xl",
+        isUser ? "flex-row-reverse" : "flex-row",
+        className,
       )}
     >
       {/* Avatar */}
       <div className="flex-shrink-0 mt-0.5">
         <div
           className={cn(
-            'flex h-7 w-7 items-center justify-center rounded-full border text-xs font-medium shadow-xs select-none',
+            "flex h-7 w-7 items-center justify-center rounded-full border text-xs font-medium shadow-xs select-none",
             isUser
-              ? variant === 'subtle'
-                ? 'bg-primary/15 text-primary border-primary/30'
-                : variant === 'neutral'
-                ? 'bg-secondary text-foreground border-border/70'
-                : variant === 'bordered'
-                ? 'bg-background text-primary border-2 border-primary/60'
-                : 'bg-primary text-primary-foreground border-primary/20'
-              : 'bg-secondary text-foreground border-border/60'
+              ? variant === "subtle"
+                ? "bg-primary/15 text-primary border-primary/30"
+                : variant === "neutral"
+                  ? "bg-secondary text-foreground border-border/70"
+                  : variant === "bordered"
+                    ? "bg-background text-primary border-2 border-primary/60"
+                    : "bg-primary text-primary-foreground border-primary/20"
+              : "bg-secondary text-foreground border-border/60",
           )}
         >
           {message.avatar ? (
             <img
               src={message.avatar}
-              alt={message.name || 'User'}
+              alt={message.name || "User"}
               className="h-full w-full rounded-full object-cover"
             />
           ) : isUser ? (
@@ -104,14 +104,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       {/* Main Content Area */}
       <div
         className={cn(
-          'flex flex-col max-w-[88%] sm:max-w-[82%] min-w-0',
-          isUser ? 'items-end' : 'items-start'
+          "flex flex-col max-w-[88%] sm:max-w-[82%] min-w-0",
+          isUser ? "items-end" : "items-start",
         )}
       >
         {/* Header (Author, Model Badge, Latency, Token Metrics) */}
         <div className="flex items-center gap-2 mb-1 text-[11px] text-muted-foreground">
           <span className="font-semibold text-foreground text-xs">
-            {message.name || (isUser ? 'You' : 'Assistant')}
+            {message.name || (isUser ? "You" : "Assistant")}
           </span>
 
           {message.model && (
@@ -189,20 +189,20 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         {message.content && (
           <div
             className={cn(
-              'rounded-2xl px-4 py-2.5 text-xs transition-shadow',
+              "rounded-2xl px-4 py-2.5 text-xs transition-shadow",
               isUser
-                ? variant === 'subtle'
-                  ? 'bg-primary/10 text-foreground border border-primary/25 rounded-tr-sm shadow-xs'
-                  : variant === 'neutral'
-                  ? 'bg-secondary text-foreground border border-border/70 rounded-tr-sm shadow-xs'
-                  : variant === 'bordered'
-                  ? 'bg-background text-foreground border-2 border-primary/60 rounded-tr-sm shadow-xs'
-                  : 'bg-primary text-primary-foreground rounded-tr-sm shadow-xs'
-                : variant === 'subtle'
-                ? 'bg-secondary/40 border border-border/50 rounded-tl-sm text-foreground shadow-xs w-full'
-                : variant === 'bordered'
-                ? 'bg-card border-2 border-border/80 rounded-tl-sm text-foreground shadow-sm w-full'
-                : 'bg-card border border-border/60 rounded-tl-sm text-foreground shadow-xs w-full'
+                ? variant === "subtle"
+                  ? "bg-primary/10 text-foreground border border-primary/25 rounded-tr-sm shadow-xs"
+                  : variant === "neutral"
+                    ? "bg-secondary text-foreground border border-border/70 rounded-tr-sm shadow-xs"
+                    : variant === "bordered"
+                      ? "bg-background text-foreground border-2 border-primary/60 rounded-tr-sm shadow-xs"
+                      : "bg-primary text-primary-foreground rounded-tr-sm shadow-xs"
+                : variant === "subtle"
+                  ? "bg-secondary/40 border border-border/50 rounded-tl-sm text-foreground shadow-xs w-full"
+                  : variant === "bordered"
+                    ? "bg-card border-2 border-border/80 rounded-tl-sm text-foreground shadow-sm w-full"
+                    : "bg-card border border-border/60 rounded-tl-sm text-foreground shadow-xs w-full",
             )}
           >
             {isUser ? (
@@ -212,7 +212,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             ) : (
               <StreamingText
                 content={message.content}
-                isStreaming={message.status === 'streaming'}
+                isStreaming={message.status === "streaming"}
               />
             )}
           </div>
@@ -246,8 +246,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         {/* Action Controls Toolbar (Copy, Retry, Branching) */}
         <div
           className={cn(
-            'flex items-center gap-1.5 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity',
-            isUser ? 'self-end' : 'self-start'
+            "flex items-center gap-1.5 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity",
+            isUser ? "self-end" : "self-start",
           )}
         >
           {message.branches && message.branches.length > 1 && (

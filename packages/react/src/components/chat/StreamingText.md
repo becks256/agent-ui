@@ -17,11 +17,11 @@ Zero-flicker streaming Markdown engine designed for Server-Sent Events (SSE). Re
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `content` | `string` | — | Yes | Markdown or plain text content to render. |
-| `isStreaming` | `boolean` | `false` | No | Whether the stream is actively in progress (shows animated typing cursor). |
-| `className` | `string` | — | No | Optional CSS classes. |
+| Prop          | Type      | Default | Required | Description                                                                |
+| :------------ | :-------- | :------ | :------- | :------------------------------------------------------------------------- |
+| `content`     | `string`  | —       | Yes      | Markdown or plain text content to render.                                  |
+| `isStreaming` | `boolean` | `false` | No       | Whether the stream is actively in progress (shows animated typing cursor). |
+| `className`   | `string`  | —       | No       | Optional CSS classes.                                                      |
 
 ## Basic Usage
 

@@ -19,11 +19,11 @@ Animated collapsible container for Chain-of-Thought (CoT) reasoning streams. Inc
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `thought` | `ThoughtProcess` | — | Yes | The thought process object containing title, markdown content, durationMs, tokens, and sub-steps. |
-| `defaultExpanded` | `boolean` | `false` | No | Whether the reasoning accordion should be expanded upon initial mount. |
-| `className` | `string` | — | No | Optional additional Tailwind CSS class names to apply to the container. |
+| Prop              | Type             | Default | Required | Description                                                                                       |
+| :---------------- | :--------------- | :------ | :------- | :------------------------------------------------------------------------------------------------ |
+| `thought`         | `ThoughtProcess` | —       | Yes      | The thought process object containing title, markdown content, durationMs, tokens, and sub-steps. |
+| `defaultExpanded` | `boolean`        | `false` | No       | Whether the reasoning accordion should be expanded upon initial mount.                            |
+| `className`       | `string`         | —       | No       | Optional additional Tailwind CSS class names to apply to the container.                           |
 
 ## Types
 
@@ -43,7 +43,7 @@ export interface ThoughtProcess {
 export interface ThoughtStep {
   id: string;
   title: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   durationMs?: number;
 }
 ```
@@ -53,9 +53,10 @@ export interface ThoughtStep {
 ```tsx
 <ReasoningAccordion
   thought={{
-    id: 'th-1',
-    title: 'Evaluating query intent & execution DAG',
-    content: '1. Parsed user prompt.\n2. Validating workspace constraints.\n3. Dispatching bash tool.',
+    id: "th-1",
+    title: "Evaluating query intent & execution DAG",
+    content:
+      "1. Parsed user prompt.\n2. Validating workspace constraints.\n3. Dispatching bash tool.",
     durationMs: 2400,
     tokens: 312,
   }}
@@ -69,14 +70,14 @@ export interface ThoughtStep {
 <ReasoningAccordion
   defaultExpanded={true}
   thought={{
-    id: 'th-stream',
-    title: 'Synthesizing build artifacts...',
+    id: "th-stream",
+    title: "Synthesizing build artifacts...",
     content: streamContent,
     isStreaming: true,
     steps: [
-      { id: '1', title: 'Verify workspace contracts', status: 'completed' },
-      { id: '2', title: 'Compile ESM and DTS bundles', status: 'running' },
-      { id: '3', title: 'Run typecheck verification', status: 'pending' },
+      { id: "1", title: "Verify workspace contracts", status: "completed" },
+      { id: "2", title: "Compile ESM and DTS bundles", status: "running" },
+      { id: "3", title: "Run typecheck verification", status: "pending" },
     ],
   }}
 />

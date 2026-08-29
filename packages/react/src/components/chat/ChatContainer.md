@@ -18,11 +18,11 @@ Auto-scrolling conversation container with stick-to-bottom anchor, scroll-up det
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `children` | `React.ReactNode` | — | Yes | Message bubbles and chat stream items to render. |
-| `isStreaming` | `boolean` | `false` | No | When true, smoothly locks scroll to the bottom during incoming token generation. |
-| `autoScrollThreshold` | `number` | `100` | No | Pixel threshold from bottom to determine if user has scrolled away. |
+| Prop                  | Type              | Default | Required | Description                                                                      |
+| :-------------------- | :---------------- | :------ | :------- | :------------------------------------------------------------------------------- |
+| `children`            | `React.ReactNode` | —       | Yes      | Message bubbles and chat stream items to render.                                 |
+| `isStreaming`         | `boolean`         | `false` | No       | When true, smoothly locks scroll to the bottom during incoming token generation. |
+| `autoScrollThreshold` | `number`          | `100`   | No       | Pixel threshold from bottom to determine if user has scrolled away.              |
 
 ## Basic Usage
 

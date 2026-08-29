@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { HelpCircle, Check, ArrowRight } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import React, { useState } from "react";
+import { HelpCircle, Check, ArrowRight } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface QuestionOption {
   id: string;
@@ -18,7 +18,9 @@ export interface InteractiveQuestionCardProps {
   className?: string;
 }
 
-export const InteractiveQuestionCard: React.FC<InteractiveQuestionCardProps> = ({
+export const InteractiveQuestionCard: React.FC<
+  InteractiveQuestionCardProps
+> = ({
   question,
   description,
   options,
@@ -27,13 +29,13 @@ export const InteractiveQuestionCard: React.FC<InteractiveQuestionCardProps> = (
   className,
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [customInput, setCustomInput] = useState('');
+  const [customInput, setCustomInput] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const toggleOption = (id: string) => {
     if (isMultiSelect) {
       setSelectedIds((prev) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
       );
     } else {
       setSelectedIds([id]);
@@ -51,8 +53,8 @@ export const InteractiveQuestionCard: React.FC<InteractiveQuestionCardProps> = (
   return (
     <div
       className={cn(
-        'my-3 p-4 rounded-xl border border-primary/30 bg-primary/5 backdrop-blur-sm shadow-sm space-y-3',
-        className
+        "my-3 p-4 rounded-xl border border-primary/30 bg-primary/5 backdrop-blur-sm shadow-sm space-y-3",
+        className,
       )}
     >
       <div className="flex items-start gap-2.5">
@@ -82,25 +84,27 @@ export const InteractiveQuestionCard: React.FC<InteractiveQuestionCardProps> = (
               disabled={isSubmitted}
               onClick={() => toggleOption(opt.id)}
               className={cn(
-                'w-full flex items-center justify-between p-2.5 rounded-lg border text-left text-xs transition-all',
+                "w-full flex items-center justify-between p-2.5 rounded-lg border text-left text-xs transition-all",
                 isSelected
-                  ? 'border-primary bg-primary/15 text-foreground font-medium shadow-2xs'
-                  : 'border-border/60 bg-card hover:bg-secondary/60 text-muted-foreground hover:text-foreground'
+                  ? "border-primary bg-primary/15 text-foreground font-medium shadow-2xs"
+                  : "border-border/60 bg-card hover:bg-secondary/60 text-muted-foreground hover:text-foreground",
               )}
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <div
                     className={cn(
-                      'flex h-4 w-4 items-center justify-center rounded border flex-shrink-0 transition-colors',
+                      "flex h-4 w-4 items-center justify-center rounded border flex-shrink-0 transition-colors",
                       isSelected
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-border bg-background'
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-background",
                     )}
                   >
                     {isSelected && <Check className="h-2.5 w-2.5 stroke-[3]" />}
                   </div>
-                  <span className="truncate text-foreground font-medium">{opt.label}</span>
+                  <span className="truncate text-foreground font-medium">
+                    {opt.label}
+                  </span>
                   {opt.isRecommended && (
                     <span className="text-[9px] uppercase font-mono px-1.5 py-0.5 rounded bg-primary text-primary-foreground font-bold tracking-wider shadow-2xs">
                       Recommended

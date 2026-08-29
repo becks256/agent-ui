@@ -1,14 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  ArrowUp,
-  Square,
-  Paperclip,
-} from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { ModelInfo, FileAttachment } from '../../types';
-import { ModelSelector } from './ModelSelector';
-import { ContextTray, type ContextItem } from './ContextTray';
-import { SlashCommandMenu, type SlashCommand } from './SlashCommandMenu';
+import React, { useState, useRef, useEffect } from "react";
+import { ArrowUp, Square, Paperclip } from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { ModelInfo, FileAttachment } from "../../types";
+import { ModelSelector } from "./ModelSelector";
+import { ContextTray, type ContextItem } from "./ContextTray";
+import { SlashCommandMenu, type SlashCommand } from "./SlashCommandMenu";
 
 export interface PromptInputProps {
   value: string;
@@ -33,7 +29,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
   onSubmit,
   onStop,
   isStreaming = false,
-  placeholder = 'Ask a question or type / for commands...',
+  placeholder = "Ask a question or type / for commands...",
   models,
   selectedModel,
   onSelectModel,
@@ -45,26 +41,26 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [showSlashMenu, setShowSlashMenu] = useState(false);
-  const [slashFilter, setSlashFilter] = useState('');
+  const [slashFilter, setSlashFilter] = useState("");
 
   // Auto-resize textarea height
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${Math.min(
         textareaRef.current.scrollHeight,
-        220
+        220,
       )}px`;
     }
   }, [value]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (!isStreaming && (value.trim() || attachments.length > 0)) {
         onSubmit(value, attachments);
       }
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       setShowSlashMenu(false);
     }
   };
@@ -73,7 +69,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({
     const val = e.target.value;
     onChange(val);
 
-    if (val.startsWith('/')) {
+    if (val.startsWith("/")) {
       setShowSlashMenu(true);
       setSlashFilter(val.slice(1));
     } else {
@@ -93,16 +89,13 @@ export const PromptInput: React.FC<PromptInputProps> = ({
   return (
     <div
       className={cn(
-        'relative rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md shadow-lg transition-all duration-200 focus-within:border-primary/60 focus-within:ring-1 focus-within:ring-primary/30',
-        className
+        "relative rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md shadow-lg transition-all duration-200 focus-within:border-primary/60 focus-within:ring-1 focus-within:ring-primary/30",
+        className,
       )}
     >
       {/* Pinned Context Tray */}
       {contextItems.length > 0 && onRemoveContextItem && (
-        <ContextTray
-          items={contextItems}
-          onRemoveItem={onRemoveContextItem}
-        />
+        <ContextTray items={contextItems} onRemoveItem={onRemoveContextItem} />
       )}
 
       {/* Slash Command Autocomplete Popover */}

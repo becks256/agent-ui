@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Sparkles, Zap, Brain, Check } from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { ModelInfo } from '../../types';
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, Sparkles, Zap, Brain, Check } from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { ModelInfo } from "../../types";
 
 export interface ModelSelectorProps {
   models: ModelInfo[];
   selectedModel: ModelInfo;
   onSelectModel: (model: ModelInfo) => void;
-  placement?: 'bottom-full' | 'top-full';
+  placement?: "bottom-full" | "top-full";
   className?: string;
 }
 
@@ -16,7 +16,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   models,
   selectedModel,
   onSelectModel,
-  placement = 'bottom-full',
+  placement = "bottom-full",
   className,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,21 +27,27 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     if (!isOpen) return;
 
     const handlePointerDown = (e: MouseEvent | TouchEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
     };
   }, [isOpen]);
 
   return (
-    <div ref={containerRef} className={cn('relative inline-block text-left', className)}>
+    <div
+      ref={containerRef}
+      className={cn("relative inline-block text-left", className)}
+    >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -55,13 +61,23 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: placement === 'bottom-full' ? 6 : -6, scale: 0.96 }}
+            initial={{
+              opacity: 0,
+              y: placement === "bottom-full" ? 6 : -6,
+              scale: 0.96,
+            }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: placement === 'bottom-full' ? 6 : -6, scale: 0.96 }}
+            exit={{
+              opacity: 0,
+              y: placement === "bottom-full" ? 6 : -6,
+              scale: 0.96,
+            }}
             transition={{ duration: 0.15 }}
             className={cn(
-              'absolute left-0 w-64 rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md shadow-xl z-50 p-1.5 space-y-1',
-              placement === 'bottom-full' ? 'bottom-full mb-2' : 'top-full mt-2'
+              "absolute left-0 w-64 rounded-xl border border-border/80 bg-popover/95 backdrop-blur-md shadow-xl z-50 p-1.5 space-y-1",
+              placement === "bottom-full"
+                ? "bottom-full mb-2"
+                : "top-full mt-2",
             )}
           >
             <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-muted-foreground border-b border-border/40">
@@ -80,24 +96,45 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                       setIsOpen(false);
                     }}
                     className={cn(
-                      'w-full flex items-center justify-between p-2 rounded-lg text-xs text-left transition-colors',
+                      "w-full flex items-center justify-between p-2 rounded-lg text-xs text-left transition-colors",
                       isSelected
-                        ? 'bg-primary text-primary-foreground font-semibold shadow-2xs'
-                        : 'text-foreground hover:bg-secondary'
+                        ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
+                        : "text-foreground hover:bg-secondary",
                     )}
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
                         <span className="font-semibold">{m.name}</span>
-                        {m.speed === 'fast' && (
-                          <Zap className={cn("h-2.5 w-2.5", isSelected ? "text-primary-foreground/90" : "text-amber-500")} />
+                        {m.speed === "fast" && (
+                          <Zap
+                            className={cn(
+                              "h-2.5 w-2.5",
+                              isSelected
+                                ? "text-primary-foreground/90"
+                                : "text-amber-500",
+                            )}
+                          />
                         )}
-                        {m.reasoningEffort === 'high' && (
-                          <Brain className={cn("h-2.5 w-2.5", isSelected ? "text-primary-foreground/90" : "text-primary")} />
+                        {m.reasoningEffort === "high" && (
+                          <Brain
+                            className={cn(
+                              "h-2.5 w-2.5",
+                              isSelected
+                                ? "text-primary-foreground/90"
+                                : "text-primary",
+                            )}
+                          />
                         )}
                       </div>
                       {m.description && (
-                        <p className={cn("text-[10px] truncate mt-0.5", isSelected ? "text-primary-foreground/80" : "text-muted-foreground")}>
+                        <p
+                          className={cn(
+                            "text-[10px] truncate mt-0.5",
+                            isSelected
+                              ? "text-primary-foreground/80"
+                              : "text-muted-foreground",
+                          )}
+                        >
                           {m.description}
                         </p>
                       )}

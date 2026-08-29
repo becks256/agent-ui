@@ -19,12 +19,12 @@ Multi-agent collaboration visualizer showing subagent roles, delegation states, 
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `agents` | `SwarmAgent[]` | — | Yes | Array of subagents with role, name, status, avatar, and current active task. |
-| `activeAgentId` | `string` | — | No | ID of the currently focused or active agent in the swarm. |
-| `onSelectAgent` | `(agentId: string) => void` | — | No | Callback fired when an agent pill or avatar is clicked. |
-| `className` | `string` | — | No | Optional additional CSS classes. |
+| Prop            | Type                        | Default | Required | Description                                                                  |
+| :-------------- | :-------------------------- | :------ | :------- | :--------------------------------------------------------------------------- |
+| `agents`        | `SwarmAgent[]`              | —       | Yes      | Array of subagents with role, name, status, avatar, and current active task. |
+| `activeAgentId` | `string`                    | —       | No       | ID of the currently focused or active agent in the swarm.                    |
+| `onSelectAgent` | `(agentId: string) => void` | —       | No       | Callback fired when an agent pill or avatar is clicked.                      |
+| `className`     | `string`                    | —       | No       | Optional additional CSS classes.                                             |
 
 ## Types
 
@@ -35,7 +35,7 @@ export interface SwarmAgent {
   id: string;
   name: string;
   role: string;
-  status: 'idle' | 'working' | 'completed' | 'failed';
+  status: "idle" | "working" | "completed" | "failed";
   avatar?: string;
   currentTask?: string;
   progress?: number;
@@ -47,8 +47,14 @@ export interface SwarmAgent {
 ```tsx
 <AgentSwarmView
   agents={[
-    { id: 'a1', name: 'Planner', role: 'Architecture', status: 'working', currentTask: 'Formulating task graph...' },
-    { id: 'a2', name: 'Coder', role: 'TypeScript', status: 'idle' },
+    {
+      id: "a1",
+      name: "Planner",
+      role: "Architecture",
+      status: "working",
+      currentTask: "Formulating task graph...",
+    },
+    { id: "a2", name: "Coder", role: "TypeScript", status: "idle" },
   ]}
   activeAgentId="a1"
 />

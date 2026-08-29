@@ -1,11 +1,11 @@
-import type { Metadata } from 'next';
-import { Analytics } from "@vercel/analytics/next"
-import './globals.css';
+import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'Noetic UI — High-Design Component Library for Thinking AI & Agents',
+  title: "Noetic UI — High-Design Component Library for Thinking AI & Agents",
   description:
-    'A polished, open-source UI component library designed specifically for cognitive AI and agentic applications.',
+    "A polished, open-source UI component library designed specifically for cognitive AI and agentic applications.",
 };
 
 export default function RootLayout({

@@ -1,5 +1,5 @@
-import React from 'react';
-import { cn } from '../../utils/cn';
+import React from "react";
+import { cn } from "../../utils/cn";
 
 export interface StreamingTextProps {
   content: string;
@@ -14,16 +14,16 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
 }) => {
   // Simple, robust markdown line parser for zero-dependency streaming rendering
   const renderFormattedText = (text: string) => {
-    const lines = text.split('\n');
+    const lines = text.split("\n");
     let inCodeBlock = false;
     let codeBlockContent: string[] = [];
-    let codeBlockLang = '';
+    let codeBlockLang = "";
 
     const elements: React.ReactNode[] = [];
 
     lines.forEach((line, idx) => {
       // Code Block Start/End
-      if (line.startsWith('```')) {
+      if (line.startsWith("```")) {
         if (inCodeBlock) {
           elements.push(
             <div
@@ -36,16 +36,16 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
                 </div>
               )}
               <pre className="p-3 overflow-x-auto">
-                <code>{codeBlockContent.join('\n')}</code>
+                <code>{codeBlockContent.join("\n")}</code>
               </pre>
-            </div>
+            </div>,
           );
           codeBlockContent = [];
           inCodeBlock = false;
-          codeBlockLang = '';
+          codeBlockLang = "";
         } else {
           inCodeBlock = true;
-          codeBlockLang = line.replace('```', '').trim();
+          codeBlockLang = line.replace("```", "").trim();
         }
         return;
       }
@@ -56,50 +56,59 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
       }
 
       // Headings
-      if (line.startsWith('### ')) {
+      if (line.startsWith("### ")) {
         elements.push(
-          <h3 key={idx} className="text-sm font-semibold text-foreground mt-3 mb-1">
-            {line.replace('### ', '')}
-          </h3>
+          <h3
+            key={idx}
+            className="text-sm font-semibold text-foreground mt-3 mb-1"
+          >
+            {line.replace("### ", "")}
+          </h3>,
         );
         return;
       }
-      if (line.startsWith('## ')) {
+      if (line.startsWith("## ")) {
         elements.push(
-          <h2 key={idx} className="text-base font-bold text-foreground mt-4 mb-1.5">
-            {line.replace('## ', '')}
-          </h2>
+          <h2
+            key={idx}
+            className="text-base font-bold text-foreground mt-4 mb-1.5"
+          >
+            {line.replace("## ", "")}
+          </h2>,
         );
         return;
       }
-      if (line.startsWith('# ')) {
+      if (line.startsWith("# ")) {
         elements.push(
           <h1 key={idx} className="text-lg font-bold text-foreground mt-4 mb-2">
-            {line.replace('# ', '')}
-          </h1>
+            {line.replace("# ", "")}
+          </h1>,
         );
         return;
       }
 
       // Blockquotes
-      if (line.startsWith('> ')) {
+      if (line.startsWith("> ")) {
         elements.push(
           <blockquote
             key={idx}
             className="border-l-2 border-primary/40 pl-3 italic text-muted-foreground my-2 text-xs"
           >
-            {line.replace('> ', '')}
-          </blockquote>
+            {line.replace("> ", "")}
+          </blockquote>,
         );
         return;
       }
 
       // Bullet lists
-      if (line.startsWith('- ') || line.startsWith('* ')) {
+      if (line.startsWith("- ") || line.startsWith("* ")) {
         elements.push(
-          <li key={idx} className="ml-4 list-disc text-foreground/90 my-0.5 text-xs">
+          <li
+            key={idx}
+            className="ml-4 list-disc text-foreground/90 my-0.5 text-xs"
+          >
             {renderInlineSpans(line.substring(2))}
-          </li>
+          </li>,
         );
         return;
       }
@@ -108,21 +117,27 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
       const numMatch = line.match(/^(\d+)\.\s(.*)/);
       if (numMatch) {
         elements.push(
-          <li key={idx} className="ml-4 list-decimal text-foreground/90 my-0.5 text-xs">
+          <li
+            key={idx}
+            className="ml-4 list-decimal text-foreground/90 my-0.5 text-xs"
+          >
             {renderInlineSpans(numMatch[2])}
-          </li>
+          </li>,
         );
         return;
       }
 
       // Normal paragraph
-      if (line.trim() === '') {
+      if (line.trim() === "") {
         elements.push(<div key={idx} className="h-2" />);
       } else {
         elements.push(
-          <p key={idx} className="my-1 text-xs leading-relaxed text-foreground/90">
+          <p
+            key={idx}
+            className="my-1 text-xs leading-relaxed text-foreground/90"
+          >
             {renderInlineSpans(line)}
-          </p>
+          </p>,
         );
       }
     });
@@ -135,9 +150,9 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
           className="my-3 rounded-lg overflow-hidden border border-border/60 bg-neutral-950 text-neutral-100 font-mono text-xs"
         >
           <pre className="p-3 overflow-x-auto">
-            <code>{codeBlockContent.join('\n')}</code>
+            <code>{codeBlockContent.join("\n")}</code>
           </pre>
-        </div>
+        </div>,
       );
     }
 
@@ -149,7 +164,7 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
     // Handle inline code `code`
     const parts = text.split(/(`[^`]+`|\*\*[^*]+\*\*)/g);
     return parts.map((part, i) => {
-      if (part.startsWith('`') && part.endsWith('`')) {
+      if (part.startsWith("`") && part.endsWith("`")) {
         return (
           <code
             key={i}
@@ -159,7 +174,7 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
           </code>
         );
       }
-      if (part.startsWith('**') && part.endsWith('**')) {
+      if (part.startsWith("**") && part.endsWith("**")) {
         return (
           <strong key={i} className="font-semibold text-foreground">
             {part.slice(2, -2)}
@@ -171,7 +186,9 @@ export const StreamingText: React.FC<StreamingTextProps> = ({
   };
 
   return (
-    <div className={cn('text-xs leading-relaxed font-sans select-text', className)}>
+    <div
+      className={cn("text-xs leading-relaxed font-sans select-text", className)}
+    >
       {renderFormattedText(content)}
       {isStreaming && (
         <span className="inline-block h-3.5 w-1.5 ml-0.5 bg-primary animate-stream-cursor align-middle rounded-sm" />

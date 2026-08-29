@@ -1,7 +1,7 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowDown } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface ChatContainerProps {
   children: React.ReactNode;
@@ -23,8 +23,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
 
   const scrollToBottom = useCallback((smooth = true) => {
     bottomAnchorRef.current?.scrollIntoView({
-      behavior: smooth ? 'smooth' : 'auto',
-      block: 'end',
+      behavior: smooth ? "smooth" : "auto",
+      block: "end",
     });
     setUserScrolledUp(false);
     setShowScrollBottom(false);
@@ -58,8 +58,8 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
         ref={containerRef}
         onScroll={handleScroll}
         className={cn(
-          'flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-4 scroll-smooth',
-          className
+          "flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 space-y-4 scroll-smooth",
+          className,
         )}
       >
         {children}

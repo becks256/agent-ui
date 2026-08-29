@@ -18,11 +18,11 @@ Multi-file drag-and-drop dropzone surface with thumbnail previews, upload progre
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `attachments` | `FileAttachment[]` | — | Yes | Array of currently attached files with upload status. |
-| `onUploadFiles` | `(files: File[]) => void` | — | Yes | Callback fired when files are dropped or selected via file browser. |
-| `onRemoveAttachment` | `(id: string) => void` | — | Yes | Callback fired when an attachment is removed. |
+| Prop                 | Type                      | Default | Required | Description                                                         |
+| :------------------- | :------------------------ | :------ | :------- | :------------------------------------------------------------------ |
+| `attachments`        | `FileAttachment[]`        | —       | Yes      | Array of currently attached files with upload status.               |
+| `onUploadFiles`      | `(files: File[]) => void` | —       | Yes      | Callback fired when files are dropped or selected via file browser. |
+| `onRemoveAttachment` | `(id: string) => void`    | —       | Yes      | Callback fired when an attachment is removed.                       |
 
 ## Basic Usage
 

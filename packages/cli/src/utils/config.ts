@@ -1,5 +1,5 @@
-import fs from 'fs-extra';
-import path from 'path';
+import fs from "fs-extra";
+import path from "path";
 
 export interface NoeticUiConfig {
   baseColor: string;
@@ -12,12 +12,12 @@ export interface NoeticUiConfig {
 }
 
 export const DEFAULT_CONFIG: NoeticUiConfig = {
-  baseColor: 'violet',
-  css: 'app/globals.css',
-  components: 'components/noetic-ui',
+  baseColor: "violet",
+  css: "app/globals.css",
+  components: "components/noetic-ui",
   aliases: {
-    components: 'components/noetic-ui',
-    utils: 'components/noetic-ui/cn',
+    components: "components/noetic-ui",
+    utils: "components/noetic-ui/cn",
   },
 };
 
@@ -56,14 +56,14 @@ export const CSS_COLOR_VARIABLES = `
 
 export function detectCssPath(cwd: string): string | null {
   const candidatePaths = [
-    'src/app/globals.css',
-    'app/globals.css',
-    'src/styles/globals.css',
-    'styles/globals.css',
-    'src/index.css',
-    'src/main.css',
-    'src/styles.css',
-    'src/App.css',
+    "src/app/globals.css",
+    "app/globals.css",
+    "src/styles/globals.css",
+    "styles/globals.css",
+    "src/index.css",
+    "src/main.css",
+    "src/styles.css",
+    "src/App.css",
   ];
 
   for (const p of candidatePaths) {
@@ -74,42 +74,54 @@ export function detectCssPath(cwd: string): string | null {
   return null;
 }
 
-export function detectPackageManager(cwd: string): 'pnpm' | 'npm' | 'yarn' | 'bun' {
-  if (fs.existsSync(path.resolve(cwd, 'pnpm-lock.yaml'))) return 'pnpm';
-  if (fs.existsSync(path.resolve(cwd, 'bun.lockb')) || fs.existsSync(path.resolve(cwd, 'bun.lock'))) return 'bun';
-  if (fs.existsSync(path.resolve(cwd, 'yarn.lock'))) return 'yarn';
-  return 'npm';
+export function detectPackageManager(
+  cwd: string,
+): "pnpm" | "npm" | "yarn" | "bun" {
+  if (fs.existsSync(path.resolve(cwd, "pnpm-lock.yaml"))) return "pnpm";
+  if (
+    fs.existsSync(path.resolve(cwd, "bun.lockb")) ||
+    fs.existsSync(path.resolve(cwd, "bun.lock"))
+  )
+    return "bun";
+  if (fs.existsSync(path.resolve(cwd, "yarn.lock"))) return "yarn";
+  return "npm";
 }
 
-export function getInstallCommand(pkgManager: 'pnpm' | 'npm' | 'yarn' | 'bun', pkgs: string[]): string {
-  if (pkgs.length === 0) return '';
+export function getInstallCommand(
+  pkgManager: "pnpm" | "npm" | "yarn" | "bun",
+  pkgs: string[],
+): string {
+  if (pkgs.length === 0) return "";
   switch (pkgManager) {
-    case 'pnpm':
-      return `pnpm add ${pkgs.join(' ')}`;
-    case 'yarn':
-      return `yarn add ${pkgs.join(' ')}`;
-    case 'bun':
-      return `bun add ${pkgs.join(' ')}`;
-    case 'npm':
+    case "pnpm":
+      return `pnpm add ${pkgs.join(" ")}`;
+    case "yarn":
+      return `yarn add ${pkgs.join(" ")}`;
+    case "bun":
+      return `bun add ${pkgs.join(" ")}`;
+    case "npm":
     default:
-      return `npm i ${pkgs.join(' ')}`;
+      return `npm i ${pkgs.join(" ")}`;
   }
 }
 
 export async function readConfig(cwd: string): Promise<NoeticUiConfig | null> {
-  const configPath = path.resolve(cwd, 'noetic-ui.json');
+  const configPath = path.resolve(cwd, "noetic-ui.json");
   if (await fs.pathExists(configPath)) {
     return fs.readJson(configPath);
   }
   // Fallback for transition compatibility
-  const legacyConfigPath = path.resolve(cwd, 'agent-ui.json');
+  const legacyConfigPath = path.resolve(cwd, "agent-ui.json");
   if (await fs.pathExists(legacyConfigPath)) {
     return fs.readJson(legacyConfigPath);
   }
   return null;
 }
 
-export async function writeConfig(cwd: string, config: NoeticUiConfig): Promise<void> {
-  const configPath = path.resolve(cwd, 'noetic-ui.json');
+export async function writeConfig(
+  cwd: string,
+  config: NoeticUiConfig,
+): Promise<void> {
+  const configPath = path.resolve(cwd, "noetic-ui.json");
   await fs.writeJson(configPath, config, { spaces: 2 });
 }

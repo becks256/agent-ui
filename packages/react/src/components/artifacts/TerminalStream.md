@@ -17,11 +17,11 @@ Authentic dark terminal console with command header, copy output, and live ANSI 
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `output` | `string` | — | Yes | Terminal stdout/stderr text stream. |
-| `command` | `string` | — | No | Shell command shown in the terminal titlebar prompt. |
-| `status` | `'running' | 'completed' | 'failed'` | `'completed'` | No | Live execution status indicator. |
+| Prop      | Type       | Default     | Required  | Description                                          |
+| :-------- | :--------- | :---------- | :-------- | :--------------------------------------------------- |
+| `output`  | `string`   | —           | Yes       | Terminal stdout/stderr text stream.                  |
+| `command` | `string`   | —           | No        | Shell command shown in the terminal titlebar prompt. |
+| `status`  | `'running' | 'completed' | 'failed'` | `'completed'`                                        | No  | Live execution status indicator. |
 
 ## Basic Usage
 

@@ -17,12 +17,12 @@ Structured single/multi-select option cards for agent clarification with accessi
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `question` | `string` | — | Yes | The clarification question asked by the agent. |
-| `options` | `InteractiveOption[]` | — | Yes | List of selectable option cards. |
-| `isMultiSelect` | `boolean` | `false` | No | Allows multiple option selections. |
-| `onSubmit` | `(selectedIds: string[]) => void` | — | Yes | Callback with the selected option IDs. |
+| Prop            | Type                              | Default | Required | Description                                    |
+| :-------------- | :-------------------------------- | :------ | :------- | :--------------------------------------------- |
+| `question`      | `string`                          | —       | Yes      | The clarification question asked by the agent. |
+| `options`       | `InteractiveOption[]`             | —       | Yes      | List of selectable option cards.               |
+| `isMultiSelect` | `boolean`                         | `false` | No       | Allows multiple option selections.             |
+| `onSubmit`      | `(selectedIds: string[]) => void` | —       | Yes      | Callback with the selected option IDs.         |
 
 ## Basic Usage
 
@@ -30,8 +30,17 @@ Structured single/multi-select option cards for agent clarification with accessi
 <InteractiveQuestionCard
   question="Which bundler should we configure?"
   options={[
-    { id: 'tsup', label: 'tsup (Recommended)', isRecommended: true, description: 'Fast TypeScript bundler powered by esbuild' },
-    { id: 'rollup', label: 'Rollup', description: 'Classic plugin-based bundler' },
+    {
+      id: "tsup",
+      label: "tsup (Recommended)",
+      isRecommended: true,
+      description: "Fast TypeScript bundler powered by esbuild",
+    },
+    {
+      id: "rollup",
+      label: "Rollup",
+      description: "Classic plugin-based bundler",
+    },
   ]}
   onSubmit={(ids) => submitAnswer(ids)}
 />

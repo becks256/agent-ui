@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Terminal,
   Globe,
@@ -18,9 +18,9 @@ import {
   ShieldAlert,
   Play,
   XCircle,
-} from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { ToolCall } from '../../types';
+} from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { ToolCall } from "../../types";
 
 export interface ToolCallCardProps {
   toolCall: ToolCall;
@@ -32,22 +32,51 @@ export interface ToolCallCardProps {
 
 const getToolIcon = (name: string) => {
   const lower = name.toLowerCase();
-  if (lower.includes('bash') || lower.includes('command') || lower.includes('terminal') || lower.includes('exec')) {
+  if (
+    lower.includes("bash") ||
+    lower.includes("command") ||
+    lower.includes("terminal") ||
+    lower.includes("exec")
+  ) {
     return <Terminal className="h-3.5 w-3.5" />;
   }
-  if (lower.includes('web') || lower.includes('search') || lower.includes('browser') || lower.includes('url')) {
+  if (
+    lower.includes("web") ||
+    lower.includes("search") ||
+    lower.includes("browser") ||
+    lower.includes("url")
+  ) {
     return <Globe className="h-3.5 w-3.5" />;
   }
-  if (lower.includes('read') || lower.includes('view') || lower.includes('cat') || lower.includes('find')) {
+  if (
+    lower.includes("read") ||
+    lower.includes("view") ||
+    lower.includes("cat") ||
+    lower.includes("find")
+  ) {
     return <FileText className="h-3.5 w-3.5" />;
   }
-  if (lower.includes('edit') || lower.includes('write') || lower.includes('replace') || lower.includes('patch')) {
+  if (
+    lower.includes("edit") ||
+    lower.includes("write") ||
+    lower.includes("replace") ||
+    lower.includes("patch")
+  ) {
     return <FileCode className="h-3.5 w-3.5" />;
   }
-  if (lower.includes('sql') || lower.includes('db') || lower.includes('database') || lower.includes('postgres')) {
+  if (
+    lower.includes("sql") ||
+    lower.includes("db") ||
+    lower.includes("database") ||
+    lower.includes("postgres")
+  ) {
     return <Database className="h-3.5 w-3.5" />;
   }
-  if (lower.includes('python') || lower.includes('code') || lower.includes('run')) {
+  if (
+    lower.includes("python") ||
+    lower.includes("code") ||
+    lower.includes("run")
+  ) {
     return <Code2 className="h-3.5 w-3.5" />;
   }
   return <Wrench className="h-3.5 w-3.5" />;
@@ -60,17 +89,21 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
   onReject,
   className,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded || toolCall.status === 'awaiting_approval');
-  const [activeTab, setActiveTab] = useState<'output' | 'args' | 'raw'>('output');
+  const [isExpanded, setIsExpanded] = useState(
+    defaultExpanded || toolCall.status === "awaiting_approval",
+  );
+  const [activeTab, setActiveTab] = useState<"output" | "args" | "raw">(
+    "output",
+  );
   const [copied, setCopied] = useState(false);
 
   const formattedArgs =
-    typeof toolCall.args === 'string'
+    typeof toolCall.args === "string"
       ? toolCall.args
       : JSON.stringify(toolCall.args, null, 2);
 
   const formattedResult =
-    typeof toolCall.result === 'string'
+    typeof toolCall.result === "string"
       ? toolCall.result
       : JSON.stringify(toolCall.result, null, 2);
 
@@ -84,12 +117,14 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
   return (
     <div
       className={cn(
-        'my-2 rounded-xl border bg-card/60 backdrop-blur-sm transition-all duration-200 overflow-hidden shadow-sm',
-        toolCall.status === 'running' && 'border-cyan-500/40 bg-cyan-500/5 shadow-cyan-500/5',
-        toolCall.status === 'awaiting_approval' && 'border-amber-500/40 bg-amber-500/5 shadow-amber-500/5',
-        toolCall.status === 'error' && 'border-rose-500/30 bg-rose-500/5',
-        toolCall.status === 'success' && 'border-border/60 hover:border-border',
-        className
+        "my-2 rounded-xl border bg-card/60 backdrop-blur-sm transition-all duration-200 overflow-hidden shadow-sm",
+        toolCall.status === "running" &&
+          "border-cyan-500/40 bg-cyan-500/5 shadow-cyan-500/5",
+        toolCall.status === "awaiting_approval" &&
+          "border-amber-500/40 bg-amber-500/5 shadow-amber-500/5",
+        toolCall.status === "error" && "border-rose-500/30 bg-rose-500/5",
+        toolCall.status === "success" && "border-border/60 hover:border-border",
+        className,
       )}
     >
       {/* Card Header */}
@@ -101,11 +136,15 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
           {/* Tool Icon */}
           <div
             className={cn(
-              'flex h-6 w-6 items-center justify-center rounded-lg border text-foreground/80 transition-colors',
-              toolCall.status === 'running' && 'border-cyan-500/30 bg-cyan-500/10 text-cyan-500',
-              toolCall.status === 'awaiting_approval' && 'border-amber-500/30 bg-amber-500/10 text-amber-500',
-              toolCall.status === 'error' && 'border-rose-500/30 bg-rose-500/10 text-rose-500',
-              toolCall.status === 'success' && 'border-border/60 bg-secondary/50 text-foreground/80'
+              "flex h-6 w-6 items-center justify-center rounded-lg border text-foreground/80 transition-colors",
+              toolCall.status === "running" &&
+                "border-cyan-500/30 bg-cyan-500/10 text-cyan-500",
+              toolCall.status === "awaiting_approval" &&
+                "border-amber-500/30 bg-amber-500/10 text-amber-500",
+              toolCall.status === "error" &&
+                "border-rose-500/30 bg-rose-500/10 text-rose-500",
+              toolCall.status === "success" &&
+                "border-border/60 bg-secondary/50 text-foreground/80",
             )}
           >
             {getToolIcon(toolCall.name)}
@@ -118,11 +157,11 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
             </span>
 
             {/* Quick summary parameter */}
-            {typeof toolCall.args === 'object' && toolCall.args !== null && (
+            {typeof toolCall.args === "object" && toolCall.args !== null && (
               <span className="hidden md:inline-block font-mono text-[11px] text-muted-foreground/70 truncate max-w-xs">
                 {Object.entries(toolCall.args)[0]
                   ? `${Object.entries(toolCall.args)[0][0]}: "${String(Object.entries(toolCall.args)[0][1]).slice(0, 30)}..."`
-                  : ''}
+                  : ""}
               </span>
             )}
           </div>
@@ -130,28 +169,28 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
 
         {/* Status Badge & Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          {toolCall.status === 'running' && (
+          {toolCall.status === "running" && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-cyan-500/15 text-[10px] text-cyan-800 dark:text-cyan-300 border border-cyan-500/30 font-medium">
               <Loader2 className="h-2.5 w-2.5 animate-spin" />
               Running
             </span>
           )}
 
-          {toolCall.status === 'awaiting_approval' && (
+          {toolCall.status === "awaiting_approval" && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-[10px] text-amber-950 dark:text-amber-300 border border-amber-500/40 font-semibold animate-pulse">
               <ShieldAlert className="h-2.5 w-2.5" />
               Requires Approval
             </span>
           )}
 
-          {toolCall.status === 'success' && (
+          {toolCall.status === "success" && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-[10px] text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 font-medium">
               <CheckCircle2 className="h-2.5 w-2.5" />
               Completed
             </span>
           )}
 
-          {toolCall.status === 'error' && (
+          {toolCall.status === "error" && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-500/15 text-[10px] text-rose-800 dark:text-rose-300 border border-rose-500/30 font-medium">
               <AlertCircle className="h-2.5 w-2.5" />
               Failed
@@ -176,7 +215,7 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
       </div>
 
       {/* Human In The Loop Approval Banner */}
-      {toolCall.status === 'awaiting_approval' && (
+      {toolCall.status === "awaiting_approval" && (
         <div className="px-3.5 py-2.5 bg-amber-500/10 border-t border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div className="flex items-center gap-2 text-xs text-amber-700 dark:text-amber-300">
             <ShieldAlert className="h-4 w-4 flex-shrink-0" />
@@ -214,9 +253,9 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
         {isExpanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
           >
             <div className="border-t border-border/40 bg-secondary/20">
               {/* Tab Navigation */}
@@ -224,36 +263,36 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
                 <div className="flex items-center gap-1">
                   <button
                     type="button"
-                    onClick={() => setActiveTab('output')}
+                    onClick={() => setActiveTab("output")}
                     className={cn(
-                      'px-2 py-0.5 rounded-md font-medium transition-colors',
-                      activeTab === 'output'
-                        ? 'bg-secondary text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
+                      "px-2 py-0.5 rounded-md font-medium transition-colors",
+                      activeTab === "output"
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     Output
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab('args')}
+                    onClick={() => setActiveTab("args")}
                     className={cn(
-                      'px-2 py-0.5 rounded-md font-medium transition-colors',
-                      activeTab === 'args'
-                        ? 'bg-secondary text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
+                      "px-2 py-0.5 rounded-md font-medium transition-colors",
+                      activeTab === "args"
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     Arguments
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveTab('raw')}
+                    onClick={() => setActiveTab("raw")}
                     className={cn(
-                      'px-2 py-0.5 rounded-md font-medium transition-colors',
-                      activeTab === 'raw'
-                        ? 'bg-secondary text-foreground'
-                        : 'text-muted-foreground hover:text-foreground'
+                      "px-2 py-0.5 rounded-md font-medium transition-colors",
+                      activeTab === "raw"
+                        ? "bg-secondary text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     Raw JSON
@@ -266,11 +305,11 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
                   onClick={(e) =>
                     handleCopy(
                       e,
-                      activeTab === 'output'
+                      activeTab === "output"
                         ? formattedResult
-                        : activeTab === 'args'
-                        ? formattedArgs
-                        : JSON.stringify(toolCall, null, 2)
+                        : activeTab === "args"
+                          ? formattedArgs
+                          : JSON.stringify(toolCall, null, 2),
                     )
                   }
                   className="p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
@@ -286,9 +325,9 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
 
               {/* Tab Content Panes */}
               <div className="p-3 font-mono text-[11px] leading-relaxed max-h-80 overflow-y-auto select-text">
-                {activeTab === 'output' && (
+                {activeTab === "output" && (
                   <div>
-                    {toolCall.status === 'running' && (
+                    {toolCall.status === "running" && (
                       <div className="flex items-center gap-2 text-muted-foreground py-2">
                         <Loader2 className="h-3.5 w-3.5 animate-spin text-cyan-500" />
                         <span>Awaiting tool execution result...</span>
@@ -304,19 +343,23 @@ export const ToolCallCard: React.FC<ToolCallCardProps> = ({
                         {formattedResult}
                       </pre>
                     )}
-                    {toolCall.result === undefined && !toolCall.error && toolCall.status !== 'running' && (
-                      <span className="text-muted-foreground italic">No output returned.</span>
-                    )}
+                    {toolCall.result === undefined &&
+                      !toolCall.error &&
+                      toolCall.status !== "running" && (
+                        <span className="text-muted-foreground italic">
+                          No output returned.
+                        </span>
+                      )}
                   </div>
                 )}
 
-                {activeTab === 'args' && (
+                {activeTab === "args" && (
                   <pre className="text-foreground/90 whitespace-pre-wrap break-all">
                     {formattedArgs}
                   </pre>
                 )}
 
-                {activeTab === 'raw' && (
+                {activeTab === "raw" && (
                   <pre className="text-foreground/80 whitespace-pre-wrap break-all">
                     {JSON.stringify(toolCall, null, 2)}
                   </pre>

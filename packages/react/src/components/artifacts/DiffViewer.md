@@ -17,10 +17,10 @@ Git diff inspector showing line additions, deletions, and hunk headers with high
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `diffText` | `string` | — | Yes | Standard unified diff string (e.g. output from git diff). |
-| `filename` | `string` | — | No | Filename displayed in the diff header. |
+| Prop       | Type     | Default | Required | Description                                               |
+| :--------- | :------- | :------ | :------- | :-------------------------------------------------------- |
+| `diffText` | `string` | —       | Yes      | Standard unified diff string (e.g. output from git diff). |
+| `filename` | `string` | —       | No       | Filename displayed in the diff header.                    |
 
 ## Basic Usage
 

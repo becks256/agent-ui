@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ChevronDown, Clock, Cpu, CheckCircle2, AlertCircle, Loader2, Copy, Check } from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { ThoughtProcess } from '../../types';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Sparkles,
+  ChevronDown,
+  Clock,
+  Cpu,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  Copy,
+  Check,
+} from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { ThoughtProcess } from "../../types";
 
 export interface ReasoningAccordionProps {
   thought: ThoughtProcess;
@@ -17,10 +27,12 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
   className,
   onCopy,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded || !!thought.isStreaming);
+  const [isExpanded, setIsExpanded] = useState(
+    defaultExpanded || !!thought.isStreaming,
+  );
   const [copied, setCopied] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(
-    thought.durationMs ? (thought.durationMs / 1000).toFixed(1) : '0.0'
+    thought.durationMs ? (thought.durationMs / 1000).toFixed(1) : "0.0",
   );
 
   // Auto-expand when streaming starts
@@ -59,9 +71,10 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
   return (
     <div
       className={cn(
-        'group my-2 rounded-xl border border-border/50 bg-secondary/30 backdrop-blur-sm transition-all duration-200 overflow-hidden',
-        thought.isStreaming && 'border-primary/30 bg-primary/5 shadow-sm shadow-primary/5',
-        className
+        "group my-2 rounded-xl border border-border/50 bg-secondary/30 backdrop-blur-sm transition-all duration-200 overflow-hidden",
+        thought.isStreaming &&
+          "border-primary/30 bg-primary/5 shadow-sm shadow-primary/5",
+        className,
       )}
     >
       {/* Header Bar */}
@@ -70,7 +83,7 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
         tabIndex={0}
         onClick={() => setIsExpanded(!isExpanded)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             setIsExpanded(!isExpanded);
           }
@@ -80,8 +93,8 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
         <div className="flex items-center gap-2 min-w-0">
           <div
             className={cn(
-              'flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary',
-              thought.isStreaming && 'animate-pulse'
+              "flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary",
+              thought.isStreaming && "animate-pulse",
             )}
           >
             {thought.isStreaming ? (
@@ -92,7 +105,8 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
           </div>
 
           <span className="font-medium text-foreground/90 truncate">
-            {thought.title || (thought.isStreaming ? 'Thinking...' : 'Reasoning Process')}
+            {thought.title ||
+              (thought.isStreaming ? "Thinking..." : "Reasoning Process")}
           </span>
 
           {/* Badges */}
@@ -141,33 +155,38 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
         {isExpanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: 'easeInOut' }}
+            transition={{ duration: 0.22, ease: "easeInOut" }}
           >
             <div className="border-t border-border/40 px-4 py-3 text-xs leading-relaxed text-muted-foreground/90 font-mono bg-background/30 select-text">
               {/* Step progression if available */}
               {thought.steps && thought.steps.length > 0 && (
                 <div className="mb-3 space-y-1.5 pb-2.5 border-b border-border/30">
                   {thought.steps.map((step) => (
-                    <div key={step.id} className="flex items-center gap-2 text-[11px]">
-                      {step.status === 'completed' && (
+                    <div
+                      key={step.id}
+                      className="flex items-center gap-2 text-[11px]"
+                    >
+                      {step.status === "completed" && (
                         <CheckCircle2 className="h-3 w-3 text-emerald-500 flex-shrink-0" />
                       )}
-                      {step.status === 'running' && (
+                      {step.status === "running" && (
                         <Loader2 className="h-3 w-3 text-primary animate-spin flex-shrink-0" />
                       )}
-                      {step.status === 'failed' && (
+                      {step.status === "failed" && (
                         <AlertCircle className="h-3 w-3 text-rose-500 flex-shrink-0" />
                       )}
-                      {step.status === 'pending' && (
+                      {step.status === "pending" && (
                         <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/40 ml-1 mr-0.5 flex-shrink-0" />
                       )}
                       <span
                         className={cn(
-                          'truncate font-sans',
-                          step.status === 'running' && 'text-foreground font-medium',
-                          step.status === 'completed' && 'text-muted-foreground line-through opacity-70'
+                          "truncate font-sans",
+                          step.status === "running" &&
+                            "text-foreground font-medium",
+                          step.status === "completed" &&
+                            "text-muted-foreground line-through opacity-70",
                         )}
                       >
                         {step.title}
@@ -180,7 +199,9 @@ export const ReasoningAccordion: React.FC<ReasoningAccordionProps> = ({
               {/* Main Thought Stream */}
               <div className="whitespace-pre-wrap font-sans text-xs text-foreground/80 leading-relaxed max-h-72 overflow-y-auto pr-1">
                 {thought.content || (
-                  <span className="italic text-muted-foreground/60">Contemplating approach...</span>
+                  <span className="italic text-muted-foreground/60">
+                    Contemplating approach...
+                  </span>
                 )}
                 {thought.isStreaming && (
                   <span className="inline-block h-3 w-1.5 bg-primary ml-1 animate-pulse align-middle" />

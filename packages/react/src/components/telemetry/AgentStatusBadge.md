@@ -17,11 +17,11 @@ Ambient status indicator with animated pulsing halos across 6 states (Thinking, 
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `state` | `'idle' | 'thinking' | 'searching' | 'coding' | 'awaiting_approval' | 'completed' | 'paused'` | — | Yes | Current operational state of the agent. |
-| `variant` | `'solid' | 'subtle'` | `'subtle'` | No | Visual badge style. |
-| `customLabel` | `string` | — | No | Custom text override for the state label. |
+| Prop          | Type     | Default    | Required    | Description                               |
+| :------------ | :------- | :--------- | :---------- | :---------------------------------------- |
+| `state`       | `'idle'  | 'thinking' | 'searching' | 'coding'                                  | 'awaiting_approval' | 'completed' | 'paused'` | —   | Yes | Current operational state of the agent. |
+| `variant`     | `'solid' | 'subtle'`  | `'subtle'`  | No                                        | Visual badge style. |
+| `customLabel` | `string` | —          | No          | Custom text override for the state label. |
 
 ## Basic Usage
 

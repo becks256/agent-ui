@@ -1,16 +1,24 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-export type Role = 'user' | 'assistant' | 'system' | 'tool' | 'agent';
+export type Role = "user" | "assistant" | "system" | "tool" | "agent";
 
 export interface ModelInfo {
   id: string;
   name: string;
-  provider?: 'openai' | 'anthropic' | 'google' | 'meta' | 'deepseek' | 'mistral' | 'local' | string;
+  provider?:
+    | "openai"
+    | "anthropic"
+    | "google"
+    | "meta"
+    | "deepseek"
+    | "mistral"
+    | "local"
+    | string;
   icon?: ReactNode;
   contextWindow?: number;
   description?: string;
-  speed?: 'fast' | 'moderate' | 'slow';
-  reasoningEffort?: 'low' | 'medium' | 'high';
+  speed?: "fast" | "moderate" | "slow";
+  reasoningEffort?: "low" | "medium" | "high";
 }
 
 export interface TokenUsage {
@@ -23,7 +31,7 @@ export interface TokenUsage {
 export interface ThoughtStep {
   id: string;
   title: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   durationMs?: number;
 }
 
@@ -37,7 +45,8 @@ export interface ThoughtProcess {
   steps?: ThoughtStep[];
 }
 
-export type ToolStatus = 'idle' | 'running' | 'success' | 'error' | 'cancelled' | 'awaiting_approval';
+export type ToolStatus =
+  "idle" | "running" | "success" | "error" | "cancelled" | "awaiting_approval";
 
 export interface ToolCall {
   id: string;
@@ -48,11 +57,12 @@ export interface ToolCall {
   durationMs?: number;
   error?: string;
   requiresApproval?: boolean;
-  approvalSeverity?: 'low' | 'medium' | 'critical';
+  approvalSeverity?: "low" | "medium" | "critical";
   approved?: boolean;
 }
 
-export type ArtifactType = 'code' | 'markdown' | 'diff' | 'html' | 'svg' | 'table' | 'json' | 'image';
+export type ArtifactType =
+  "code" | "markdown" | "diff" | "html" | "svg" | "table" | "json" | "image";
 
 export interface Artifact {
   id: string;
@@ -66,7 +76,8 @@ export interface Artifact {
   isLivePreviewable?: boolean;
 }
 
-export type StepStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'skipped';
+export type StepStatus =
+  "pending" | "in_progress" | "completed" | "failed" | "skipped";
 
 export interface AgentPlanStep {
   id: string;
@@ -81,7 +92,7 @@ export interface AgentPlan {
   id: string;
   title: string;
   description?: string;
-  status: 'draft' | 'running' | 'completed' | 'failed';
+  status: "draft" | "running" | "completed" | "failed";
   steps: AgentPlanStep[];
   progressPercent?: number;
 }
@@ -93,7 +104,7 @@ export interface FileAttachment {
   type: string;
   url?: string;
   previewUrl?: string;
-  status: 'uploading' | 'ready' | 'error';
+  status: "uploading" | "ready" | "error";
   progress?: number;
 }
 
@@ -107,7 +118,7 @@ export interface AgentMessage {
   model?: ModelInfo;
   tokens?: TokenUsage;
   latencyMs?: number;
-  status?: 'idle' | 'streaming' | 'completed' | 'error';
+  status?: "idle" | "streaming" | "completed" | "error";
   thoughts?: ThoughtProcess[];
   toolCalls?: ToolCall[];
   artifacts?: Artifact[];

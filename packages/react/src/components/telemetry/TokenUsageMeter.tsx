@@ -1,7 +1,7 @@
-import React from 'react';
-import { Cpu, DollarSign } from 'lucide-react';
-import { cn } from '../../utils/cn';
-import type { TokenUsage } from '../../types';
+import React from "react";
+import { Cpu, DollarSign } from "lucide-react";
+import { cn } from "../../utils/cn";
+import type { TokenUsage } from "../../types";
 
 export interface TokenUsageMeterProps {
   usage: TokenUsage;
@@ -20,8 +20,8 @@ export const TokenUsageMeter: React.FC<TokenUsageMeterProps> = ({
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-3 px-3 py-1.5 rounded-xl border border-border/60 bg-secondary/30 text-xs font-mono',
-        className
+        "inline-flex items-center gap-3 px-3 py-1.5 rounded-xl border border-border/60 bg-secondary/30 text-xs font-mono",
+        className,
       )}
     >
       <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -38,8 +38,12 @@ export const TokenUsageMeter: React.FC<TokenUsageMeterProps> = ({
       <div className="w-16 h-1.5 rounded-full bg-secondary border border-border/40 overflow-hidden hidden sm:block">
         <div
           className={cn(
-            'h-full rounded-full transition-all duration-300',
-            percent > 85 ? 'bg-rose-500' : percent > 60 ? 'bg-amber-500' : 'bg-primary'
+            "h-full rounded-full transition-all duration-300",
+            percent > 85
+              ? "bg-rose-500"
+              : percent > 60
+                ? "bg-amber-500"
+                : "bg-primary",
           )}
           style={{ width: `${percent}%` }}
         />

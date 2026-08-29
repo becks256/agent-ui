@@ -17,11 +17,11 @@ Message fork and alternative response variant navigator (e.g. < 2 of 4 >) with s
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `currentIndex` | `number` | — | Yes | 1-indexed number of the currently active branch. |
-| `totalBranches` | `number` | — | Yes | Total number of available alternative response variants. |
-| `onSelectBranch` | `(newIndex: number) => void` | — | Yes | Callback triggered when previous/next chevron is clicked. |
+| Prop             | Type                         | Default | Required | Description                                               |
+| :--------------- | :--------------------------- | :------ | :------- | :-------------------------------------------------------- |
+| `currentIndex`   | `number`                     | —       | Yes      | 1-indexed number of the currently active branch.          |
+| `totalBranches`  | `number`                     | —       | Yes      | Total number of available alternative response variants.  |
+| `onSelectBranch` | `(newIndex: number) => void` | —       | Yes      | Callback triggered when previous/next chevron is clicked. |
 
 ## Basic Usage
 

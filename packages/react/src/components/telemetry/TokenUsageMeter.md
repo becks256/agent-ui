@@ -18,11 +18,11 @@ Context window utilization gauge with prompt/completion token breakdown and live
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `usage` | `TokenUsage` | — | Yes | Token consumption object containing prompt, completion, total, and costUsd. |
-| `maxTokens` | `number` | `128000` | No | Maximum context capacity of the active model. |
-| `showCost` | `boolean` | `true` | No | Whether estimated USD cost should be rendered. |
+| Prop        | Type         | Default  | Required | Description                                                                 |
+| :---------- | :----------- | :------- | :------- | :-------------------------------------------------------------------------- |
+| `usage`     | `TokenUsage` | —        | Yes      | Token consumption object containing prompt, completion, total, and costUsd. |
+| `maxTokens` | `number`     | `128000` | No       | Maximum context capacity of the active model.                               |
+| `showCost`  | `boolean`    | `true`   | No       | Whether estimated USD cost should be rendered.                              |
 
 ## Basic Usage
 

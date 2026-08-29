@@ -18,11 +18,11 @@ Model dropdown with provider badges, speed ratings, and reasoning effort indicat
 
 ## Props
 
-| Prop | Type | Default | Required | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `models` | `ModelInfo[]` | — | Yes | List of available models. |
-| `selectedModel` | `ModelInfo` | — | Yes | Currently selected model. |
-| `onSelectModel` | `(model: ModelInfo) => void` | — | Yes | Callback when model is selected. |
+| Prop            | Type                         | Default | Required | Description                      |
+| :-------------- | :--------------------------- | :------ | :------- | :------------------------------- |
+| `models`        | `ModelInfo[]`                | —       | Yes      | List of available models.        |
+| `selectedModel` | `ModelInfo`                  | —       | Yes      | Currently selected model.        |
+| `onSelectModel` | `(model: ModelInfo) => void` | —       | Yes      | Callback when model is selected. |
 
 ## Basic Usage
 

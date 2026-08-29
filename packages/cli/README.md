@@ -16,6 +16,7 @@
 ## Overview
 
 The `@noetic-ui/cli` tool is a shadcn/ui-inspired component distribution and project scaffolding utility for **Noetic UI**. It allows you to:
+
 - Detect your framework (Next.js App/Pages Router, Vite, Remix, Astro).
 - Inject CSS color variables and theme tokens into your global stylesheet.
 - Copy unbundled TypeScript source code for any of the 23 components into your repository.
@@ -26,17 +27,21 @@ The `@noetic-ui/cli` tool is a shadcn/ui-inspired component distribution and pro
 ## Quickstart
 
 ### 1. Initialize Noetic UI in your project:
+
 ```bash
 npx @noetic-ui/cli init
 ```
+
 This detects your project setup, creates `noetic-ui.json`, adds `components/noetic-ui/cn.ts` and `types.ts`, and injects theme tokens into your `globals.css`.
 
 ### 2. Add components:
+
 ```bash
 npx @noetic-ui/cli add PromptInput MessageBubble
 ```
 
 ### 3. Or copy all 23 components at once:
+
 ```bash
 npx @noetic-ui/cli add --all
 ```
@@ -46,6 +51,7 @@ npx @noetic-ui/cli add --all
 ## Commands Reference
 
 ### `init`
+
 ```bash
 # Interactive setup with prompts
 npx @noetic-ui/cli init
@@ -55,13 +61,17 @@ npx @noetic-ui/cli init -y
 ```
 
 ### `list`
+
 Displays a categorized index of all 23 components across the 7 architectural suites:
+
 ```bash
 npx @noetic-ui/cli list
 ```
 
 ### `add [...components]`
+
 Copies component source code into your repository:
+
 ```bash
 # Add specific components
 npx @noetic-ui/cli add ReasoningAccordion ToolCallCard
@@ -80,7 +90,9 @@ npx @noetic-ui/cli add MessageBubble --overwrite
 ```
 
 ### `theme [preset]`
+
 Configures your project's brand palette directly in `globals.css` with auto-calibrated text contrast:
+
 ```bash
 # Interactive palette selector
 npx @noetic-ui/cli theme

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Copy, Check, FileCode, Maximize2, Minimize2 } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import React, { useState } from "react";
+import { Copy, Check, FileCode, Maximize2, Minimize2 } from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface CodeBlockProps {
   code: string;
@@ -12,7 +12,7 @@ export interface CodeBlockProps {
 
 export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
-  language = 'typescript',
+  language = "typescript",
   filename,
   showLineNumbers = true,
   className,
@@ -20,7 +20,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   const [copied, setCopied] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const lines = code.split('\n');
+  const lines = code.split("\n");
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -31,9 +31,9 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   return (
     <div
       className={cn(
-        'group my-3 rounded-xl border border-border/60 bg-neutral-950 text-neutral-100 font-mono text-xs overflow-hidden shadow-md transition-all',
-        isFullScreen && 'fixed inset-4 z-50 my-0 shadow-2xl flex flex-col',
-        className
+        "group my-3 rounded-xl border border-border/60 bg-neutral-950 text-neutral-100 font-mono text-xs overflow-hidden shadow-md transition-all",
+        isFullScreen && "fixed inset-4 z-50 my-0 shadow-2xl flex flex-col",
+        className,
       )}
     >
       {/* Header Bar */}
@@ -72,7 +72,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
             type="button"
             onClick={() => setIsFullScreen(!isFullScreen)}
             className="p-1 rounded-md text-neutral-400 hover:text-neutral-100 hover:bg-neutral-800 transition-colors"
-            title={isFullScreen ? 'Exit Fullscreen' : 'Fullscreen'}
+            title={isFullScreen ? "Exit Fullscreen" : "Fullscreen"}
           >
             {isFullScreen ? (
               <Minimize2 className="h-3.5 w-3.5" />

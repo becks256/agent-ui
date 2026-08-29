@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Sparkles,
   Bot,
@@ -44,7 +44,7 @@ import {
   Grid,
   Menu,
   X,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   ChatContainer,
   MessageBubble,
@@ -77,88 +77,113 @@ import {
   type Artifact,
   type AgentPlan,
   type AgentState,
-} from '@noetic-ui/react';
-import { COMPONENT_DOCS, type ComponentDoc } from '../data/component-docs';
+} from "@noetic-ui/react";
+import { COMPONENT_DOCS, type ComponentDoc } from "../data/component-docs";
 
 const SUITES = [
   {
-    id: 'reasoning',
-    title: '1. Reasoning & Tools',
-    components: ['ReasoningAccordion', 'ToolCallCard', 'AgentPlanView', 'AgentSwarmView'],
+    id: "reasoning",
+    title: "1. Reasoning & Tools",
+    components: [
+      "ReasoningAccordion",
+      "ToolCallCard",
+      "AgentPlanView",
+      "AgentSwarmView",
+    ],
   },
   {
-    id: 'chat',
-    title: '2. Messages & Streaming',
-    components: ['MessageBubble', 'StreamingText', 'BranchSwitcher', 'ChatContainer'],
+    id: "chat",
+    title: "2. Messages & Streaming",
+    components: [
+      "MessageBubble",
+      "StreamingText",
+      "BranchSwitcher",
+      "ChatContainer",
+    ],
   },
   {
-    id: 'input',
-    title: '3. Input & Prompting',
-    components: ['PromptInput', 'DragAndDropUploader', 'ContextTray', 'SlashCommandMenu', 'ModelSelector'],
+    id: "input",
+    title: "3. Input & Prompting",
+    components: [
+      "PromptInput",
+      "DragAndDropUploader",
+      "ContextTray",
+      "SlashCommandMenu",
+      "ModelSelector",
+    ],
   },
   {
-    id: 'hitl',
-    title: '4. Human-in-the-Loop',
-    components: ['ActionConfirmationModal', 'InteractiveQuestionCard', 'FeedbackActions'],
+    id: "hitl",
+    title: "4. Human-in-the-Loop",
+    components: [
+      "ActionConfirmationModal",
+      "InteractiveQuestionCard",
+      "FeedbackActions",
+    ],
   },
   {
-    id: 'canvas',
-    title: '5. Artifacts & Canvas',
-    components: ['ArtifactWorkspace', 'CodeBlock', 'DiffViewer', 'TerminalStream'],
+    id: "canvas",
+    title: "5. Artifacts & Canvas",
+    components: [
+      "ArtifactWorkspace",
+      "CodeBlock",
+      "DiffViewer",
+      "TerminalStream",
+    ],
   },
   {
-    id: 'telemetry',
-    title: '6. Telemetry & States',
-    components: ['AgentStatusBadge', 'TokenUsageMeter'],
+    id: "telemetry",
+    title: "6. Telemetry & States",
+    components: ["AgentStatusBadge", "TokenUsageMeter"],
   },
   {
-    id: 'theme',
-    title: '7. Theme & Customization',
-    components: ['ThemeColorPicker'],
+    id: "theme",
+    title: "7. Theme & Customization",
+    components: ["ThemeColorPicker"],
   },
 ];
 
 const mockModels: ModelInfo[] = [
   {
-    id: 'claude-3-5-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    provider: 'anthropic',
-    description: 'Most intelligent model for agentic reasoning and coding',
-    speed: 'fast',
-    reasoningEffort: 'high',
+    id: "claude-3-5-sonnet",
+    name: "Claude 3.5 Sonnet",
+    provider: "anthropic",
+    description: "Most intelligent model for agentic reasoning and coding",
+    speed: "fast",
+    reasoningEffort: "high",
   },
   {
-    id: 'gemini-1-5-pro',
-    name: 'Gemini 1.5 Pro',
-    provider: 'google',
-    description: 'Massive 2M context window with multimodal comprehension',
-    speed: 'fast',
-    reasoningEffort: 'high',
+    id: "gemini-1-5-pro",
+    name: "Gemini 1.5 Pro",
+    provider: "google",
+    description: "Massive 2M context window with multimodal comprehension",
+    speed: "fast",
+    reasoningEffort: "high",
   },
   {
-    id: 'gpt-4o',
-    name: 'GPT-4o',
-    provider: 'openai',
-    description: 'High performance multimodal model for general agent tasks',
-    speed: 'fast',
-    reasoningEffort: 'medium',
+    id: "gpt-4o",
+    name: "GPT-4o",
+    provider: "openai",
+    description: "High performance multimodal model for general agent tasks",
+    speed: "fast",
+    reasoningEffort: "medium",
   },
   {
-    id: 'deepseek-r1',
-    name: 'DeepSeek R1',
-    provider: 'deepseek',
-    description: 'Open-weight reasoning model with deep Chain of Thought',
-    speed: 'moderate',
-    reasoningEffort: 'high',
+    id: "deepseek-r1",
+    name: "DeepSeek R1",
+    provider: "deepseek",
+    description: "Open-weight reasoning model with deep Chain of Thought",
+    speed: "moderate",
+    reasoningEffort: "high",
   },
 ];
 
 const mockArtifact: Artifact = {
-  id: 'art-1',
-  title: 'AgentOrchestrator.ts',
-  type: 'code',
-  filename: 'src/orchestrator/AgentOrchestrator.ts',
-  language: 'typescript',
+  id: "art-1",
+  title: "AgentOrchestrator.ts",
+  type: "code",
+  filename: "src/orchestrator/AgentOrchestrator.ts",
+  language: "typescript",
   version: 2,
   content: `import { AgentSwarm, ToolRegistry, type ExecutionContext } from '@noetic-ui/core';
 
@@ -202,7 +227,7 @@ const mockDiff = `--- a/src/orchestrator/AgentOrchestrator.ts
 
 const cliSimulations: Record<string, { cmd: string; output: string }> = {
   list: {
-    cmd: 'npx @noetic-ui/cli list',
+    cmd: "npx @noetic-ui/cli list",
     output: `⚡ Noetic UI — Component Registry (23 Components)
 
 1. Reasoning & Tools (4)
@@ -245,7 +270,7 @@ const cliSimulations: Record<string, { cmd: string; output: string }> = {
 Use npx @noetic-ui/cli add <component> to add components to your project.`,
   },
   init: {
-    cmd: 'npx @noetic-ui/cli init',
+    cmd: "npx @noetic-ui/cli init",
     output: `⚡ Initializing Noetic UI in your project...
 
 ✔ Detected Next.js (App Router)
@@ -264,7 +289,7 @@ Next steps:
    npx @noetic-ui/cli add --all`,
   },
   addSingle: {
-    cmd: 'npx @noetic-ui/cli add PromptInput',
+    cmd: "npx @noetic-ui/cli add PromptInput",
     output: `⚡ Adding 6 files to components/noetic-ui...
 
 ✔ Added components/noetic-ui/cn.ts
@@ -279,7 +304,7 @@ Required peer packages:
 pnpm add lucide-react framer-motion`,
   },
   addAll: {
-    cmd: 'npx @noetic-ui/cli add --all',
+    cmd: "npx @noetic-ui/cli add --all",
     output: `⚡ Adding 25 files to components/noetic-ui...
 
 ✔ Added ReasoningAccordion.tsx
@@ -310,7 +335,7 @@ pnpm add lucide-react framer-motion`,
 ✨ Successfully installed all 23 components across 7 suites!`,
   },
   themePreset: {
-    cmd: 'npx @noetic-ui/cli theme cyan',
+    cmd: "npx @noetic-ui/cli theme cyan",
     output: `✨ Set theme to Cyber Cyan (HSL: 195°, 90%, 50%)
 Calculated relative luminance: 0.384
 Optimal foreground contrast: #ffffff (6.8:1 AAA)
@@ -320,25 +345,39 @@ Updated CSS custom properties in app/globals.css`,
 
 export default function Home() {
   const [isDark, setIsDark] = useState(true);
-  const [activeView, setActiveView] = useState<'demo' | 'components' | 'docs'>('demo');
-  const [docsSection, setDocsSection] = useState<'cli' | 'quickstart' | 'components-api' | 'components-directory' | 'theme' | 'messages'>('components-api');
-  const [selectedDocComponent, setSelectedDocComponent] = useState<string>('ReasoningAccordion');
-  const [docSearchQuery, setDocSearchQuery] = useState<string>('');
-  const [activeCliDemo, setActiveCliDemo] = useState<string>('list');
-  const [componentCategory, setComponentCategory] = useState<string>('all');
+  const [activeView, setActiveView] = useState<"demo" | "components" | "docs">(
+    "demo",
+  );
+  const [docsSection, setDocsSection] = useState<
+    | "cli"
+    | "quickstart"
+    | "components-api"
+    | "components-directory"
+    | "theme"
+    | "messages"
+  >("components-api");
+  const [selectedDocComponent, setSelectedDocComponent] =
+    useState<string>("ReasoningAccordion");
+  const [docSearchQuery, setDocSearchQuery] = useState<string>("");
+  const [activeCliDemo, setActiveCliDemo] = useState<string>("list");
+  const [componentCategory, setComponentCategory] = useState<string>("all");
   const [copiedInstall, setCopiedInstall] = useState(false);
   const [copiedDocCmd, setCopiedDocCmd] = useState(false);
   const [copiedDocImport, setCopiedDocImport] = useState(false);
   const [selectedModel, setSelectedModel] = useState<ModelInfo>(mockModels[0]);
-  const [promptText, setPromptText] = useState('');
+  const [promptText, setPromptText] = useState("");
   const [isSimulating, setIsSimulating] = useState(false);
-  const [selectedArtifact, setSelectedArtifact] = useState<Artifact | null>(mockArtifact);
+  const [selectedArtifact, setSelectedArtifact] = useState<Artifact | null>(
+    mockArtifact,
+  );
   const [isApprovalOpen, setIsApprovalOpen] = useState(false);
   const [sampleBranchIndex, setSampleBranchIndex] = useState(1);
-  const [sampleInputText, setSampleInputText] = useState('Inspect active agent tasks and optimize bundle...');
-  
+  const [sampleInputText, setSampleInputText] = useState(
+    "Inspect active agent tasks and optimize bundle...",
+  );
+
   // Mobile UI States
-  const [mobileDemoTab, setMobileDemoTab] = useState<'chat' | 'canvas'>('chat');
+  const [mobileDemoTab, setMobileDemoTab] = useState<"chat" | "canvas">("chat");
   const [isMobileDocsNavOpen, setIsMobileDocsNavOpen] = useState(false);
 
   // Dynamic Primary Color Theme State: Hue, Saturation, Lightness
@@ -347,7 +386,9 @@ export default function Home() {
   const [primaryLight, setPrimaryLight] = useState<number>(60);
 
   // Message Bubble Contrast & Style Variant
-  const [messageVariant, setMessageVariant] = useState<'solid' | 'subtle' | 'neutral' | 'bordered'>('solid');
+  const [messageVariant, setMessageVariant] = useState<
+    "solid" | "subtle" | "neutral" | "bordered"
+  >("solid");
 
   // Compute contrast metrics via reusable helper
   const metrics = getContrastMetrics(primaryHue, primarySat, primaryLight);
@@ -358,17 +399,20 @@ export default function Home() {
     setPrimarySat(s);
     setPrimaryLight(l);
 
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       const currentMetrics = getContrastMetrics(h, s, l);
       const primaryHsl = `${h} ${s}% ${l}%`;
 
-      document.documentElement.style.setProperty('--primary', primaryHsl);
-      document.documentElement.style.setProperty('--ring', primaryHsl);
-      document.documentElement.style.setProperty('--agent-thought', primaryHsl);
-      document.documentElement.style.setProperty('--primary-hue', h.toString());
-      document.documentElement.style.setProperty('--primary-sat', `${s}%`);
-      document.documentElement.style.setProperty('--primary-light', `${l}%`);
-      document.documentElement.style.setProperty('--primary-foreground', currentMetrics.foregroundHsl);
+      document.documentElement.style.setProperty("--primary", primaryHsl);
+      document.documentElement.style.setProperty("--ring", primaryHsl);
+      document.documentElement.style.setProperty("--agent-thought", primaryHsl);
+      document.documentElement.style.setProperty("--primary-hue", h.toString());
+      document.documentElement.style.setProperty("--primary-sat", `${s}%`);
+      document.documentElement.style.setProperty("--primary-light", `${l}%`);
+      document.documentElement.style.setProperty(
+        "--primary-foreground",
+        currentMetrics.foregroundHsl,
+      );
     }
   };
 
@@ -378,41 +422,43 @@ export default function Home() {
 
   const [sampleAttachments, setSampleAttachments] = useState<FileAttachment[]>([
     {
-      id: 'att-1',
-      name: 'architecture_diagram.png',
+      id: "att-1",
+      name: "architecture_diagram.png",
       size: 245000,
-      type: 'image/png',
-      status: 'ready',
+      type: "image/png",
+      status: "ready",
     },
     {
-      id: 'att-2',
-      name: 'schema.json',
+      id: "att-2",
+      name: "schema.json",
       size: 14200,
-      type: 'application/json',
-      status: 'ready',
+      type: "application/json",
+      status: "ready",
     },
   ]);
 
   // Mock messages stream for Live Demo
   const [messages, setMessages] = useState<AgentMessage[]>([
     {
-      id: 'msg-1',
-      role: 'user',
-      content: 'Can you analyze our TypeScript build pipeline, optimize the bundle size, and verify the multi-package exports?',
+      id: "msg-1",
+      role: "user",
+      content:
+        "Can you analyze our TypeScript build pipeline, optimize the bundle size, and verify the multi-package exports?",
       createdAt: new Date(),
     },
     {
-      id: 'msg-2',
-      role: 'assistant',
-      name: 'Cognitive Architect',
+      id: "msg-2",
+      role: "assistant",
+      name: "Cognitive Architect",
       model: mockModels[0],
       createdAt: new Date(),
       latencyMs: 1420,
       tokens: { prompt: 820, completion: 430, total: 1250 },
       thoughts: [
         {
-          id: 'th-1',
-          title: 'Deconstructing workspace dependency graph & bundling strategy',
+          id: "th-1",
+          title:
+            "Deconstructing workspace dependency graph & bundling strategy",
           content: `1. Inspecting package.json across monorepo packages.
 2. Checking tsup.config.ts for ESM/CJS dual output and d.ts generation.
 3. Analyzing tree-shaking flags and peer dependency exclusions for React 19.
@@ -420,43 +466,63 @@ export default function Home() {
           durationMs: 3840,
           tokens: 412,
           steps: [
-            { id: 's1', title: 'Parse monorepo dependency graph', status: 'completed' },
-            { id: 's2', title: 'Analyze rollup bundle chunking', status: 'completed' },
-            { id: 's3', title: 'Verify exports map in package.json', status: 'completed' },
+            {
+              id: "s1",
+              title: "Parse monorepo dependency graph",
+              status: "completed",
+            },
+            {
+              id: "s2",
+              title: "Analyze rollup bundle chunking",
+              status: "completed",
+            },
+            {
+              id: "s3",
+              title: "Verify exports map in package.json",
+              status: "completed",
+            },
           ],
         },
       ],
       plan: {
-        id: 'plan-1',
-        title: 'Build Optimization Plan',
-        status: 'running',
+        id: "plan-1",
+        title: "Build Optimization Plan",
+        status: "running",
         steps: [
           {
-            id: 'p1',
-            title: 'Audit bundle size and duplicate lodash/lucide imports',
-            status: 'completed',
+            id: "p1",
+            title: "Audit bundle size and duplicate lodash/lucide imports",
+            status: "completed",
           },
           {
-            id: 'p2',
-            title: 'Configure tsup build targets for modern ESM bundling',
-            status: 'in_progress',
+            id: "p2",
+            title: "Configure tsup build targets for modern ESM bundling",
+            status: "in_progress",
             subtasks: [
-              { id: 'p2-1', title: 'Inject "use client" directives', status: 'completed' },
-              { id: 'p2-2', title: 'Enable DTS rollup optimization', status: 'in_progress' },
+              {
+                id: "p2-1",
+                title: 'Inject "use client" directives',
+                status: "completed",
+              },
+              {
+                id: "p2-2",
+                title: "Enable DTS rollup optimization",
+                status: "in_progress",
+              },
             ],
           },
           {
-            id: 'p3',
-            title: 'Run automated type-check and benchmark verification',
-            status: 'pending',
+            id: "p3",
+            title: "Run automated type-check and benchmark verification",
+            status: "pending",
           },
         ],
       },
       toolCalls: [
         {
-          id: 'tc-1',
-          name: 'bash',
-          args: { command: 'pnpm run build --filter @noetic-ui/react' },
+          id: "tc-1",
+          name: "bash",
+          args: { command: "pnpm run build --filter @noetic-ui/react" },
           result: `> @noetic-ui/react@0.1.0 build
 > tsup
 
@@ -465,7 +531,7 @@ CJS dist/index.js     48.2 KB
 ESM dist/index.mjs    42.8 KB
 DTS dist/index.d.ts   14.1 KB
 ✔ Build completed in 242ms`,
-          status: 'success',
+          status: "success",
           durationMs: 242,
         },
       ],
@@ -485,28 +551,30 @@ Key improvements:
 
     const userMsg: AgentMessage = {
       id: `user-${Date.now()}`,
-      role: 'user',
-      content: 'Please execute the deployment verification checks and confirm system readiness.',
+      role: "user",
+      content:
+        "Please execute the deployment verification checks and confirm system readiness.",
       createdAt: new Date(),
     };
 
     const agentMsgId = `agent-${Date.now()}`;
     const agentMsg: AgentMessage = {
       id: agentMsgId,
-      role: 'assistant',
-      name: 'Cognitive Architect',
+      role: "assistant",
+      name: "Cognitive Architect",
       model: selectedModel,
-      status: 'streaming',
+      status: "streaming",
       createdAt: new Date(),
       thoughts: [
         {
           id: `th-${Date.now()}`,
-          title: 'Evaluating deployment preconditions and health metrics',
-          content: 'Synthesizing test coverage, lint results, and environment configuration...',
+          title: "Evaluating deployment preconditions and health metrics",
+          content:
+            "Synthesizing test coverage, lint results, and environment configuration...",
           isStreaming: true,
         },
       ],
-      content: '',
+      content: "",
     };
 
     setMessages((prev) => [...prev, userMsg, agentMsg]);
@@ -520,28 +588,31 @@ Key improvements:
                 ...msg,
                 thoughts: [
                   {
-                    id: 'th-sim',
-                    title: 'Deployment checks completed',
-                    content: 'All verification checks passed with 100% test coverage.',
+                    id: "th-sim",
+                    title: "Deployment checks completed",
+                    content:
+                      "All verification checks passed with 100% test coverage.",
                     durationMs: 2400,
                     tokens: 280,
                   },
                 ],
                 toolCalls: [
                   {
-                    id: 'tc-sim',
-                    name: 'bash',
-                    args: { command: 'pnpm test && pnpm typecheck' },
-                    result: '✔ 28 test suites passed\n✔ Typecheck passed with 0 errors',
-                    status: 'success',
+                    id: "tc-sim",
+                    name: "bash",
+                    args: { command: "pnpm test && pnpm typecheck" },
+                    result:
+                      "✔ 28 test suites passed\n✔ Typecheck passed with 0 errors",
+                    status: "success",
                     durationMs: 480,
                   },
                 ],
-                content: 'All automated verification suites passed successfully! The package is ready for publication.',
-                status: 'completed',
+                content:
+                  "All automated verification suites passed successfully! The package is ready for publication.",
+                status: "completed",
               }
-            : msg
-        )
+            : msg,
+        ),
       );
       setIsSimulating(false);
     }, 3000);
@@ -551,16 +622,16 @@ Key improvements:
     if (!text.trim()) return;
     const newMsg: AgentMessage = {
       id: `user-${Date.now()}`,
-      role: 'user',
+      role: "user",
       content: text,
       createdAt: new Date(),
     };
     setMessages((prev) => [...prev, newMsg]);
-    setPromptText('');
+    setPromptText("");
   };
 
   const copyInstallCommand = () => {
-    navigator.clipboard.writeText('npm i @noetic-ui/react');
+    navigator.clipboard.writeText("npm i @noetic-ui/react");
     setCopiedInstall(true);
     setTimeout(() => setCopiedInstall(false), 2000);
   };
@@ -573,135 +644,165 @@ Key improvements:
 
   const navigateToComponentDoc = (componentName: string) => {
     setSelectedDocComponent(componentName);
-    setDocsSection('components-api');
+    setDocsSection("components-api");
     setIsMobileDocsNavOpen(false);
-    setActiveView('docs');
+    setActiveView("docs");
   };
 
   const toggleTheme = () => {
     setIsDark(!isDark);
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('dark');
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.toggle("dark");
     }
   };
 
   const categories = [
-    { id: 'all', label: 'All Components (23)' },
-    { id: 'reasoning', label: '1. Reasoning & Tools (4)' },
-    { id: 'chat', label: '2. Messages & Streaming (4)' },
-    { id: 'input', label: '3. Input & Prompting (5)' },
-    { id: 'hitl', label: '4. Human-in-the-Loop (3)' },
-    { id: 'canvas', label: '5. Artifacts & Canvas (4)' },
-    { id: 'telemetry', label: '6. Telemetry & States (2)' },
-    { id: 'theme', label: '7. Theme & Customization (1)' },
+    { id: "all", label: "All Components (23)" },
+    { id: "reasoning", label: "1. Reasoning & Tools (4)" },
+    { id: "chat", label: "2. Messages & Streaming (4)" },
+    { id: "input", label: "3. Input & Prompting (5)" },
+    { id: "hitl", label: "4. Human-in-the-Loop (3)" },
+    { id: "canvas", label: "5. Artifacts & Canvas (4)" },
+    { id: "telemetry", label: "6. Telemetry & States (2)" },
+    { id: "theme", label: "7. Theme & Customization (1)" },
   ];
 
   // Helper to render live component previews inside the Component API Reference page
   const renderLiveComponentPreview = (name: string) => {
     switch (name) {
-      case 'ReasoningAccordion':
+      case "ReasoningAccordion":
         return (
           <ReasoningAccordion
             defaultExpanded={true}
             thought={{
-              id: 'th-demo',
-              title: 'Deconstructing workspace graph & bundling strategy',
+              id: "th-demo",
+              title: "Deconstructing workspace graph & bundling strategy",
               content: `1. Verified workspace dependencies across 3 packages.\n2. Checking tsup.config.ts for ESM/CJS dual output.\n3. Identified optimization: externalize icons and isolate sourcemaps.`,
               durationMs: 3840,
               tokens: 412,
               steps: [
-                { id: 's1', title: 'Parse monorepo dependency graph', status: 'completed' },
-                { id: 's2', title: 'Analyze rollup bundle chunking', status: 'completed' },
-                { id: 's3', title: 'Verify exports contract', status: 'completed' },
+                {
+                  id: "s1",
+                  title: "Parse monorepo dependency graph",
+                  status: "completed",
+                },
+                {
+                  id: "s2",
+                  title: "Analyze rollup bundle chunking",
+                  status: "completed",
+                },
+                {
+                  id: "s3",
+                  title: "Verify exports contract",
+                  status: "completed",
+                },
               ],
             }}
           />
         );
-      case 'ToolCallCard':
+      case "ToolCallCard":
         return (
           <ToolCallCard
             defaultExpanded={true}
             toolCall={{
-              id: 'tc-demo',
-              name: 'bash',
-              args: { command: 'pnpm run build --filter @noetic-ui/react' },
+              id: "tc-demo",
+              name: "bash",
+              args: { command: "pnpm run build --filter @noetic-ui/react" },
               result: `CJS dist/index.js     48.2 KB\nESM dist/index.mjs    42.8 KB\nDTS dist/index.d.ts   14.1 KB\n✔ Build completed in 242ms`,
-              status: 'success',
+              status: "success",
               durationMs: 242,
             }}
           />
         );
-      case 'AgentPlanView':
+      case "AgentPlanView":
         return (
           <AgentPlanView
             plan={{
-              id: 'p-demo',
-              title: 'Refactor Package Exports & Optimize Bundle',
-              status: 'running',
+              id: "p-demo",
+              title: "Refactor Package Exports & Optimize Bundle",
+              status: "running",
               steps: [
-                { id: '1', title: 'Audit bundle dependencies', status: 'completed' },
                 {
-                  id: '2',
-                  title: 'Configure tsup build targets for modern ESM',
-                  status: 'in_progress',
+                  id: "1",
+                  title: "Audit bundle dependencies",
+                  status: "completed",
+                },
+                {
+                  id: "2",
+                  title: "Configure tsup build targets for modern ESM",
+                  status: "in_progress",
                   subtasks: [
-                    { id: '2-1', title: 'Inject "use client" directives', status: 'completed' },
-                    { id: '2-2', title: 'Enable DTS rollup optimization', status: 'in_progress' },
+                    {
+                      id: "2-1",
+                      title: 'Inject "use client" directives',
+                      status: "completed",
+                    },
+                    {
+                      id: "2-2",
+                      title: "Enable DTS rollup optimization",
+                      status: "in_progress",
+                    },
                   ],
                 },
-                { id: '3', title: 'Run automated typecheck verification', status: 'pending' },
+                {
+                  id: "3",
+                  title: "Run automated typecheck verification",
+                  status: "pending",
+                },
               ],
             }}
           />
         );
-      case 'AgentSwarmView':
+      case "AgentSwarmView":
         return (
           <AgentSwarmView
             agents={[
               {
-                id: 'a1',
-                name: 'Orchestrator',
-                role: 'Task Coordinator',
-                status: 'working',
-                currentTask: 'Delegating code review to Coder agent...',
+                id: "a1",
+                name: "Orchestrator",
+                role: "Task Coordinator",
+                status: "working",
+                currentTask: "Delegating code review to Coder agent...",
               },
               {
-                id: 'a2',
-                name: 'Code Synthesizer',
-                role: 'TypeScript Specialist',
-                status: 'working',
-                currentTask: 'Writing unit test suites...',
+                id: "a2",
+                name: "Code Synthesizer",
+                role: "TypeScript Specialist",
+                status: "working",
+                currentTask: "Writing unit test suites...",
               },
             ]}
             activeAgentId="a1"
           />
         );
-      case 'MessageBubble':
+      case "MessageBubble":
         return (
           <div className="space-y-3">
             <MessageBubble
               variant={messageVariant}
               message={{
-                id: 'msg-u-prev',
-                role: 'user',
-                content: 'Can you optimize our React 19 server actions in Next.js 15?',
+                id: "msg-u-prev",
+                role: "user",
+                content:
+                  "Can you optimize our React 19 server actions in Next.js 15?",
               }}
             />
             <MessageBubble
               variant={messageVariant}
               message={{
-                id: 'msg-a-prev',
-                role: 'assistant',
-                name: 'Claude 3.5 Sonnet',
+                id: "msg-a-prev",
+                role: "assistant",
+                name: "Claude 3.5 Sonnet",
                 model: mockModels[0],
                 latencyMs: 840,
                 tokens: { total: 420 },
-                content: 'Collocating mutations with `useActionState` and optimistic UI guarantees seamless zero-flicker transitions.',
+                content:
+                  "Collocating mutations with `useActionState` and optimistic UI guarantees seamless zero-flicker transitions.",
               }}
             />
           </div>
         );
-      case 'StreamingText':
+      case "StreamingText":
         return (
           <div className="p-3.5 rounded-xl border border-border/60 bg-secondary/30 text-xs">
             <StreamingText
@@ -712,10 +813,12 @@ Key improvements:
             />
           </div>
         );
-      case 'BranchSwitcher':
+      case "BranchSwitcher":
         return (
           <div className="flex items-center justify-between p-4 rounded-xl bg-card border border-border/60">
-            <span className="text-xs text-muted-foreground font-mono">Variant Navigator:</span>
+            <span className="text-xs text-muted-foreground font-mono">
+              Variant Navigator:
+            </span>
             <BranchSwitcher
               currentIndex={sampleBranchIndex}
               totalBranches={4}
@@ -723,20 +826,29 @@ Key improvements:
             />
           </div>
         );
-      case 'ChatContainer':
+      case "ChatContainer":
         return (
           <div className="h-44 border border-border/60 rounded-xl overflow-hidden bg-card">
             <ChatContainer isStreaming={false} className="p-4">
               <MessageBubble
-                message={{ id: 'c-1', role: 'user', content: 'Testing auto-scrolling viewport...' }}
+                message={{
+                  id: "c-1",
+                  role: "user",
+                  content: "Testing auto-scrolling viewport...",
+                }}
               />
               <MessageBubble
-                message={{ id: 'c-2', role: 'assistant', content: 'ChatContainer automatically maintains scroll anchoring!' }}
+                message={{
+                  id: "c-2",
+                  role: "assistant",
+                  content:
+                    "ChatContainer automatically maintains scroll anchoring!",
+                }}
               />
             </ChatContainer>
           </div>
         );
-      case 'PromptInput':
+      case "PromptInput":
         return (
           <PromptInput
             value={sampleInputText}
@@ -745,10 +857,12 @@ Key improvements:
             models={mockModels}
             selectedModel={selectedModel}
             onSelectModel={setSelectedModel}
-            contextItems={[{ id: '1', label: 'AgentOrchestrator.ts', type: 'file' }]}
+            contextItems={[
+              { id: "1", label: "AgentOrchestrator.ts", type: "file" },
+            ]}
           />
         );
-      case 'DragAndDropUploader':
+      case "DragAndDropUploader":
         return (
           <DragAndDropUploader
             attachments={sampleAttachments}
@@ -758,18 +872,18 @@ Key improvements:
             }
           />
         );
-      case 'ContextTray':
+      case "ContextTray":
         return (
           <ContextTray
             items={[
-              { id: '1', label: 'AgentOrchestrator.ts', type: 'file' },
-              { id: '2', label: 'UserPreferences', type: 'memory' },
-              { id: '3', label: 'Postgres DB', type: 'database' },
+              { id: "1", label: "AgentOrchestrator.ts", type: "file" },
+              { id: "2", label: "UserPreferences", type: "memory" },
+              { id: "3", label: "Postgres DB", type: "database" },
             ]}
             onRemoveItem={() => {}}
           />
         );
-      case 'SlashCommandMenu':
+      case "SlashCommandMenu":
         return (
           <div className="max-w-md mx-auto p-1">
             <SlashCommandMenu
@@ -781,7 +895,7 @@ Key improvements:
             />
           </div>
         );
-      case 'ModelSelector':
+      case "ModelSelector":
         return (
           <div className="flex items-center gap-3">
             <ModelSelector
@@ -790,16 +904,21 @@ Key improvements:
               onSelectModel={setSelectedModel}
             />
             <span className="text-xs text-muted-foreground">
-              Selected: <strong className="text-foreground">{selectedModel.name}</strong>
+              Selected:{" "}
+              <strong className="text-foreground">{selectedModel.name}</strong>
             </span>
           </div>
         );
-      case 'ActionConfirmationModal':
+      case "ActionConfirmationModal":
         return (
           <div className="p-4 rounded-xl bg-secondary/30 border border-border/40 flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold text-foreground">Safety Gatekeeper Modal</p>
-              <p className="text-[11px] text-muted-foreground">Intercepts destructive commands and DB mutations.</p>
+              <p className="text-xs font-semibold text-foreground">
+                Safety Gatekeeper Modal
+              </p>
+              <p className="text-[11px] text-muted-foreground">
+                Intercepts destructive commands and DB mutations.
+              </p>
             </div>
             <button
               type="button"
@@ -810,28 +929,30 @@ Key improvements:
             </button>
           </div>
         );
-      case 'InteractiveQuestionCard':
+      case "InteractiveQuestionCard":
         return (
           <InteractiveQuestionCard
             question="Which bundling strategy would you like configured?"
             description="Agent detected multiple valid bundlers in workspace."
             options={[
               {
-                id: 'tsup',
-                label: 'tsup (Recommended)',
-                description: 'Fast, zero-config bundler powered by esbuild with dual ESM/CJS output',
+                id: "tsup",
+                label: "tsup (Recommended)",
+                description:
+                  "Fast, zero-config bundler powered by esbuild with dual ESM/CJS output",
                 isRecommended: true,
               },
               {
-                id: 'rollup',
-                label: 'Rollup',
-                description: 'Classic plugin-based ecosystem for complex tree-shaking',
+                id: "rollup",
+                label: "Rollup",
+                description:
+                  "Classic plugin-based ecosystem for complex tree-shaking",
               },
             ]}
             onSubmit={() => {}}
           />
         );
-      case 'FeedbackActions':
+      case "FeedbackActions":
         return (
           <div className="p-3 bg-secondary/30 rounded-xl border border-border/40">
             <FeedbackActions
@@ -841,13 +962,13 @@ Key improvements:
             />
           </div>
         );
-      case 'ArtifactWorkspace':
+      case "ArtifactWorkspace":
         return (
           <div className="h-64 rounded-xl border border-border/60 overflow-hidden">
             <ArtifactWorkspace artifact={mockArtifact} />
           </div>
         );
-      case 'CodeBlock':
+      case "CodeBlock":
         return (
           <CodeBlock
             filename="AgentOrchestrator.ts"
@@ -855,9 +976,11 @@ Key improvements:
             code={`import { AgentSwarm } from '@noetic-ui/react';\n\nexport const orchestrator = new AgentSwarm();`}
           />
         );
-      case 'DiffViewer':
-        return <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />;
-      case 'TerminalStream':
+      case "DiffViewer":
+        return (
+          <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />
+        );
+      case "TerminalStream":
         return (
           <TerminalStream
             command="pnpm test"
@@ -865,26 +988,38 @@ Key improvements:
             status="completed"
           />
         );
-      case 'AgentStatusBadge':
+      case "AgentStatusBadge":
         return (
           <div className="flex flex-wrap gap-2">
-            {(['idle', 'thinking', 'searching', 'coding', 'awaiting_approval', 'completed'] as AgentState[]).map(
-              (state) => (
-                <AgentStatusBadge key={state} state={state} />
-              )
-            )}
+            {(
+              [
+                "idle",
+                "thinking",
+                "searching",
+                "coding",
+                "awaiting_approval",
+                "completed",
+              ] as AgentState[]
+            ).map((state) => (
+              <AgentStatusBadge key={state} state={state} />
+            ))}
           </div>
         );
-      case 'TokenUsageMeter':
+      case "TokenUsageMeter":
         return (
           <div className="space-y-3">
             <TokenUsageMeter
-              usage={{ prompt: 14200, completion: 4800, total: 19000, costUsd: 0.057 }}
+              usage={{
+                prompt: 14200,
+                completion: 4800,
+                total: 19000,
+                costUsd: 0.057,
+              }}
               maxTokens={128000}
             />
           </div>
         );
-      case 'ThemeColorPicker':
+      case "ThemeColorPicker":
         return (
           <ThemeColorPicker
             mode="inline"
@@ -901,13 +1036,19 @@ Key improvements:
     }
   };
 
-  const activeDoc: ComponentDoc = COMPONENT_DOCS[selectedDocComponent] || COMPONENT_DOCS['ReasoningAccordion'];
+  const activeDoc: ComponentDoc =
+    COMPONENT_DOCS[selectedDocComponent] ||
+    COMPONENT_DOCS["ReasoningAccordion"];
 
   // All component names in sequence for prev/next navigation
   const allComponentNames = SUITES.flatMap((s) => s.components);
   const currentCompIndex = allComponentNames.indexOf(selectedDocComponent);
-  const prevComponentName = currentCompIndex > 0 ? allComponentNames[currentCompIndex - 1] : null;
-  const nextComponentName = currentCompIndex < allComponentNames.length - 1 ? allComponentNames[currentCompIndex + 1] : null;
+  const prevComponentName =
+    currentCompIndex > 0 ? allComponentNames[currentCompIndex - 1] : null;
+  const nextComponentName =
+    currentCompIndex < allComponentNames.length - 1
+      ? allComponentNames[currentCompIndex + 1]
+      : null;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -920,7 +1061,9 @@ Key improvements:
               <Bot className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-sm sm:text-base tracking-tight text-foreground">Noetic UI</span>
+              <span className="font-bold text-sm sm:text-base tracking-tight text-foreground">
+                Noetic UI
+              </span>
               <span className="text-[9px] sm:text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded-full bg-secondary text-foreground border border-border/80 font-bold">
                 v0.1.1
               </span>
@@ -931,22 +1074,22 @@ Key improvements:
           <nav className="hidden md:flex items-center gap-1 bg-secondary/80 p-1 rounded-xl border border-border/60 text-xs">
             <button
               type="button"
-              onClick={() => setActiveView('demo')}
+              onClick={() => setActiveView("demo")}
               className={`px-3 py-1 rounded-lg font-medium transition-all ${
-                activeView === 'demo'
-                  ? 'bg-card text-foreground shadow-xs font-semibold'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeView === "demo"
+                  ? "bg-card text-foreground shadow-xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Live Agent Demo
             </button>
             <button
               type="button"
-              onClick={() => setActiveView('components')}
+              onClick={() => setActiveView("components")}
               className={`px-3 py-1 rounded-lg font-medium transition-all ${
-                activeView === 'components'
-                  ? 'bg-card text-foreground shadow-xs font-semibold'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeView === "components"
+                  ? "bg-card text-foreground shadow-xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Component Suite (23)
@@ -954,13 +1097,13 @@ Key improvements:
             <button
               type="button"
               onClick={() => {
-                setActiveView('docs');
-                setDocsSection('components-api');
+                setActiveView("docs");
+                setDocsSection("components-api");
               }}
               className={`px-3 py-1 rounded-lg font-medium transition-all ${
-                activeView === 'docs'
-                  ? 'bg-card text-foreground shadow-xs font-semibold'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeView === "docs"
+                  ? "bg-card text-foreground shadow-xs font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               Docs & API Reference
@@ -1000,7 +1143,11 @@ Key improvements:
               className="p-1.5 sm:p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary border border-border/60 transition-colors"
               title="Toggle theme"
             >
-              {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {isDark ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </button>
           </div>
         </div>
@@ -1010,11 +1157,11 @@ Key improvements:
           <div className="flex items-center gap-1 w-full text-xs">
             <button
               type="button"
-              onClick={() => setActiveView('demo')}
+              onClick={() => setActiveView("demo")}
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg font-medium transition-all ${
-                activeView === 'demo'
-                  ? 'bg-card text-foreground shadow-xs font-bold'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeView === "demo"
+                  ? "bg-card text-foreground shadow-xs font-bold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Play className="h-3.5 w-3.5 fill-current opacity-80" />
@@ -1022,11 +1169,11 @@ Key improvements:
             </button>
             <button
               type="button"
-              onClick={() => setActiveView('components')}
+              onClick={() => setActiveView("components")}
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg font-medium transition-all ${
-                activeView === 'components'
-                  ? 'bg-card text-foreground shadow-xs font-bold'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeView === "components"
+                  ? "bg-card text-foreground shadow-xs font-bold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Layers className="h-3.5 w-3.5" />
@@ -1035,13 +1182,13 @@ Key improvements:
             <button
               type="button"
               onClick={() => {
-                setActiveView('docs');
-                setDocsSection('components-api');
+                setActiveView("docs");
+                setDocsSection("components-api");
               }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg font-medium transition-all ${
-                activeView === 'docs'
-                  ? 'bg-card text-foreground shadow-xs font-bold'
-                  : 'text-muted-foreground hover:text-foreground'
+                activeView === "docs"
+                  ? "bg-card text-foreground shadow-xs font-bold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <BookOpen className="h-3.5 w-3.5" />
@@ -1052,18 +1199,18 @@ Key improvements:
       </header>
 
       {/* Main Content Body: 1. Demo View */}
-      {activeView === 'demo' && (
+      {activeView === "demo" && (
         <main className="flex-1 flex flex-col lg:flex-row h-[calc(100vh-97px)] md:h-[calc(100vh-57px)] overflow-hidden">
           {/* Mobile Tab Switcher for Demo (Chat vs Sidecar Artifact) */}
           <div className="flex lg:hidden items-center justify-between px-3 py-2 border-b border-border/40 bg-secondary/30 text-xs">
             <div className="flex items-center gap-1 bg-secondary/80 p-0.5 rounded-lg border border-border/60">
               <button
                 type="button"
-                onClick={() => setMobileDemoTab('chat')}
+                onClick={() => setMobileDemoTab("chat")}
                 className={`flex items-center gap-1 px-3 py-1 rounded-md font-medium transition-all ${
-                  mobileDemoTab === 'chat'
-                    ? 'bg-card text-foreground shadow-xs font-bold'
-                    : 'text-muted-foreground'
+                  mobileDemoTab === "chat"
+                    ? "bg-card text-foreground shadow-xs font-bold"
+                    : "text-muted-foreground"
                 }`}
               >
                 <MessageSquare className="h-3 w-3" />
@@ -1071,16 +1218,18 @@ Key improvements:
               </button>
               <button
                 type="button"
-                onClick={() => setMobileDemoTab('canvas')}
+                onClick={() => setMobileDemoTab("canvas")}
                 className={`flex items-center gap-1 px-3 py-1 rounded-md font-medium transition-all ${
-                  mobileDemoTab === 'canvas'
-                    ? 'bg-card text-foreground shadow-xs font-bold'
-                    : 'text-muted-foreground'
+                  mobileDemoTab === "canvas"
+                    ? "bg-card text-foreground shadow-xs font-bold"
+                    : "text-muted-foreground"
                 }`}
               >
                 <Layers className="h-3 w-3" />
                 <span>Artifact Canvas</span>
-                {selectedArtifact && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                {selectedArtifact && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                )}
               </button>
             </div>
 
@@ -1098,39 +1247,48 @@ Key improvements:
           {/* Left Column: Chat Conversation Stream */}
           <div
             className={`flex-1 flex-col h-full border-r border-border/60 min-w-0 bg-background/50 ${
-              mobileDemoTab === 'chat' ? 'flex' : 'hidden lg:flex'
+              mobileDemoTab === "chat" ? "flex" : "hidden lg:flex"
             }`}
           >
             {/* Ambient Telemetry & Message Style Controller Status Bar */}
             <div className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-6 py-2 border-b border-border/40 bg-secondary/20 text-xs">
               <div className="flex items-center gap-2">
                 <AgentStatusBadge
-                  state={isSimulating ? 'thinking' : 'idle'}
-                  customLabel={isSimulating ? 'Streaming CoT Reasoning...' : 'Agent Idle'}
+                  state={isSimulating ? "thinking" : "idle"}
+                  customLabel={
+                    isSimulating ? "Streaming CoT Reasoning..." : "Agent Idle"
+                  }
                 />
               </div>
 
               <div className="flex items-center gap-2 sm:gap-3">
                 {/* Bubble Style Switcher */}
                 <div className="hidden sm:flex items-center gap-1 bg-secondary/80 p-0.5 rounded-lg border border-border/60 text-[10px]">
-                  {(['solid', 'subtle', 'neutral', 'bordered'] as const).map((v) => (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() => setMessageVariant(v)}
-                      className={`px-2 py-0.5 rounded-md font-medium capitalize transition-all ${
-                        messageVariant === v
-                          ? 'bg-card text-foreground shadow-xs font-bold'
-                          : 'text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {v}
-                    </button>
-                  ))}
+                  {(["solid", "subtle", "neutral", "bordered"] as const).map(
+                    (v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => setMessageVariant(v)}
+                        className={`px-2 py-0.5 rounded-md font-medium capitalize transition-all ${
+                          messageVariant === v
+                            ? "bg-card text-foreground shadow-xs font-bold"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {v}
+                      </button>
+                    ),
+                  )}
                 </div>
 
                 <TokenUsageMeter
-                  usage={{ prompt: 1240, completion: 890, total: 2130, costUsd: 0.0085 }}
+                  usage={{
+                    prompt: 1240,
+                    completion: 890,
+                    total: 2130,
+                    costUsd: 0.0085,
+                  }}
                 />
 
                 <button
@@ -1146,7 +1304,10 @@ Key improvements:
             </div>
 
             {/* Virtualized / Auto-scrolling Chat Viewport */}
-            <ChatContainer isStreaming={isSimulating} className="px-3 sm:px-8 py-4 sm:py-6">
+            <ChatContainer
+              isStreaming={isSimulating}
+              className="px-3 sm:px-8 py-4 sm:py-6"
+            >
               {messages.map((msg) => (
                 <MessageBubble
                   key={msg.id}
@@ -1154,7 +1315,7 @@ Key improvements:
                   variant={messageVariant}
                   onSelectArtifact={(artId) => {
                     setSelectedArtifact(mockArtifact);
-                    setMobileDemoTab('canvas');
+                    setMobileDemoTab("canvas");
                   }}
                   onApproveTool={(tcId) => setIsApprovalOpen(true)}
                 />
@@ -1172,8 +1333,8 @@ Key improvements:
                 selectedModel={selectedModel}
                 onSelectModel={setSelectedModel}
                 contextItems={[
-                  { id: 'ctx-1', label: 'AgentOrchestrator.ts', type: 'file' },
-                  { id: 'ctx-2', label: 'UserPreferences', type: 'memory' },
+                  { id: "ctx-1", label: "AgentOrchestrator.ts", type: "file" },
+                  { id: "ctx-2", label: "UserPreferences", type: "memory" },
                 ]}
                 onRemoveContextItem={(id) => {}}
                 placeholder="Ask your agent or type /plan, /search, /exec..."
@@ -1184,7 +1345,7 @@ Key improvements:
           {/* Right Column: Artifacts, Code Canvas & Live Sidecar */}
           <div
             className={`w-full lg:w-[480px] xl:w-[560px] h-full flex-col p-3 sm:p-4 bg-secondary/10 overflow-hidden ${
-              mobileDemoTab === 'canvas' ? 'flex' : 'hidden lg:flex'
+              mobileDemoTab === "canvas" ? "flex" : "hidden lg:flex"
             }`}
           >
             {selectedArtifact ? (
@@ -1192,7 +1353,7 @@ Key improvements:
                 artifact={selectedArtifact}
                 onClose={() => {
                   setSelectedArtifact(null);
-                  setMobileDemoTab('chat');
+                  setMobileDemoTab("chat");
                 }}
               />
             ) : (
@@ -1202,11 +1363,12 @@ Key improvements:
                   No Active Artifact Selected
                 </p>
                 <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">
-                  When your agent generates code, files, or canvas documents, they will be rendered in this sidecar workspace.
+                  When your agent generates code, files, or canvas documents,
+                  they will be rendered in this sidecar workspace.
                 </p>
                 <button
                   type="button"
-                  onClick={() => setMobileDemoTab('chat')}
+                  onClick={() => setMobileDemoTab("chat")}
                   className="mt-4 lg:hidden px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold shadow-xs"
                 >
                   Back to Agent Chat
@@ -1218,7 +1380,7 @@ Key improvements:
       )}
 
       {/* Main Content Body: 2. Comprehensive Component Suite Gallery View */}
-      {activeView === 'components' && (
+      {activeView === "components" && (
         <div className="flex-1 p-4 sm:p-10 max-w-7xl mx-auto w-full space-y-6 sm:space-y-8 overflow-y-auto">
           {/* Header & Theme Customization Bar */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:p-6 rounded-2xl border border-border/80 bg-card shadow-sm">
@@ -1227,7 +1389,8 @@ Key improvements:
                 Noetic UI Component Catalog (23 Components)
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
-                Interactive sandbox showcasing all 23 components across the 7 core architectural suites.
+                Interactive sandbox showcasing all 23 components across the 7
+                core architectural suites.
               </p>
             </div>
 
@@ -1236,16 +1399,18 @@ Key improvements:
               <div className="flex items-center gap-2">
                 <div
                   className="h-4 w-4 rounded-full border border-background shadow-xs flex-shrink-0"
-                  style={{ backgroundColor: `hsl(${primaryHue}, ${primarySat}%, ${primaryLight}%)` }}
+                  style={{
+                    backgroundColor: `hsl(${primaryHue}, ${primarySat}%, ${primaryLight}%)`,
+                  }}
                 />
                 <span className="text-xs font-semibold font-mono">
                   {primaryHue}° / {primarySat}% / {primaryLight}%
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-primary text-primary-foreground font-bold shadow-2xs">
-                  {metrics.isLightBackground ? 'Black text' : 'White text'}
+                  {metrics.isLightBackground ? "Black text" : "White text"}
                 </span>
               </div>
-              
+
               <ThemeColorPicker
                 hue={primaryHue}
                 saturation={primarySat}
@@ -1267,8 +1432,8 @@ Key improvements:
                 onClick={() => setComponentCategory(cat.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap flex-shrink-0 transition-all ${
                   componentCategory === cat.id
-                    ? 'bg-primary text-primary-foreground font-semibold shadow-xs'
-                    : 'bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary'
+                    ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                    : "bg-secondary/70 text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`}
               >
                 {cat.label}
@@ -1277,7 +1442,8 @@ Key improvements:
           </div>
 
           {/* Suite 1: Reasoning & Tool Execution (4) */}
-          {(componentCategory === 'all' || componentCategory === 'reasoning') && (
+          {(componentCategory === "all" ||
+            componentCategory === "reasoning") && (
             <section className="space-y-4 pt-2">
               <div className="flex items-center justify-between border-b border-border/60 pb-2">
                 <div className="flex items-center gap-2">
@@ -1298,7 +1464,9 @@ Key improvements:
                       </h3>
                       <button
                         type="button"
-                        onClick={() => navigateToComponentDoc('ReasoningAccordion')}
+                        onClick={() =>
+                          navigateToComponentDoc("ReasoningAccordion")
+                        }
                         className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                       >
                         <span>View Props & Docs</span>
@@ -1308,14 +1476,22 @@ Key improvements:
                     <ReasoningAccordion
                       defaultExpanded={true}
                       thought={{
-                        id: 'sample-th',
-                        title: 'Synthesizing Multi-Agent Strategy',
+                        id: "sample-th",
+                        title: "Synthesizing Multi-Agent Strategy",
                         content: `1. Verified workspace dependencies.\n2. Formulated task DAG for parallel tool dispatch.\n3. Validated schema contracts across subagents.`,
                         durationMs: 3200,
                         tokens: 284,
                         steps: [
-                          { id: 's1', title: 'Verify workspace contracts', status: 'completed' },
-                          { id: 's2', title: 'Formulate execution DAG', status: 'completed' },
+                          {
+                            id: "s1",
+                            title: "Verify workspace contracts",
+                            status: "completed",
+                          },
+                          {
+                            id: "s2",
+                            title: "Formulate execution DAG",
+                            status: "completed",
+                          },
                         ],
                       }}
                     />
@@ -1331,7 +1507,7 @@ Key improvements:
                       </h3>
                       <button
                         type="button"
-                        onClick={() => navigateToComponentDoc('ToolCallCard')}
+                        onClick={() => navigateToComponentDoc("ToolCallCard")}
                         className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                       >
                         <span>View Props & Docs</span>
@@ -1341,11 +1517,12 @@ Key improvements:
                     <ToolCallCard
                       defaultExpanded={true}
                       toolCall={{
-                        id: 'tc-demo',
-                        name: 'bash',
-                        args: { command: 'git status --short' },
-                        result: 'M packages/react/src/index.ts\nM packages/react/package.json',
-                        status: 'success',
+                        id: "tc-demo",
+                        name: "bash",
+                        args: { command: "git status --short" },
+                        result:
+                          "M packages/react/src/index.ts\nM packages/react/package.json",
+                        status: "success",
                         durationMs: 142,
                       }}
                     />
@@ -1361,7 +1538,7 @@ Key improvements:
                       </h3>
                       <button
                         type="button"
-                        onClick={() => navigateToComponentDoc('AgentPlanView')}
+                        onClick={() => navigateToComponentDoc("AgentPlanView")}
                         className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                       >
                         <span>View Props & Docs</span>
@@ -1370,13 +1547,25 @@ Key improvements:
                     </div>
                     <AgentPlanView
                       plan={{
-                        id: 'sample-plan',
-                        title: 'Refactor Monorepo Structure',
-                        status: 'running',
+                        id: "sample-plan",
+                        title: "Refactor Monorepo Structure",
+                        status: "running",
                         steps: [
-                          { id: '1', title: 'Analyze existing dependencies', status: 'completed' },
-                          { id: '2', title: 'Extract shared Tailwind preset', status: 'in_progress' },
-                          { id: '3', title: 'Deploy Storybook documentation', status: 'pending' },
+                          {
+                            id: "1",
+                            title: "Analyze existing dependencies",
+                            status: "completed",
+                          },
+                          {
+                            id: "2",
+                            title: "Extract shared Tailwind preset",
+                            status: "in_progress",
+                          },
+                          {
+                            id: "3",
+                            title: "Deploy Storybook documentation",
+                            status: "pending",
+                          },
                         ],
                       }}
                     />
@@ -1392,7 +1581,7 @@ Key improvements:
                       </h3>
                       <button
                         type="button"
-                        onClick={() => navigateToComponentDoc('AgentSwarmView')}
+                        onClick={() => navigateToComponentDoc("AgentSwarmView")}
                         className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                       >
                         <span>View Props & Docs</span>
@@ -1402,18 +1591,19 @@ Key improvements:
                     <AgentSwarmView
                       agents={[
                         {
-                          id: 'a1',
-                          name: 'Orchestrator',
-                          role: 'Task Coordinator',
-                          status: 'working',
-                          currentTask: 'Delegating code review to Coder agent...',
+                          id: "a1",
+                          name: "Orchestrator",
+                          role: "Task Coordinator",
+                          status: "working",
+                          currentTask:
+                            "Delegating code review to Coder agent...",
                         },
                         {
-                          id: 'a2',
-                          name: 'Code Synthesizer',
-                          role: 'TypeScript Specialist',
-                          status: 'working',
-                          currentTask: 'Writing unit test suites...',
+                          id: "a2",
+                          name: "Code Synthesizer",
+                          role: "TypeScript Specialist",
+                          status: "working",
+                          currentTask: "Writing unit test suites...",
                         },
                       ]}
                       activeAgentId="a1"
@@ -1425,7 +1615,7 @@ Key improvements:
           )}
 
           {/* Suite 2: Messages & Streaming (4) */}
-          {(componentCategory === 'all' || componentCategory === 'chat') && (
+          {(componentCategory === "all" || componentCategory === "chat") && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <MessageSquare className="h-4 w-4 text-primary" />
@@ -1445,7 +1635,9 @@ Key improvements:
                         </h3>
                         <button
                           type="button"
-                          onClick={() => navigateToComponentDoc('MessageBubble')}
+                          onClick={() =>
+                            navigateToComponentDoc("MessageBubble")
+                          }
                           className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                         >
                           <span>View Props & Docs</span>
@@ -1453,20 +1645,38 @@ Key improvements:
                         </button>
                       </div>
                       <p className="text-[11px] text-muted-foreground mt-0.5">
-                        Supports 4 contrast variants: <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">solid</code>, <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">subtle</code>, <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">neutral</code>, and <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">bordered</code>.
+                        Supports 4 contrast variants:{" "}
+                        <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                          solid
+                        </code>
+                        ,{" "}
+                        <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                          subtle
+                        </code>
+                        ,{" "}
+                        <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                          neutral
+                        </code>
+                        , and{" "}
+                        <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                          bordered
+                        </code>
+                        .
                       </p>
                     </div>
 
                     <div className="flex items-center gap-1 bg-secondary p-1 rounded-lg text-xs overflow-x-auto no-scrollbar">
-                      {(['solid', 'subtle', 'neutral', 'bordered'] as const).map((v) => (
+                      {(
+                        ["solid", "subtle", "neutral", "bordered"] as const
+                      ).map((v) => (
                         <button
                           key={v}
                           type="button"
                           onClick={() => setMessageVariant(v)}
                           className={`px-2.5 py-1 rounded-md font-medium capitalize whitespace-nowrap transition-all ${
                             messageVariant === v
-                              ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                              : 'text-muted-foreground hover:text-foreground'
+                              ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                              : "text-muted-foreground hover:text-foreground"
                           }`}
                         >
                           {v}
@@ -1479,21 +1689,23 @@ Key improvements:
                     <MessageBubble
                       variant={messageVariant}
                       message={{
-                        id: 'msg-u',
-                        role: 'user',
-                        content: 'How do I optimize React 19 server actions in Next.js?',
+                        id: "msg-u",
+                        role: "user",
+                        content:
+                          "How do I optimize React 19 server actions in Next.js?",
                       }}
                     />
                     <MessageBubble
                       variant={messageVariant}
                       message={{
-                        id: 'msg-a',
-                        role: 'assistant',
-                        name: 'Claude 3.5 Sonnet',
+                        id: "msg-a",
+                        role: "assistant",
+                        name: "Claude 3.5 Sonnet",
                         model: mockModels[0],
                         latencyMs: 840,
                         tokens: { total: 420 },
-                        content: 'React 19 server actions can be optimized by collocating mutations with useActionState.',
+                        content:
+                          "React 19 server actions can be optimized by collocating mutations with useActionState.",
                       }}
                     />
                   </div>
@@ -1507,7 +1719,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('StreamingText')}
+                      onClick={() => navigateToComponentDoc("StreamingText")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1532,7 +1744,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('BranchSwitcher')}
+                      onClick={() => navigateToComponentDoc("BranchSwitcher")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1540,7 +1752,9 @@ Key improvements:
                     </button>
                   </div>
                   <div className="flex items-center justify-between p-3 sm:p-4 rounded-xl bg-secondary/20 border border-border/40">
-                    <span className="text-xs text-muted-foreground font-mono">Variant:</span>
+                    <span className="text-xs text-muted-foreground font-mono">
+                      Variant:
+                    </span>
                     <BranchSwitcher
                       currentIndex={sampleBranchIndex}
                       totalBranches={4}
@@ -1557,7 +1771,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ChatContainer')}
+                      onClick={() => navigateToComponentDoc("ChatContainer")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1565,9 +1779,25 @@ Key improvements:
                     </button>
                   </div>
                   <div className="h-36 border border-border/60 rounded-xl overflow-hidden bg-secondary/10">
-                    <ChatContainer isStreaming={false} className="p-3 space-y-2">
-                      <MessageBubble message={{ id: 'c-1', role: 'user', content: 'Testing conversation viewport anchoring...' }} />
-                      <MessageBubble message={{ id: 'c-2', role: 'assistant', content: 'ChatContainer ensures stick-to-bottom scroll during token streaming.' }} />
+                    <ChatContainer
+                      isStreaming={false}
+                      className="p-3 space-y-2"
+                    >
+                      <MessageBubble
+                        message={{
+                          id: "c-1",
+                          role: "user",
+                          content: "Testing conversation viewport anchoring...",
+                        }}
+                      />
+                      <MessageBubble
+                        message={{
+                          id: "c-2",
+                          role: "assistant",
+                          content:
+                            "ChatContainer ensures stick-to-bottom scroll during token streaming.",
+                        }}
+                      />
                     </ChatContainer>
                   </div>
                 </div>
@@ -1576,7 +1806,7 @@ Key improvements:
           )}
 
           {/* Suite 3: Input & Multimodal Prompting (5) */}
-          {(componentCategory === 'all' || componentCategory === 'input') && (
+          {(componentCategory === "all" || componentCategory === "input") && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <SlidersHorizontal className="h-4 w-4 text-primary" />
@@ -1594,7 +1824,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('PromptInput')}
+                      onClick={() => navigateToComponentDoc("PromptInput")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1609,8 +1839,8 @@ Key improvements:
                     selectedModel={selectedModel}
                     onSelectModel={setSelectedModel}
                     contextItems={[
-                      { id: '1', label: 'AgentOrchestrator.ts', type: 'file' },
-                      { id: '2', label: 'TelemetryService', type: 'tool' },
+                      { id: "1", label: "AgentOrchestrator.ts", type: "file" },
+                      { id: "2", label: "TelemetryService", type: "tool" },
                     ]}
                     onRemoveContextItem={() => {}}
                   />
@@ -1624,7 +1854,9 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('DragAndDropUploader')}
+                      onClick={() =>
+                        navigateToComponentDoc("DragAndDropUploader")
+                      }
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1635,7 +1867,9 @@ Key improvements:
                     attachments={sampleAttachments}
                     onUploadFiles={() => {}}
                     onRemoveAttachment={(id) =>
-                      setSampleAttachments((prev) => prev.filter((a) => a.id !== id))
+                      setSampleAttachments((prev) =>
+                        prev.filter((a) => a.id !== id),
+                      )
                     }
                   />
                 </div>
@@ -1648,7 +1882,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ContextTray')}
+                      onClick={() => navigateToComponentDoc("ContextTray")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1657,9 +1891,14 @@ Key improvements:
                   </div>
                   <ContextTray
                     items={[
-                      { id: '1', label: 'tsconfig.json', type: 'file', meta: 'root' },
-                      { id: '2', label: 'UserPreferences', type: 'memory' },
-                      { id: '3', label: 'Postgres DB', type: 'database' },
+                      {
+                        id: "1",
+                        label: "tsconfig.json",
+                        type: "file",
+                        meta: "root",
+                      },
+                      { id: "2", label: "UserPreferences", type: "memory" },
+                      { id: "3", label: "Postgres DB", type: "database" },
                     ]}
                     onRemoveItem={() => {}}
                   />
@@ -1673,7 +1912,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('SlashCommandMenu')}
+                      onClick={() => navigateToComponentDoc("SlashCommandMenu")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1699,7 +1938,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ModelSelector')}
+                      onClick={() => navigateToComponentDoc("ModelSelector")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1713,7 +1952,10 @@ Key improvements:
                       onSelectModel={setSelectedModel}
                     />
                     <span className="text-xs text-muted-foreground">
-                      Selected: <strong className="text-foreground">{selectedModel.name}</strong>
+                      Selected:{" "}
+                      <strong className="text-foreground">
+                        {selectedModel.name}
+                      </strong>
                     </span>
                   </div>
                 </div>
@@ -1722,7 +1964,7 @@ Key improvements:
           )}
 
           {/* Suite 4: Human-in-the-Loop & HITL Controls (3) */}
-          {(componentCategory === 'all' || componentCategory === 'hitl') && (
+          {(componentCategory === "all" || componentCategory === "hitl") && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <ShieldAlert className="h-4 w-4 text-primary" />
@@ -1740,7 +1982,9 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('InteractiveQuestionCard')}
+                      onClick={() =>
+                        navigateToComponentDoc("InteractiveQuestionCard")
+                      }
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1752,15 +1996,17 @@ Key improvements:
                     description="Agent detected multiple options in workspace configuration."
                     options={[
                       {
-                        id: 'vitest',
-                        label: 'Vitest + Testing Library (Recommended)',
-                        description: 'Fast, native ESM runner with zero-config TypeScript support',
+                        id: "vitest",
+                        label: "Vitest + Testing Library (Recommended)",
+                        description:
+                          "Fast, native ESM runner with zero-config TypeScript support",
                         isRecommended: true,
                       },
                       {
-                        id: 'jest',
-                        label: 'Jest + ts-jest',
-                        description: 'Classic runner with extensive legacy plugin ecosystem',
+                        id: "jest",
+                        label: "Jest + ts-jest",
+                        description:
+                          "Classic runner with extensive legacy plugin ecosystem",
                       },
                     ]}
                     onSubmit={() => {}}
@@ -1775,7 +2021,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('FeedbackActions')}
+                      onClick={() => navigateToComponentDoc("FeedbackActions")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1799,7 +2045,9 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ActionConfirmationModal')}
+                      onClick={() =>
+                        navigateToComponentDoc("ActionConfirmationModal")
+                      }
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1807,7 +2055,8 @@ Key improvements:
                     </button>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Safety gatekeeper modal for sensitive shell commands, file overwrites, and DB migrations.
+                    Safety gatekeeper modal for sensitive shell commands, file
+                    overwrites, and DB migrations.
                   </p>
                   <button
                     type="button"
@@ -1822,7 +2071,7 @@ Key improvements:
           )}
 
           {/* Suite 5: Artifacts & Canvas (4) */}
-          {(componentCategory === 'all' || componentCategory === 'canvas') && (
+          {(componentCategory === "all" || componentCategory === "canvas") && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Layers className="h-4 w-4 text-primary" />
@@ -1840,7 +2089,9 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ArtifactWorkspace')}
+                      onClick={() =>
+                        navigateToComponentDoc("ArtifactWorkspace")
+                      }
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1860,7 +2111,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('CodeBlock')}
+                      onClick={() => navigateToComponentDoc("CodeBlock")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1882,14 +2133,17 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('DiffViewer')}
+                      onClick={() => navigateToComponentDoc("DiffViewer")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
                       <ArrowRight className="h-3 w-3" />
                     </button>
                   </div>
-                  <DiffViewer diffText={mockDiff} filename="AgentOrchestrator.ts" />
+                  <DiffViewer
+                    diffText={mockDiff}
+                    filename="AgentOrchestrator.ts"
+                  />
                 </div>
 
                 {/* 20. TerminalStream */}
@@ -1900,7 +2154,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('TerminalStream')}
+                      onClick={() => navigateToComponentDoc("TerminalStream")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1918,7 +2172,8 @@ Key improvements:
           )}
 
           {/* Suite 6: Telemetry & Live States (2) */}
-          {(componentCategory === 'all' || componentCategory === 'telemetry') && (
+          {(componentCategory === "all" ||
+            componentCategory === "telemetry") && (
             <section className="space-y-4 pt-4">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Activity className="h-4 w-4 text-primary" />
@@ -1936,7 +2191,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('AgentStatusBadge')}
+                      onClick={() => navigateToComponentDoc("AgentStatusBadge")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1944,11 +2199,18 @@ Key improvements:
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
-                    {(['idle', 'thinking', 'searching', 'coding', 'awaiting_approval', 'completed'] as AgentState[]).map(
-                      (state) => (
-                        <AgentStatusBadge key={state} state={state} />
-                      )
-                    )}
+                    {(
+                      [
+                        "idle",
+                        "thinking",
+                        "searching",
+                        "coding",
+                        "awaiting_approval",
+                        "completed",
+                      ] as AgentState[]
+                    ).map((state) => (
+                      <AgentStatusBadge key={state} state={state} />
+                    ))}
                   </div>
                 </div>
 
@@ -1960,7 +2222,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('TokenUsageMeter')}
+                      onClick={() => navigateToComponentDoc("TokenUsageMeter")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -1969,11 +2231,21 @@ Key improvements:
                   </div>
                   <div className="space-y-3 pt-1">
                     <TokenUsageMeter
-                      usage={{ prompt: 14200, completion: 4800, total: 19000, costUsd: 0.057 }}
+                      usage={{
+                        prompt: 14200,
+                        completion: 4800,
+                        total: 19000,
+                        costUsd: 0.057,
+                      }}
                       maxTokens={128000}
                     />
                     <TokenUsageMeter
-                      usage={{ prompt: 98000, completion: 24000, total: 122000, costUsd: 0.366 }}
+                      usage={{
+                        prompt: 98000,
+                        completion: 24000,
+                        total: 122000,
+                        costUsd: 0.366,
+                      }}
                       maxTokens={128000}
                     />
                   </div>
@@ -1983,7 +2255,7 @@ Key improvements:
           )}
 
           {/* Suite 7: Theme & Customization Suite (1) */}
-          {(componentCategory === 'all' || componentCategory === 'theme') && (
+          {(componentCategory === "all" || componentCategory === "theme") && (
             <section className="space-y-4 pt-4 pb-12">
               <div className="flex items-center gap-2 border-b border-border/60 pb-2">
                 <Paintbrush className="h-4 w-4 text-primary" />
@@ -2001,7 +2273,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ThemeColorPicker')}
+                      onClick={() => navigateToComponentDoc("ThemeColorPicker")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -2026,7 +2298,7 @@ Key improvements:
                     </h3>
                     <button
                       type="button"
-                      onClick={() => navigateToComponentDoc('ThemeColorPicker')}
+                      onClick={() => navigateToComponentDoc("ThemeColorPicker")}
                       className="text-[11px] font-medium text-primary hover:underline inline-flex items-center gap-1"
                     >
                       <span>View Props & Docs</span>
@@ -2035,7 +2307,8 @@ Key improvements:
                   </div>
 
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Backdrop-blurred color studio popover with automated WCAG contrast calculation and continuous HSL sliders.
+                    Backdrop-blurred color studio popover with automated WCAG
+                    contrast calculation and continuous HSL sliders.
                   </p>
 
                   <div className="p-3 sm:p-4 rounded-xl bg-secondary/30 border border-border/40 flex items-center justify-between">
@@ -2050,7 +2323,10 @@ Key improvements:
                       triggerLabel="Open Color Studio"
                     />
                     <span className="text-xs font-mono text-muted-foreground">
-                      Contrast: <strong className="text-foreground">{metrics.ratio}:1</strong>
+                      Contrast:{" "}
+                      <strong className="text-foreground">
+                        {metrics.ratio}:1
+                      </strong>
                     </span>
                   </div>
                 </div>
@@ -2061,7 +2337,7 @@ Key improvements:
       )}
 
       {/* Main Content Body: 3. Docs, CLI & Component API Reference View */}
-      {activeView === 'docs' && (
+      {activeView === "docs" && (
         <div className="flex-1 max-w-7xl mx-auto w-full flex flex-col md:flex-row overflow-hidden">
           {/* Mobile Docs Suite & Component Dropdown Navigator Bar (Visible only on < md) */}
           <div className="flex md:hidden items-center justify-between px-3 py-2 border-b border-border/60 bg-card/90 backdrop-blur-md sticky z-30 shadow-xs">
@@ -2072,33 +2348,33 @@ Key improvements:
             >
               <Grid className="h-3.5 w-3.5 text-primary flex-shrink-0" />
               <span className="truncate max-w-[150px]">
-                {docsSection === 'components-api'
+                {docsSection === "components-api"
                   ? selectedDocComponent
-                  : docsSection === 'cli'
-                  ? 'CLI Tooling'
-                  : docsSection === 'quickstart'
-                  ? 'Quickstart'
-                  : docsSection === 'theme'
-                  ? 'Theme Engine'
-                  : docsSection === 'messages'
-                  ? 'Message Variants'
-                  : 'Directory (23)'}
+                  : docsSection === "cli"
+                    ? "CLI Tooling"
+                    : docsSection === "quickstart"
+                      ? "Quickstart"
+                      : docsSection === "theme"
+                        ? "Theme Engine"
+                        : docsSection === "messages"
+                          ? "Message Variants"
+                          : "Directory (23)"}
               </span>
               <ChevronDown
                 className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${
-                  isMobileDocsNavOpen ? 'rotate-180' : ''
+                  isMobileDocsNavOpen ? "rotate-180" : ""
                 }`}
               />
             </button>
 
-            {docsSection === 'components-api' && (
+            {docsSection === "components-api" && (
               <div className="flex items-center gap-1">
                 {prevComponentName && (
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedDocComponent(prevComponentName);
-                      setDocsSection('components-api');
+                      setDocsSection("components-api");
                     }}
                     className="p-1.5 rounded-lg bg-secondary border border-border/60 text-muted-foreground hover:text-foreground"
                     title={`Previous: ${prevComponentName}`}
@@ -2111,7 +2387,7 @@ Key improvements:
                     type="button"
                     onClick={() => {
                       setSelectedDocComponent(nextComponentName);
-                      setDocsSection('components-api');
+                      setDocsSection("components-api");
                     }}
                     className="p-1.5 rounded-lg bg-secondary border border-border/60 text-muted-foreground hover:text-foreground"
                     title={`Next: ${nextComponentName}`}
@@ -2126,7 +2402,7 @@ Key improvements:
           {/* Docs Left Sub-Navigation Sidebar (Desktop sidebar & Mobile collapsible dropdown) */}
           <aside
             className={`w-full md:w-72 border-b md:border-b-0 md:border-r border-border/60 p-4 md:p-6 bg-secondary/10 flex-shrink-0 space-y-5 overflow-y-auto max-h-[calc(100vh-140px)] md:max-h-[calc(100vh-57px)] ${
-              isMobileDocsNavOpen ? 'block' : 'hidden md:block'
+              isMobileDocsNavOpen ? "block" : "hidden md:block"
             }`}
           >
             <div className="space-y-1">
@@ -2137,29 +2413,32 @@ Key improvements:
               <button
                 type="button"
                 onClick={() => {
-                  setDocsSection('cli');
+                  setDocsSection("cli");
                   setIsMobileDocsNavOpen(false);
                 }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  docsSection === 'cli'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                  docsSection === "cli"
+                    ? "bg-primary text-primary-foreground font-bold shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                 }`}
               >
                 <Terminal className="h-4 w-4" />
-                <span>CLI Tooling (<code className="font-mono text-[11px]">@noetic-ui/cli</code>)</span>
+                <span>
+                  CLI Tooling (
+                  <code className="font-mono text-[11px]">@noetic-ui/cli</code>)
+                </span>
               </button>
 
               <button
                 type="button"
                 onClick={() => {
-                  setDocsSection('quickstart');
+                  setDocsSection("quickstart");
                   setIsMobileDocsNavOpen(false);
                 }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  docsSection === 'quickstart'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                  docsSection === "quickstart"
+                    ? "bg-primary text-primary-foreground font-bold shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                 }`}
               >
                 <BookOpen className="h-4 w-4" />
@@ -2169,13 +2448,13 @@ Key improvements:
               <button
                 type="button"
                 onClick={() => {
-                  setDocsSection('theme');
+                  setDocsSection("theme");
                   setIsMobileDocsNavOpen(false);
                 }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  docsSection === 'theme'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                  docsSection === "theme"
+                    ? "bg-primary text-primary-foreground font-bold shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                 }`}
               >
                 <Palette className="h-4 w-4" />
@@ -2185,13 +2464,13 @@ Key improvements:
               <button
                 type="button"
                 onClick={() => {
-                  setDocsSection('messages');
+                  setDocsSection("messages");
                   setIsMobileDocsNavOpen(false);
                 }}
                 className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  docsSection === 'messages'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                  docsSection === "messages"
+                    ? "bg-primary text-primary-foreground font-bold shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                 }`}
               >
                 <MessageSquare className="h-4 w-4" />
@@ -2214,13 +2493,13 @@ Key improvements:
               <button
                 type="button"
                 onClick={() => {
-                  setDocsSection('components-directory');
+                  setDocsSection("components-directory");
                   setIsMobileDocsNavOpen(false);
                 }}
                 className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all ${
-                  docsSection === 'components-directory'
-                    ? 'bg-primary text-primary-foreground font-bold shadow-2xs'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                  docsSection === "components-directory"
+                    ? "bg-primary text-primary-foreground font-bold shadow-2xs"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                 }`}
               >
                 <Grid className="h-3.5 w-3.5" />
@@ -2266,24 +2545,27 @@ Key improvements:
                       <div className="space-y-0.5 pl-1">
                         {filteredCompNames.map((compName) => {
                           const isSelected =
-                            docsSection === 'components-api' && selectedDocComponent === compName;
+                            docsSection === "components-api" &&
+                            selectedDocComponent === compName;
                           return (
                             <button
                               key={compName}
                               type="button"
                               onClick={() => {
                                 setSelectedDocComponent(compName);
-                                setDocsSection('components-api');
+                                setDocsSection("components-api");
                                 setIsMobileDocsNavOpen(false);
                               }}
                               className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-all ${
                                 isSelected
-                                  ? 'bg-primary text-primary-foreground font-semibold shadow-2xs'
-                                  : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
+                                  ? "bg-primary text-primary-foreground font-semibold shadow-2xs"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-secondary/60"
                               }`}
                             >
                               <span className="truncate">{compName}</span>
-                              <ChevronRight className={`h-3 w-3 ${isSelected ? 'opacity-100' : 'opacity-40'}`} />
+                              <ChevronRight
+                                className={`h-3 w-3 ${isSelected ? "opacity-100" : "opacity-40"}`}
+                              />
                             </button>
                           );
                         })}
@@ -2298,7 +2580,7 @@ Key improvements:
           {/* Docs Right Content Area */}
           <main className="flex-1 p-4 sm:p-8 md:p-10 overflow-y-auto space-y-8 sm:space-y-10">
             {/* 1. All 23 Components Directory Overview View */}
-            {docsSection === 'components-directory' && (
+            {docsSection === "components-directory" && (
               <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-mono font-semibold mb-3">
@@ -2309,7 +2591,9 @@ Key improvements:
                     All 23 Components Directory
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                    Explore props, TypeScript type definitions, live sandbox previews, and copyable usage snippets for all 23 components across the 7 architectural suites.
+                    Explore props, TypeScript type definitions, live sandbox
+                    previews, and copyable usage snippets for all 23 components
+                    across the 7 architectural suites.
                   </p>
                 </div>
 
@@ -2317,7 +2601,9 @@ Key improvements:
                   {SUITES.map((suite) => (
                     <div key={suite.id} className="space-y-3">
                       <h2 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2 border-b border-border/60 pb-2">
-                        <span className="text-primary font-mono">{suite.title}</span>
+                        <span className="text-primary font-mono">
+                          {suite.title}
+                        </span>
                       </h2>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -2351,7 +2637,7 @@ Key improvements:
                                   type="button"
                                   onClick={() => {
                                     setSelectedDocComponent(doc.name);
-                                    setDocsSection('components-api');
+                                    setDocsSection("components-api");
                                     setIsMobileDocsNavOpen(false);
                                   }}
                                   className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
@@ -2371,7 +2657,7 @@ Key improvements:
             )}
 
             {/* 2. Component API Reference & Props Mapping */}
-            {docsSection === 'components-api' && activeDoc && (
+            {docsSection === "components-api" && activeDoc && (
               <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 {/* Header info */}
                 <div>
@@ -2397,30 +2683,46 @@ Key improvements:
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/40 text-xs">
                     <div className="flex items-center gap-2 overflow-hidden">
                       <Terminal className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                      <code className="font-mono text-[11px] text-foreground truncate">{activeDoc.cliCommand}</code>
+                      <code className="font-mono text-[11px] text-foreground truncate">
+                        {activeDoc.cliCommand}
+                      </code>
                     </div>
                     <button
                       type="button"
-                      onClick={() => copyText(activeDoc.cliCommand, setCopiedDocCmd)}
+                      onClick={() =>
+                        copyText(activeDoc.cliCommand, setCopiedDocCmd)
+                      }
                       className="p-1 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors ml-2"
                       title="Copy CLI command"
                     >
-                      {copiedDocCmd ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copiedDocCmd ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
                     </button>
                   </div>
 
                   <div className="flex items-center justify-between p-2.5 rounded-xl bg-card border border-border/40 text-xs">
                     <div className="flex items-center gap-2 overflow-hidden">
                       <Code2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                      <code className="font-mono text-[11px] text-foreground truncate">{activeDoc.importStatement}</code>
+                      <code className="font-mono text-[11px] text-foreground truncate">
+                        {activeDoc.importStatement}
+                      </code>
                     </div>
                     <button
                       type="button"
-                      onClick={() => copyText(activeDoc.importStatement, setCopiedDocImport)}
+                      onClick={() =>
+                        copyText(activeDoc.importStatement, setCopiedDocImport)
+                      }
                       className="p-1 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors ml-2"
                       title="Copy import statement"
                     >
-                      {copiedDocImport ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                      {copiedDocImport ? (
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -2432,7 +2734,9 @@ Key improvements:
                       <Eye className="h-4 w-4 text-primary" />
                       <span>Live Interactive Preview</span>
                     </h2>
-                    <span className="text-[10px] font-mono text-muted-foreground">Active Theme: {primaryHue}° HSL</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">
+                      Active Theme: {primaryHue}° HSL
+                    </span>
                   </div>
 
                   <div className="p-4 sm:p-6 rounded-2xl border border-border/80 bg-card shadow-sm overflow-hidden">
@@ -2444,7 +2748,9 @@ Key improvements:
                 <div className="space-y-3 pt-2 sm:pt-4">
                   <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
                     <Table className="h-4 w-4 text-primary" />
-                    <span>Props & API Reference ({activeDoc.props.length})</span>
+                    <span>
+                      Props & API Reference ({activeDoc.props.length})
+                    </span>
                   </h2>
 
                   <div className="overflow-x-auto rounded-2xl border border-border/80 bg-card shadow-sm">
@@ -2459,7 +2765,10 @@ Key improvements:
                       </thead>
                       <tbody className="divide-y divide-border/40">
                         {activeDoc.props.map((prop) => (
-                          <tr key={prop.name} className="hover:bg-secondary/20 transition-colors">
+                          <tr
+                            key={prop.name}
+                            className="hover:bg-secondary/20 transition-colors"
+                          >
                             <td className="py-3 px-4 font-mono font-semibold text-foreground whitespace-nowrap">
                               <div className="flex items-center gap-1.5">
                                 <span>{prop.name}</span>
@@ -2474,7 +2783,13 @@ Key improvements:
                               <code>{prop.type}</code>
                             </td>
                             <td className="py-3 px-4 font-mono text-muted-foreground text-[11px]">
-                              {prop.default ? <code>{prop.default}</code> : <span className="text-muted-foreground/40">—</span>}
+                              {prop.default ? (
+                                <code>{prop.default}</code>
+                              ) : (
+                                <span className="text-muted-foreground/40">
+                                  —
+                                </span>
+                              )}
                             </td>
                             <td className="py-3 px-4 text-muted-foreground leading-relaxed">
                               {prop.description}
@@ -2520,7 +2835,9 @@ Key improvements:
 
                   {activeDoc.advancedUsage && (
                     <div className="space-y-2 pt-2">
-                      <h3 className="text-xs font-mono font-semibold text-foreground">Advanced / Streaming Integration:</h3>
+                      <h3 className="text-xs font-mono font-semibold text-foreground">
+                        Advanced / Streaming Integration:
+                      </h3>
                       <CodeBlock
                         filename={`${activeDoc.name}Advanced.tsx`}
                         language="tsx"
@@ -2543,11 +2860,17 @@ Key improvements:
                     >
                       <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                       <div>
-                        <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">Previous</span>
-                        <span className="font-semibold text-foreground truncate max-w-[120px] block">{prevComponentName}</span>
+                        <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">
+                          Previous
+                        </span>
+                        <span className="font-semibold text-foreground truncate max-w-[120px] block">
+                          {prevComponentName}
+                        </span>
                       </div>
                     </button>
-                  ) : <div />}
+                  ) : (
+                    <div />
+                  )}
 
                   {nextComponentName ? (
                     <button
@@ -2559,18 +2882,24 @@ Key improvements:
                       className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-secondary/60 hover:bg-secondary border border-border/60 text-xs font-medium transition-all text-right"
                     >
                       <div>
-                        <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">Next</span>
-                        <span className="font-semibold text-foreground truncate max-w-[120px] block">{nextComponentName}</span>
+                        <span className="text-[9px] sm:text-[10px] text-muted-foreground block font-mono">
+                          Next
+                        </span>
+                        <span className="font-semibold text-foreground truncate max-w-[120px] block">
+                          {nextComponentName}
+                        </span>
                       </div>
                       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
                     </button>
-                  ) : <div />}
+                  ) : (
+                    <div />
+                  )}
                 </div>
               </div>
             )}
 
             {/* 3. CLI Reference & Interactive Playground */}
-            {docsSection === 'cli' && (
+            {docsSection === "cli" && (
               <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-mono font-semibold mb-3">
@@ -2578,10 +2907,22 @@ Key improvements:
                     <span>Official CLI Tooling</span>
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-                    Noetic UI CLI (<code className="font-mono text-xl sm:text-2xl font-bold">@noetic-ui/cli</code>)
+                    Noetic UI CLI (
+                    <code className="font-mono text-xl sm:text-2xl font-bold">
+                      @noetic-ui/cli
+                    </code>
+                    )
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                    The <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@noetic-ui/cli</code> package is a shadcn-inspired component distribution and scaffolding tool. It allows you to initialize projects, inspect all 23 components, and copy unbundled TypeScript source code directly into your repository with 100% source ownership.
+                    The{" "}
+                    <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                      @noetic-ui/cli
+                    </code>{" "}
+                    package is a shadcn-inspired component distribution and
+                    scaffolding tool. It allows you to initialize projects,
+                    inspect all 23 components, and copy unbundled TypeScript
+                    source code directly into your repository with 100% source
+                    ownership.
                   </p>
                 </div>
 
@@ -2593,17 +2934,18 @@ Key improvements:
                         Interactive CLI Simulator
                       </h3>
                       <p className="text-[11px] text-muted-foreground">
-                        Click a command below to preview its live terminal output and behavior:
+                        Click a command below to preview its live terminal
+                        output and behavior:
                       </p>
                     </div>
 
                     <div className="flex flex-wrap gap-1.5">
                       {[
-                        { id: 'list', label: 'list' },
-                        { id: 'init', label: 'init' },
-                        { id: 'addSingle', label: 'add PromptInput' },
-                        { id: 'addAll', label: 'add --all' },
-                        { id: 'themePreset', label: 'theme cyan' },
+                        { id: "list", label: "list" },
+                        { id: "init", label: "init" },
+                        { id: "addSingle", label: "add PromptInput" },
+                        { id: "addAll", label: "add --all" },
+                        { id: "themePreset", label: "theme cyan" },
                       ].map((item) => (
                         <button
                           key={item.id}
@@ -2611,8 +2953,8 @@ Key improvements:
                           onClick={() => setActiveCliDemo(item.id)}
                           className={`px-2.5 py-1 rounded-lg font-mono text-xs transition-all ${
                             activeCliDemo === item.id
-                              ? 'bg-primary text-primary-foreground font-bold shadow-xs'
-                              : 'bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80'
+                              ? "bg-primary text-primary-foreground font-bold shadow-xs"
+                              : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80"
                           }`}
                         >
                           {item.label}
@@ -2631,11 +2973,29 @@ Key improvements:
                 {/* Command 1: init */}
                 <div className="space-y-3 pt-2">
                   <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">1</span>
-                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli init</code></span>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">
+                      1
+                    </span>
+                    <span>
+                      <code className="font-mono text-sm sm:text-base">
+                        npx @noetic-ui/cli init
+                      </code>
+                    </span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Scaffolds the Noetic UI configuration in your project. It automatically detects your framework (Next.js App/Pages Router, Vite, Remix, Astro), creates <code className="font-mono text-[11px]">noetic-ui.json</code>, sets up <code className="font-mono text-[11px]">components/noetic-ui/cn.ts</code> and <code className="font-mono text-[11px]">types.ts</code>, and injects CSS custom properties into your global stylesheet.
+                    Scaffolds the Noetic UI configuration in your project. It
+                    automatically detects your framework (Next.js App/Pages
+                    Router, Vite, Remix, Astro), creates{" "}
+                    <code className="font-mono text-[11px]">
+                      noetic-ui.json
+                    </code>
+                    , sets up{" "}
+                    <code className="font-mono text-[11px]">
+                      components/noetic-ui/cn.ts
+                    </code>{" "}
+                    and <code className="font-mono text-[11px]">types.ts</code>,
+                    and injects CSS custom properties into your global
+                    stylesheet.
                   </p>
                   <CodeBlock
                     language="bash"
@@ -2651,11 +3011,19 @@ npx @noetic-ui/cli init -y`}
                 {/* Command 2: list */}
                 <div className="space-y-3 pt-3 sm:pt-4">
                   <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">2</span>
-                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli list</code></span>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">
+                      2
+                    </span>
+                    <span>
+                      <code className="font-mono text-sm sm:text-base">
+                        npx @noetic-ui/cli list
+                      </code>
+                    </span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Prints a categorized index of all 23 available components across the 7 architectural suites with descriptions and required peer packages:
+                    Prints a categorized index of all 23 available components
+                    across the 7 architectural suites with descriptions and
+                    required peer packages:
                   </p>
                   <CodeBlock
                     language="bash"
@@ -2667,11 +3035,32 @@ npx @noetic-ui/cli init -y`}
                 {/* Command 3: add */}
                 <div className="space-y-3 pt-3 sm:pt-4">
                   <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">3</span>
-                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli add [...components]</code></span>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">
+                      3
+                    </span>
+                    <span>
+                      <code className="font-mono text-sm sm:text-base">
+                        npx @noetic-ui/cli add [...components]
+                      </code>
+                    </span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Copies components directly into your codebase (<code className="font-mono text-[11px]">components/noetic-ui/</code>). It automatically resolves internal dependencies (e.g. adding <code className="font-mono text-[11px]">PromptInput</code> also copies <code className="font-mono text-[11px]">ModelSelector</code>, <code className="font-mono text-[11px]">ContextTray</code>, <code className="font-mono text-[11px]">SlashCommandMenu</code>, <code className="font-mono text-[11px]">cn.ts</code>, and <code className="font-mono text-[11px]">types.ts</code>):
+                    Copies components directly into your codebase (
+                    <code className="font-mono text-[11px]">
+                      components/noetic-ui/
+                    </code>
+                    ). It automatically resolves internal dependencies (e.g.
+                    adding{" "}
+                    <code className="font-mono text-[11px]">PromptInput</code>{" "}
+                    also copies{" "}
+                    <code className="font-mono text-[11px]">ModelSelector</code>
+                    , <code className="font-mono text-[11px]">ContextTray</code>
+                    ,{" "}
+                    <code className="font-mono text-[11px]">
+                      SlashCommandMenu
+                    </code>
+                    , <code className="font-mono text-[11px]">cn.ts</code>, and{" "}
+                    <code className="font-mono text-[11px]">types.ts</code>):
                   </p>
                   <CodeBlock
                     language="bash"
@@ -2696,11 +3085,20 @@ npx @noetic-ui/cli add MessageBubble --overwrite`}
                 {/* Command 4: theme */}
                 <div className="space-y-3 pt-3 sm:pt-4">
                   <h2 className="text-base sm:text-lg font-bold text-foreground flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">4</span>
-                    <span><code className="font-mono text-sm sm:text-base">npx @noetic-ui/cli theme [preset]</code></span>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-secondary text-xs font-mono font-bold">
+                      4
+                    </span>
+                    <span>
+                      <code className="font-mono text-sm sm:text-base">
+                        npx @noetic-ui/cli theme [preset]
+                      </code>
+                    </span>
                   </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Interactive palette configurator that updates <code className="font-mono text-[11px]">globals.css</code> with calibrated HSL color tokens and optimal WCAG text contrast:
+                    Interactive palette configurator that updates{" "}
+                    <code className="font-mono text-[11px]">globals.css</code>{" "}
+                    with calibrated HSL color tokens and optimal WCAG text
+                    contrast:
                   </p>
                   <CodeBlock
                     language="bash"
@@ -2715,9 +3113,16 @@ npx @noetic-ui/cli theme cyan`}
 
                 {/* Configuration File noetic-ui.json */}
                 <div className="space-y-3 pt-3 sm:pt-4 pb-12">
-                  <h2 className="text-base sm:text-lg font-bold text-foreground">Configuration File (<code className="font-mono text-sm">noetic-ui.json</code>)</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">
+                    Configuration File (
+                    <code className="font-mono text-sm">noetic-ui.json</code>)
+                  </h2>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Generated by <code className="font-mono text-[11px]">npx @noetic-ui/cli init</code> in the root of your project:
+                    Generated by{" "}
+                    <code className="font-mono text-[11px]">
+                      npx @noetic-ui/cli init
+                    </code>{" "}
+                    in the root of your project:
                   </p>
                   <CodeBlock
                     language="json"
@@ -2737,19 +3142,26 @@ npx @noetic-ui/cli theme cyan`}
             )}
 
             {/* 4. Quickstart & Package Setup */}
-            {docsSection === 'quickstart' && (
+            {docsSection === "quickstart" && (
               <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     Quickstart & Package Setup
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                    Install <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">@noetic-ui/react</code> directly from npm to consume pre-compiled components in your React 18/19 or Next.js app.
+                    Install{" "}
+                    <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                      @noetic-ui/react
+                    </code>{" "}
+                    directly from npm to consume pre-compiled components in your
+                    React 18/19 or Next.js app.
                   </p>
                 </div>
 
                 <div className="space-y-3 sm:space-y-4">
-                  <h2 className="text-base sm:text-lg font-bold text-foreground">1. Install NPM Package</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">
+                    1. Install NPM Package
+                  </h2>
                   <CodeBlock
                     language="bash"
                     filename="Terminal"
@@ -2758,7 +3170,9 @@ npx @noetic-ui/cli theme cyan`}
                 </div>
 
                 <div className="space-y-3 sm:space-y-4">
-                  <h2 className="text-base sm:text-lg font-bold text-foreground">2. Import Components</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">
+                    2. Import Components
+                  </h2>
                   <CodeBlock
                     language="tsx"
                     filename="AgentView.tsx"
@@ -2787,19 +3201,26 @@ export function MyAgentApp() {
             )}
 
             {/* 5. Theme & Contrast Engine */}
-            {docsSection === 'theme' && (
+            {docsSection === "theme" && (
               <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     Theme & Contrast Engine
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                    Noetic UI uses CSS custom properties with automatic WCAG 2.1 contrast ratio calculations. When bright primary colors like Yellow (40°) or Neon Lime (85°) are selected in Light Mode, the text automatically flips to black (<code className="font-mono">#09090b</code>) to guarantee AA & AAA compliance (10.8:1 contrast).
+                    Noetic UI uses CSS custom properties with automatic WCAG 2.1
+                    contrast ratio calculations. When bright primary colors like
+                    Yellow (40°) or Neon Lime (85°) are selected in Light Mode,
+                    the text automatically flips to black (
+                    <code className="font-mono">#09090b</code>) to guarantee AA
+                    & AAA compliance (10.8:1 contrast).
                   </p>
                 </div>
 
                 <div className="space-y-3 sm:space-y-4">
-                  <h2 className="text-base sm:text-lg font-bold text-foreground">Reusable ThemeColorPicker Component</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-foreground">
+                    Reusable ThemeColorPicker Component
+                  </h2>
                   <CodeBlock
                     language="tsx"
                     filename="Header.tsx"
@@ -2833,14 +3254,18 @@ export function Header() {
             )}
 
             {/* 6. Message Bubble Contrast Modes */}
-            {docsSection === 'messages' && (
+            {docsSection === "messages" && (
               <div className="space-y-6 sm:space-y-8 max-w-4xl">
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                     Message Bubble Contrast Modes
                   </h1>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-2 leading-relaxed">
-                    <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">MessageBubble</code> supports 4 distinct visual variants designed to accommodate any brand visual hierarchy:
+                    <code className="text-foreground font-mono font-semibold px-1 py-0.2 rounded bg-secondary border border-border/60">
+                      MessageBubble
+                    </code>{" "}
+                    supports 4 distinct visual variants designed to accommodate
+                    any brand visual hierarchy:
                   </p>
                 </div>
 

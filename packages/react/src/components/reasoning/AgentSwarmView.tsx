@@ -1,12 +1,19 @@
-import React from 'react';
-import { Bot, ArrowRight, CheckCircle2, Loader2, AlertCircle, Users } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import React from "react";
+import {
+  Bot,
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
+  Users,
+} from "lucide-react";
+import { cn } from "../../utils/cn";
 
 export interface SwarmAgent {
   id: string;
   name: string;
   role: string;
-  status: 'idle' | 'working' | 'completed' | 'failed';
+  status: "idle" | "working" | "completed" | "failed";
   avatar?: string;
   currentTask?: string;
   progress?: number;
@@ -28,8 +35,8 @@ export const AgentSwarmView: React.FC<AgentSwarmViewProps> = ({
   return (
     <div
       className={cn(
-        'my-3 p-3.5 rounded-xl border border-border/60 bg-card/60 backdrop-blur-sm shadow-sm',
-        className
+        "my-3 p-3.5 rounded-xl border border-border/60 bg-card/60 backdrop-blur-sm shadow-sm",
+        className,
       )}
     >
       <div className="flex items-center justify-between mb-3">
@@ -42,7 +49,7 @@ export const AgentSwarmView: React.FC<AgentSwarmViewProps> = ({
           </span>
         </div>
         <span className="text-[10px] text-muted-foreground font-mono">
-          {agents.filter((a) => a.status === 'working').length} active
+          {agents.filter((a) => a.status === "working").length} active
         </span>
       </div>
 
@@ -54,10 +61,13 @@ export const AgentSwarmView: React.FC<AgentSwarmViewProps> = ({
               key={agent.id}
               onClick={() => onSelectAgent && onSelectAgent(agent.id)}
               className={cn(
-                'p-2.5 rounded-lg border border-border/40 bg-secondary/30 transition-all text-xs',
-                onSelectAgent ? 'cursor-pointer hover:border-primary/40 hover:bg-secondary/60' : '',
-                isActive && 'border-primary/60 bg-primary/10 shadow-sm shadow-primary/10',
-                agent.status === 'working' && 'border-primary/30'
+                "p-2.5 rounded-lg border border-border/40 bg-secondary/30 transition-all text-xs",
+                onSelectAgent
+                  ? "cursor-pointer hover:border-primary/40 hover:bg-secondary/60"
+                  : "",
+                isActive &&
+                  "border-primary/60 bg-primary/10 shadow-sm shadow-primary/10",
+                agent.status === "working" && "border-primary/30",
               )}
             >
               <div className="flex items-center justify-between gap-2">
@@ -74,7 +84,7 @@ export const AgentSwarmView: React.FC<AgentSwarmViewProps> = ({
                         <Bot className="h-3.5 w-3.5 text-primary" />
                       )}
                     </div>
-                    {agent.status === 'working' && (
+                    {agent.status === "working" && (
                       <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary" />
@@ -94,25 +104,25 @@ export const AgentSwarmView: React.FC<AgentSwarmViewProps> = ({
 
                 {/* Status Indicator */}
                 <div className="flex-shrink-0">
-                  {agent.status === 'working' && (
+                  {agent.status === "working" && (
                     <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary text-primary-foreground font-bold font-mono text-[10px] shadow-2xs">
                       <Loader2 className="h-2.5 w-2.5 animate-spin" />
                       Working
                     </span>
                   )}
-                  {agent.status === 'completed' && (
+                  {agent.status === "completed" && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-emerald-800 dark:text-emerald-300 font-mono font-medium">
                       <CheckCircle2 className="h-2.5 w-2.5" />
                       Done
                     </span>
                   )}
-                  {agent.status === 'failed' && (
+                  {agent.status === "failed" && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-rose-800 dark:text-rose-300 font-mono font-medium">
                       <AlertCircle className="h-2.5 w-2.5" />
                       Error
                     </span>
                   )}
-                  {agent.status === 'idle' && (
+                  {agent.status === "idle" && (
                     <span className="text-[10px] text-muted-foreground font-mono">
                       Idle
                     </span>
