@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/generate-component-docs.mjs",
+    "prebuild": "node scripts/generate-component-docs.mjs",
     "dev": "next dev --port 3000",
     "build": "next build",
+    "generate-docs": "node scripts/generate-component-docs.mjs",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "node scripts/generate-component-docs.mjs && tsc --noEmit"
   },
   "dependencies": {
     "@noetic-ui/react": "workspace:*",

@@ -97,17 +97,18 @@ When authoring a new component or modifying an existing one, agents **must** com
 
 ```mermaid
 flowchart LR
-    A["1. Create / Edit in packages/react/src/components"] --> B["2. Export in packages/react/src/index.ts"]
+    A["1. Create / Edit Component (.tsx) & Readme (.md) in packages/react/src/components"] --> B["2. Export in packages/react/src/index.ts"]
     B --> C["3. Register in packages/cli/src/registry/components.ts"]
     C --> D["4. Add to packages/cli/scripts/build-templates.mjs"]
-    D --> E["5. Run pnpm build to regenerate templates & bundle"]
+    D --> E["5. Run pnpm build (parses readmes & bundles packages)"]
     E --> F["6. Showcase in apps/docs/src/app/page.tsx"]
 ```
 
 ### Detailed Steps:
 
-1. **Implement Component**:
-   - Location: `packages/react/src/components/<suite>/<ComponentName>.tsx`.
+1. **Implement Component & Author Readme**:
+   - Component: `packages/react/src/components/<suite>/<ComponentName>.tsx`.
+   - Documentation: `packages/react/src/components/<suite>/<ComponentName>.md`. Includes frontmatter (suite, dependencies), props table, types, basic & advanced usage.
    - Use `'use client'` at the top if the component contains interactivity, hooks, or `framer-motion`.
    - Use `cn(...)` from `../../utils/cn` for class merging.
    - Import shared types from `../../types`.
@@ -135,10 +136,10 @@ flowchart LR
      ```
 
 5. **Build & Verify**:
-   - Run `pnpm build` to execute `prebuild` (generating `packages/cli/src/registry/templates.ts`), bundle `@noetic-ui/react`, build `@noetic-ui/cli`, and verify `apps/docs`.
+   - Run `pnpm build` to execute `prebuild` for CLI templates, `prebuild` for docs (parsing all `.md` files to `apps/docs/src/data/component-docs.ts`), bundle `@noetic-ui/react`, build `@noetic-ui/cli`, and compile `apps/docs`.
 
 6. **Add to Documentation & Gallery**:
-   - Add demo and controls to `apps/docs/src/app/page.tsx`.
+   - Add interactive live preview to `apps/docs/src/app/page.tsx`.
 
 ---
 
